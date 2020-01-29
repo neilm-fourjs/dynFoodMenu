@@ -88,4 +88,10 @@
       <File filePath="etc/gma.4st"/>
     </Library>
   </Group>
+  <Group id="-973564800" label="Tests" language="Genero" targetDirectory="$(ProjectDir)/testbin">
+    <Application binaryName="test" id="-1267941975" label="test" language="Genero">
+      <File filePath="tests/generated.per"/>
+      <File filePath="tests/test.4gl"/>
+    </Application>
+  </Group>
 </Project>

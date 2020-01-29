@@ -1,0 +1,106 @@
+LAYOUT ( TEXT="Dynamic Menu Demo", STYLE="main2" )
+VBOX 
+GRID
+{
+Normal Breakfast
+}
+END -- GRID
+GROUP g_2_3 ( TEXT="Cereals" )
+GRID
+{
+[f1      ]
+[f2  ]         [f3       ]
+}
+END -- GRID
+END -- GROUP g_2_3
+GROUP g_2_7 ( TEXT="Hot Breakfast Option 1" )
+VBOX 
+GROUP s_7_11 ( TEXT="Eggs" )
+GRID
+{
+[f4 ]Fried Eggs
+[f5 ]Boiled Eggs
+}
+END -- GRID
+END -- GROUP s_7_11
+GROUP s_7_12 ( TEXT="Or" )
+GRID
+{
+[f6                  ]
+}
+END -- GRID
+END -- GROUP s_7_12
+GROUP s_7_16 ( TEXT="With Choice Of" )
+GRID
+{
+[f7         ]  [f8     ]
+[f9         ]  [f10    ]
+}
+END -- GRID
+END -- GROUP s_7_16
+END -- VBOX 
+END -- GROUP g_2_7
+GROUP g_2_8 ( TEXT="Light Meal Option 2" )
+VBOX 
+GROUP s_8_19 ( TEXT="Sandwich (1 Round)" )
+GRID
+{
+[f11         ] [f12        ]
+[f13         ]
+[f14           ]
+[f15            ]
+}
+END -- GRID
+END -- GROUP s_8_19
+END -- VBOX 
+END -- GROUP g_2_8
+GROUP g_2_9 ( TEXT="Healthy Meal Option 3" )
+GRID
+{
+[f16                 ]
+}
+END -- GRID
+END -- GROUP g_2_9
+GROUP g_2_10 ( TEXT="Condiments" )
+GRID
+{
+[f17       ]   [f18      ]
+[f19    ]      [f20      ]
+[f21   ]       [f22      ]
+[f23  ]
+[f24]Canderel
+[f25]Brown Sugar
+[f26]White Sugar
+}
+END -- GRID
+END -- GROUP g_2_10
+END -- VBOX 
+END -- LAYOUT Menu
+
+ATTRIBUTES
+CHECKBOX f1 = formonly.t1g1sg1ch1,TEXT="All Bran";
+CHECKBOX f2 = formonly.t1g1sg1ch2,TEXT="Oats";
+CHECKBOX f3 = formonly.t1g1sg1ch2o1,TEXT="With Milk";
+SPINEDIT f4 = formonly.t1g2sg1sp1, NOT NULL, REQUIRED, VALUEMAX=2, VALUEMIN=0;
+SPINEDIT f5 = formonly.t1g2sg1sp2, NOT NULL, REQUIRED, VALUEMAX=2, VALUEMIN=0;
+CHECKBOX f6 = formonly.t1g2sg2ch1,TEXT="Fish Cake with Mushroom Sauce";
+CHECKBOX f7 = formonly.t1g2sg3ch1,TEXT="White Bread";
+CHECKBOX f8 = formonly.t1g2sg3ch1o1,TEXT="Toasted";
+CHECKBOX f9 = formonly.t1g2sg3ch2,TEXT="Brown Bread";
+CHECKBOX f10 = formonly.t1g2sg3ch2o1,TEXT="Toasted";
+CHECKBOX f11 = formonly.t1g3sg1ch1,TEXT="French Toast";
+CHECKBOX f12 = formonly.t1g3sg1ch1o1,TEXT="With Cheese";
+CHECKBOX f13 = formonly.t1g3sg1ch2,TEXT="Egg Sandwich";
+CHECKBOX f14 = formonly.t1g3sg1ch3,TEXT="Chicken & Mayo";
+CHECKBOX f15 = formonly.t1g3sg1ch4,TEXT="Cheese & Tomato";
+CHECKBOX f16 = formonly.t1g4sg1ch1,TEXT="Fruit & Yoghurt Platter";
+CHECKBOX f17 = formonly.t1g5sg1ch1,TEXT="Five Roses";
+CHECKBOX f18 = formonly.t1g5sg1ch1o1,TEXT="With Milk";
+CHECKBOX f19 = formonly.t1g5sg1ch2,TEXT="Rooibos";
+CHECKBOX f20 = formonly.t1g5sg1ch2o1,TEXT="With Milk";
+CHECKBOX f21 = formonly.t1g5sg1ch3,TEXT="Coffee";
+CHECKBOX f22 = formonly.t1g5sg1ch3o1,TEXT="With Milk";
+CHECKBOX f23 = formonly.t1g5sg1ch4,TEXT="Juice";
+SPINEDIT f24 = formonly.t1g5sg1sp5, NOT NULL, REQUIRED, VALUEMAX=2, VALUEMIN=0;
+SPINEDIT f25 = formonly.t1g5sg1sp6, NOT NULL, REQUIRED, VALUEMAX=2, VALUEMIN=0;
+SPINEDIT f26 = formonly.t1g5sg1sp7, NOT NULL, REQUIRED, VALUEMAX=2, VALUEMIN=0;

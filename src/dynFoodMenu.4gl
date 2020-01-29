@@ -70,7 +70,7 @@ END FUNCTION
 FUNCTION buildForm( l_n om.DomNode, l_titl STRING, l_styl STRING ) RETURNS ()
 	DEFINE l_w, l_vb, l_grid, l_group, l_sgroup, l_cont om.DomNode
 	DEFINE l_fldnam, l_desc STRING
-	DEFINE x,y SMALLINT
+	DEFINE x,y,l_items SMALLINT
 	LET l_w = l_n.getParent()
 	CALL l_w.setAttribute("text",l_titl)
 	CALL l_w.setAttribute("style",l_styl)
@@ -78,8 +78,9 @@ FUNCTION buildForm( l_n om.DomNode, l_titl STRING, l_styl STRING ) RETURNS ()
 	CALL l_n.setAttribute("style",l_styl)
 	LET l_vb = l_n.createChild("VBox")
 	LET l_grid = l_vb.createChild("Grid")
-	CALL l_grid.setAttribute("gridWidth",C_WIDTH+6)
 	CALL l_grid.setAttribute("width",C_WIDTH+6)
+	CALL l_grid.setAttribute("height",1)
+
 	CALL m_inp.clear()
 	LET m_flds = 0
 	FOR x = 1 TO m_tree.getLength()
@@ -91,20 +92,30 @@ FUNCTION buildForm( l_n om.DomNode, l_titl STRING, l_styl STRING ) RETURNS ()
 			WHEN "Type"
 				CALL addField(x, 0, l_grid, "",l_desc ,"Label", C_WIDTH)
 			WHEN "Group"
-				LET l_group = addGroup(x, l_vb, l_desc,C_WIDTH+4)
+				IF l_cont IS NOT NULL THEN -- set height for previous grid
+					--CALL l_cont.setAttribute("height",l_items)
+				END IF
+				LET l_group = addGroup(x, l_vb, l_desc)
 				LET l_cont = l_group
 			WHEN "Subgroup"
+				IF l_cont IS NOT NULL AND l_items > 0 THEN -- set height for previous grid
+					CALL l_cont.setAttribute("height",l_items)
+				END IF
 				IF m_tree[x].visible THEN
 					IF l_group.getTagName() = "Group" THEN
 						LET l_group = l_group.createChild("VBox")
 					END IF
-					LET l_sgroup = addGroup(x, l_group, l_desc,C_WIDTH+2)
+					LET l_sgroup = addGroup(x, l_group, l_desc)
 					LET l_cont = l_sgroup
 				END IF
 			WHEN "Item"
 				IF l_cont.getTagName() = "Group" THEN
 					LET l_cont = l_cont.createChild("Grid")
+					CALL l_cont.setAttribute("width",C_WIDTH+6)
+					CALL l_cont.setAttribute("height",1)
+					LET l_items = 0
 				END IF
+				LET l_items = l_items + 1
 				IF m_tree[x].maxval = 1 THEN
 					CALL addField(x, 0, l_cont, l_fldnam, l_desc,"CheckBox", C_WIDTH)
 				ELSE
@@ -129,17 +140,13 @@ FUNCTION buildForm( l_n om.DomNode, l_titl STRING, l_styl STRING ) RETURNS ()
 	CALL l_n.writeXml("generated.42f") -- for debug only!
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION addGroup(x SMALLINT, l_n om.DomNode, l_desc STRING, l_width SMALLINT) RETURNS (om.DomNode)
+FUNCTION addGroup(x SMALLINT, l_n om.DomNode, l_desc STRING) RETURNS (om.DomNode)
 	DEFINE l_group om.DomNode
 	DEFINE l_nam STRING
 	LET l_group = l_n.createChild("Group")
-	CALL l_group.setAttribute("gridWidth", l_width)
-	CALL l_group.setAttribute("width", l_width)
 	LET l_nam = SFMT("%1_%2_%3",DOWNSHIFT(m_tree[x].id CLIPPED), m_tree[x].t_pid, m_tree[x].t_id )
 	CALL l_group.setAttribute("name",  l_nam)
 	CALL l_group.setAttribute("text", l_desc)
-	CALL l_group.setAttribute("posY", x)
-	CALL l_group.setAttribute("posX", 0)
 	RETURN l_group
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
@@ -159,12 +166,14 @@ FUNCTION addField(x SMALLINT, y SMALLINT, l_n om.DomNode, l_nam STRING, l_desc S
 		LET m_flds = m_flds + 1
 		LET m_inp[ m_flds ].l_fldName = l_nam
 		LET m_inp[ m_flds ].l_fldType = l_typ
+		CALL l_ff.setAttribute("fieldId", m_flds)
+		CALL l_ff.setAttribute("sqlTabName", "formonly")
+		CALL l_ff.setAttribute("tabIndex", m_flds)
 		CALL l_ff.setAttribute("varType", l_typ)
 		CALL l_ff.setAttribute("notNull",1)
 		CALL l_ff.setAttribute("required",1)
 		CALL l_ff.setAttribute("defaultValue",0)
 		CALL l_ff.setAttribute("value",0)
-		CALL l_ff.setAttribute("fieldId", m_flds)
 		LET l_w = l_ff.createChild(l_wdg)
 	ELSE
 		LET l_w = l_n.createChild(l_wdg)

@@ -6,5 +6,8 @@ The goal was to generate the screen and the dialog dynamically based on the data
 ![ss1](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss1.png "SS1")
 ![ss2](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss2.png "SS2")
 
-## Running on the GDC ( Linux with dark theme )
+## Running in the GDC ( Linux with dark theme )
 ![ss3](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss3.png "SS3")
+
+## Running in the GBC ( Chrome )
+![ss4](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss4.png "SS4")

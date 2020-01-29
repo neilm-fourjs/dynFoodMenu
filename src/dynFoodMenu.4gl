@@ -31,6 +31,7 @@ MAIN
 		LOCATE l_json IN FILE "data.json"
 	END IF
 	CALL util.JSON.parse(l_json, m_tree)
+	CALL ui.Interface.loadStyles( DOWNSHIFT( ui.Interface.getFrontEndName()) )
 -- build the form
 	CALL ui.Interface.setText("Menu")
 	CURRENT WINDOW IS SCREEN

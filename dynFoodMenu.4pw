@@ -82,8 +82,10 @@
     <Library binaryName="etc" id="362164715" label="etc">
       <File filePath="etc/data.json"/>
       <File filePath="etc/default.4ad"/>
-      <File filePath="etc/default.4st"/>
       <File filePath="etc/fglprofile"/>
+      <File filePath="etc/gbc.4st"/>
+      <File filePath="etc/gdc.4st"/>
+      <File filePath="etc/gma.4st"/>
     </Library>
   </Group>
 </Project>

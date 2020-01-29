@@ -12,7 +12,6 @@ Property of Four Js*
 <StyleList>
   <Style name="Window">
      <StyleAttribute name="windowType" value="normal" />
-     <StyleAttribute name="fontSize" value="0.8em" />
   </Style>
   <Style name="Window.main">
      <StyleAttribute name="windowType" value="normal" />

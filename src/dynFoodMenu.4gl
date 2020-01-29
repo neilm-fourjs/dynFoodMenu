@@ -93,7 +93,7 @@ FUNCTION buildForm( l_n om.DomNode, l_titl STRING, l_styl STRING ) RETURNS ()
 				CALL addField(id, 1, 1, l_grid, "",l_desc ,"Label", C_WIDTH)
 			WHEN "Group"
 				IF l_cont IS NOT NULL THEN -- set height for previous grid
-					--CALL l_cont.setAttribute("height",l_items)
+					CALL l_cont.setAttribute("height",l_items)
 				END IF
 				LET l_group = addGroup(id, l_vb, l_desc)
 				LET l_cont = l_group

@@ -120,7 +120,7 @@ FUNCTION buildForm( l_n om.DomNode, l_titl STRING, l_styl STRING ) RETURNS ()
 					CALL addField(id, l_items, 1, l_cont, l_fldnam, l_desc,"CheckBox", C_WIDTH)
 				ELSE
 					CALL addField(id, l_items, 1, l_cont, l_fldnam, l_desc,"SpinEdit", 3)
-					CALL addField(id, l_items, 4, l_cont, "", l_desc,"Label", C_WIDTH)
+					CALL addField(id, l_items, 5, l_cont, "", l_desc,"Label", C_WIDTH)
 				END IF
 				IF m_tree[id].option_name IS NOT NULL THEN
 					CALL addField(id, l_items, 15,l_cont, l_fldnam||"o1", m_tree[id].option_name,"CheckBox", C_WIDTH)

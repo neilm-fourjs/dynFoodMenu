@@ -1,4 +1,5 @@
 IMPORT util
+IMPORT os
 TYPE t_rec RECORD
 	t_id INTEGER,
 	t_pid INTEGER,
@@ -24,7 +25,11 @@ MAIN
 	DEFINE l_json TEXT
 	DEFINE l_f ui.Form
 -- get test data
-	LOCATE l_json IN FILE "../etc/data.json"
+	IF os.path.exists("../etc/data.json") THEN
+		LOCATE l_json IN FILE "../etc/data.json"
+	ELSE
+		LOCATE l_json IN FILE "data.json"
+	END IF
 	CALL util.JSON.parse(l_json, m_tree)
 -- build the form
 	CALL ui.Interface.setText("Menu")
@@ -103,7 +108,7 @@ FUNCTION buildForm( l_n om.DomNode, l_titl STRING, l_styl STRING ) RETURNS ()
 					CALL addField(x, 0, l_cont, l_fldnam, l_desc,"CheckBox", C_WIDTH)
 				ELSE
 					CALL addField(x, 0, l_cont, l_fldnam, l_desc,"SpinEdit", 3)
-					CALL addField(x, 3, l_cont, "", l_desc,"Label", C_WIDTH)
+					CALL addField(x, 4, l_cont, "", l_desc,"Label", C_WIDTH)
 				END IF
 				IF m_tree[x].option_name IS NOT NULL THEN
 					CALL addField(x, 15,l_cont, l_fldnam||"o1", m_tree[x].option_name,"CheckBox", C_WIDTH)

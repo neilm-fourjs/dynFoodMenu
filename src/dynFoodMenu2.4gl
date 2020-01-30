@@ -56,18 +56,28 @@ END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION input_okay() RETURNS BOOLEAN
 	DEFINE x, order_lines SMALLINT
-	DEFINE l_val SMALLINT
+	DEFINE l_val, l_opt SMALLINT
 	DEFINE l_order STRING = "Your Order is:\n"
+	DEFINE l_desc STRING
 	CALL m_data.ordered.clear()
 	LET order_lines = 1
 	FOR x = 1 TO m_data.menuTree.getLength()
 		IF m_data.menuTree[x].field.getLength() > 2 THEN
+			LET l_opt = 0
 			LET l_val = m_dialog.getFieldValue(m_data.menuTree[x].field)
 			IF l_val > 0 THEN
-				LET l_order = l_order.append(SFMT("%1 %2\n",l_val,m_data.menuTree[x].description))
+				LET l_desc = m_data.menuTree[x].description
+				IF m_data.menuTree[x].option_id.getLength()  > 2 THEN
+					LET l_opt = m_dialog.getFieldValue(m_data.menuTree[x].field||"o1")
+					IF l_opt = 1 THEN
+						LET l_desc = l_desc.append(" "||m_data.menuTree[x].option_name)
+					END IF
+				END IF
+				LET l_order = l_order.append(SFMT("%1 %2\n",l_val, l_desc))
 				LET m_data.ordered[ order_lines ].id = m_data.menuTree[x].t_id
-				LET m_data.ordered[ order_lines ].description = m_data.menuTree[x].description
+				LET m_data.ordered[ order_lines ].description = l_desc
 				LET m_data.ordered[ order_lines ].qty = l_val
+				LET m_data.ordered[ order_lines ].optional = l_opt
 				LET order_lines = order_lines + 1
 			END IF
 		END IF

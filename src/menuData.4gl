@@ -12,7 +12,7 @@ PUBLIC TYPE menuRecord RECORD
 		minval INTEGER,
 		maxval INTEGER,
 		field STRING,
-		option_id CHAR(6),
+		option_id STRING,
 		option_name STRING,
 		hidden BOOLEAN
 	END RECORD
@@ -51,7 +51,8 @@ PUBLIC TYPE condRecord RECORD
 PUBLIC TYPE orderRecord RECORD
 		id INTEGER,
 		description STRING,
-		qty SMALLINT
+		qty SMALLINT,
+		optional BOOLEAN
 	END RECORD
 
 PUBLIC TYPE menuData RECORD

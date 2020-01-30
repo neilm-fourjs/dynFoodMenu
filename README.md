@@ -3,8 +3,8 @@
 The goal was to generate the screen and the dialog dynamically based on the data provided.
 
 There are two versions of the program:
-* dynFoodMenu - one 4gl example
-* dynFoodMenu2 - main code stripped out into library functions.
+* dynFoodMenu - main code stripped out into library functions.
+* dynFoodMenu2 - a single .4gl example of just the form generation and input
 
 ## Running on the Android Emulator
 ![ss1](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss1.png "SS1")

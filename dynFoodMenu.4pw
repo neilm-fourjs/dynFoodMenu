@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Project defaultApplication="400358049" gstVersion="31408" version="3.3">
+<Project defaultApplication="1005836130" gstVersion="31408" version="3.3">
   <Settings>
     <DynamicProperties version="2">
       <DynamicProperty description="Accent color (Android 5.0 and later)" initialValue="#9575CD" isDefaultInherited="false" isHidden="false" label="Accent color" name="gma-accent-color" readOnly="false" type="COLOR"/>
@@ -78,6 +78,11 @@
     <Library binaryName="Database" id="455109296" label="Database"/>
     <Application binaryName="dynFoodMenu" dependencies="159917928,212784684,362164715,455109296" environment="dirlist:FGLIMAGEPATH=$(ProjectDir)/images;$(FGLDIR)/lib/image2font.txt;$(ProjectDir);$(FGLIMAGEPATH)" id="400358049" label="dynFoodMenu">
       <File filePath="src/dynFoodMenu.4gl"/>
+    </Application>
+    <Application binaryName="dynFoodMenu2" dependencies="362164715" id="1005836130" label="dynFoodMenu2" targetDirectory="$(ProjectDir)/bin2">
+      <File filePath="src/dynFoodMenu2.4gl"/>
+      <File filePath="src/dynForm.4gl"/>
+      <File filePath="src/menuData.4gl"/>
     </Application>
     <Library binaryName="etc" id="362164715" label="etc">
       <File filePath="etc/data.json"/>

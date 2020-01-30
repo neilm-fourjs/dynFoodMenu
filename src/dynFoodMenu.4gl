@@ -80,7 +80,6 @@ FUNCTION buildForm( l_n om.DomNode, l_titl STRING, l_styl STRING ) RETURNS ()
 	LET l_grid = l_vb.createChild("Grid")
 	CALL l_grid.setAttribute("width",C_WIDTH+6)
 	CALL l_grid.setAttribute("height",1)
-
 	CALL m_inp.clear()
 	LET m_flds = 0
 	FOR id = 1 TO m_tree.getLength()

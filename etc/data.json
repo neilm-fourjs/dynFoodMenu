@@ -30,8 +30,8 @@
     "visible": true,
     "minval": 0,
     "maxval": 0,
-    "field": " ",
-    "option_id": " ",
+    "field": "",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -43,8 +43,8 @@
     "visible": false,
     "minval": 0,
     "maxval": 0,
-    "field": " ",
-    "option_id": " ",
+    "field": "",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -57,7 +57,7 @@
     "minval": 0,
     "maxval": 1,
     "field": "formonly.t1g1sg1ch1",
-    "option_id": " ",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -83,8 +83,8 @@
     "visible": true,
     "minval": 0,
     "maxval": 0,
-    "field": " ",
-    "option_id": " ",
+    "field": "",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -96,8 +96,8 @@
     "visible": true,
     "minval": 0,
     "maxval": 0,
-    "field": " ",
-    "option_id": " ",
+    "field": "",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -110,7 +110,7 @@
     "minval": 0,
     "maxval": 2,
     "field": "formonly.t1g2sg1sp1",
-    "option_id": " ",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -123,7 +123,7 @@
     "minval": 0,
     "maxval": 2,
     "field": "formonly.t1g2sg1sp2",
-    "option_id": " ",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -135,8 +135,8 @@
     "visible": true,
     "minval": 0,
     "maxval": 0,
-    "field": " ",
-    "option_id": " ",
+    "field": "",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -149,7 +149,7 @@
     "minval": 0,
     "maxval": 1,
     "field": "formonly.t1g2sg2ch1",
-    "option_id": " ",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -161,8 +161,8 @@
     "visible": true,
     "minval": 0,
     "maxval": 0,
-    "field": " ",
-    "option_id": " ",
+    "field": "",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -202,8 +202,8 @@
     "visible": true,
     "minval": 0,
     "maxval": 0,
-    "field": " ",
-    "option_id": " ",
+    "field": "",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -215,8 +215,8 @@
     "visible": true,
     "minval": 0,
     "maxval": 0,
-    "field": " ",
-    "option_id": " ",
+    "field": "",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -243,7 +243,7 @@
     "minval": 0,
     "maxval": 1,
     "field": "formonly.t1g3sg1ch2",
-    "option_id": " ",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -256,7 +256,7 @@
     "minval": 0,
     "maxval": 1,
     "field": "formonly.t1g3sg1ch3",
-    "option_id": " ",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -269,7 +269,7 @@
     "minval": 0,
     "maxval": 1,
     "field": "formonly.t1g3sg1ch4",
-    "option_id": " ",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -281,8 +281,8 @@
     "visible": true,
     "minval": 0,
     "maxval": 0,
-    "field": " ",
-    "option_id": " ",
+    "field": "",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -294,8 +294,8 @@
     "visible": false,
     "minval": 0,
     "maxval": 0,
-    "field": " ",
-    "option_id": " ",
+    "field": "",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -308,7 +308,7 @@
     "minval": 0,
     "maxval": 1,
     "field": "formonly.t1g4sg1ch1",
-    "option_id": " ",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -320,8 +320,8 @@
     "visible": true,
     "minval": 0,
     "maxval": 0,
-    "field": " ",
-    "option_id": " ",
+    "field": "",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -333,8 +333,8 @@
     "visible": false,
     "minval": 0,
     "maxval": 0,
-    "field": " ",
-    "option_id": " ",
+    "field": "",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -389,7 +389,7 @@
     "minval": 0,
     "maxval": 1,
     "field": "formonly.t1g5sg1ch4",
-    "option_id": " ",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -402,7 +402,7 @@
     "minval": 0,
     "maxval": 2,
     "field": "formonly.t1g5sg1sp5",
-    "option_id": " ",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -415,7 +415,7 @@
     "minval": 0,
     "maxval": 2,
     "field": "formonly.t1g5sg1sp6",
-    "option_id": " ",
+    "option_id": "",
     "hidden": false
   },
   {
@@ -428,7 +428,7 @@
     "minval": 0,
     "maxval": 2,
     "field": "formonly.t1g5sg1sp7",
-    "option_id": " ",
+    "option_id": "",
     "hidden": false
   }
 ]

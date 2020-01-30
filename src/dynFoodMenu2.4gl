@@ -9,16 +9,25 @@ MAIN
 	CURRENT WINDOW IS SCREEN
 	CALL m_data.load() -- Load the menu data
 	LET m_form.treeData = m_data.menuTree -- give the ui library the menu data
+	LET m_form.toolbar[1] = "submit"
+	LET m_form.toolbar[2] = "quit"
 	CALL m_form.buildForm("Dynamic Menu Demo", "main2") -- create the form
-	CALL inp() -- do the input
+	IF inp() THEN -- do the input
+		DISPLAY "Accepted"
+		CALL m_data.save()
+	ELSE
+		DISPLAY "Cancelled"
+	END IF
 END MAIN
 --------------------------------------------------------------------------------------------------------------
 -- Do the screen record INPUT.
-FUNCTION inp() RETURNS ()
+FUNCTION inp() RETURNS (BOOLEAN)
 	DEFINE l_event STRING
 	DEFINE x SMALLINT
+	DEFINE l_accept BOOLEAN = FALSE
 	LET m_dialog = ui.Dialog.createInputByName( m_form.inpFields )
 	CALL m_dialog.addTrigger("ON ACTION close")
+	CALL m_dialog.addTrigger("ON ACTION submit")
 	CALL m_dialog.addTrigger("ON ACTION quit")
 	FOR x = 1 TO m_form.inpFields.getLength()
 		CALL m_dialog.setFieldValue(m_form.inpFields[x].l_fldName,0)
@@ -33,10 +42,40 @@ FUNCTION inp() RETURNS ()
 		CASE l_event
 			WHEN "ON ACTION close" EXIT WHILE
 			WHEN "ON ACTION quit" EXIT WHILE
+			WHEN "ON ACTION submit"
+				IF input_okay() THEN
+					LET l_accept = TRUE
+					EXIT WHILE
+				END IF
 			OTHERWISE
 				MESSAGE "Event:",l_event
 		END CASE
 	END WHILE
+	RETURN l_accept
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION input_okay() RETURNS BOOLEAN
+	DEFINE x, order_lines SMALLINT
+	DEFINE l_val SMALLINT
+	DEFINE l_order STRING = "Your Order is:\n"
+	CALL m_data.ordered.clear()
+	LET order_lines = 1
+	FOR x = 1 TO m_data.menuTree.getLength()
+		IF m_data.menuTree[x].field.getLength() > 2 THEN
+			LET l_val = m_dialog.getFieldValue(m_data.menuTree[x].field)
+			IF l_val > 0 THEN
+				LET l_order = l_order.append(SFMT("%1 %2\n",l_val,m_data.menuTree[x].description))
+				LET m_data.ordered[ order_lines ].id = m_data.menuTree[x].t_id
+				LET m_data.ordered[ order_lines ].description = m_data.menuTree[x].description
+				LET m_data.ordered[ order_lines ].qty = l_val
+				LET order_lines = order_lines + 1
+			END IF
+		END IF
+	END FOR
+	IF fgl_winQuestion("Confirm",l_order,"Yes","Yes|No","question",0) = "No" THEN
+		RETURN FALSE
+	END IF
+	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION validate()
@@ -57,7 +96,6 @@ FUNCTION validate()
 			CALL clearItems( l_c_id, 2, l_i_id )
 			CALL clearItems( l_c_id, 3, l_i_id )
 			CALL clearItems( l_c_id, 4, l_i_id )
-			--EXIT FOR
 		END IF
 	END FOR
 END FUNCTION

@@ -3,19 +3,19 @@
 IMPORT util
 IMPORT os
 PUBLIC TYPE menuRecord RECORD
-	t_id INTEGER,
-	t_pid INTEGER,
-	id CHAR(6),
-	type CHAR(20),
-	description STRING,
-	visible BOOLEAN,
-	minval INTEGER,
-	maxval INTEGER,
-	field STRING,
-	option_id CHAR(6),
-	option_name STRING,
-	hidden BOOLEAN
-END RECORD
+		t_id INTEGER,
+		t_pid INTEGER,
+		id CHAR(6),
+		type CHAR(20),
+		description STRING,
+		visible BOOLEAN,
+		minval INTEGER,
+		maxval INTEGER,
+		field STRING,
+		option_id CHAR(6),
+		option_name STRING,
+		hidden BOOLEAN
+	END RECORD
 PUBLIC TYPE condRecord RECORD
     cond RECORD
         menu_id STRING,
@@ -48,16 +48,29 @@ PUBLIC TYPE condRecord RECORD
         item_id FLOAT
     END RECORD
 	END RECORD
+PUBLIC TYPE orderRecord RECORD
+		id INTEGER,
+		description STRING,
+		qty SMALLINT
+	END RECORD
 
 PUBLIC TYPE menuData RECORD
 	fileName STRING,
 	menuTree DYNAMIC ARRAY OF menuRecord,
-	menuConditions DYNAMIC ARRAY OF condRecord
+	menuConditions DYNAMIC ARRAY OF condRecord,
+	ordered DYNAMIC ARRAY OF orderRecord
 END RECORD
 --------------------------------------------------------------------------------------------------------------
 FUNCTION (this menuData ) load()
 	CALL this.loadData()
 	CALL this.loadConditions()
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION (this menuData ) save()
+	DEFINE l_order STRING
+--TODO: send the order
+	LET l_order = util.JSON.stringify(this.ordered)
+	DISPLAY "Save:", l_order
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION (this menuData ) loadData()

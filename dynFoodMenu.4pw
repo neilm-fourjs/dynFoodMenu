@@ -85,6 +85,7 @@
       <File filePath="src/menuData.4gl"/>
     </Application>
     <Library binaryName="etc" id="362164715" label="etc">
+      <File filePath="etc/cond.json"/>
       <File filePath="etc/data.json"/>
       <File filePath="etc/default.4ad"/>
       <File filePath="etc/fglprofile"/>

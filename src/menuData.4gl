@@ -38,7 +38,7 @@ FUNCTION (this menuData ) load(l_menuName STRING)
 	CALL this.loadData(l_menuName)
 	CALL debug.output(SFMT("Loaded %1",this.fileName), FALSE)
 	CALL this.calcLevels()
-	CALL debug.output("Level calced", FALSE)
+	CALL debug.output("Levels calced", FALSE)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION (this menuData ) save()

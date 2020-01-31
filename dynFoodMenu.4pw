@@ -76,9 +76,7 @@
   </Group>
   <Group environment="filelist:FGLPROFILE=$(ProjectDir)/etc/fglprofile,dirlist:DBPATH=$(ProjectDir)/database;$(DBPATH)" id="10414220" label="Project" language="Genero">
     <Library binaryName="Database" id="455109296" label="Database"/>
-    <Application binaryName="dynFoodMenu" dependencies="159917928,212784684,362164715,455109296" environment="dirlist:FGLIMAGEPATH=$(ProjectDir)/images;$(FGLDIR)/lib/image2font.txt;$(ProjectDir);$(FGLIMAGEPATH)" id="400358049" label="dynFoodMenu">
-      <File filePath="src/debug.4gl"/>
-      <File filePath="src/debug.per"/>
+    <Application binaryName="dynFoodMenu" dependencies="159917928,212784684,362164715,455109296,-541155840" environment="dirlist:FGLIMAGEPATH=$(ProjectDir)/images;$(FGLDIR)/lib/image2font.txt;$(ProjectDir);$(FGLIMAGEPATH)" id="400358049" label="dynFoodMenu">
       <File filePath="src/dynFoodMenu1.4gl"/>
       <File filePath="src/dynForm.4gl"/>
       <File filePath="src/menuData.4gl"/>
@@ -95,11 +93,20 @@
       <File filePath="etc/gma.4st"/>
       <File filePath="etc/MEN1.json"/>
     </Library>
+    <Library binaryName="lib" id="-541155840" label="lib">
+      <File filePath="src/debug.4gl"/>
+      <File filePath="src/debug.per"/>
+    </Library>
   </Group>
   <Group id="-973564800" label="Tests" language="Genero" targetDirectory="$(ProjectDir)/testbin">
     <Application binaryName="test" id="-1267941975" label="test" language="Genero">
       <File filePath="tests/generated.per"/>
       <File filePath="tests/test.4gl"/>
+    </Application>
+    <Application binaryName="test2" dependencies="-541155840,362164715" id="-1284126652" label="test2">
+      <File filePath="tests/dynFoodTest.4gl"/>
+      <File filePath="tests/dynFormTest.4gl"/>
+      <File filePath="tests/menuData.4gl"/>
     </Application>
   </Group>
 </Project>

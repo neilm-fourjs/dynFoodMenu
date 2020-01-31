@@ -19,12 +19,14 @@ FUNCTION (this dynForm) buildForm( l_titl STRING, l_styl STRING ) RETURNS ()
 	DEFINE l_f, l_vb, l_grid, l_group, l_sgroup, l_cont om.DomNode
 	DEFINE l_fldnam, l_desc STRING
 	DEFINE id,y,l_items SMALLINT
+	CALL this.inpFields.clear()
+	LET this.no_of_flds = 0
 -- Create and setup Form / Window
-	OPEN WINDOW w_menu WITH 50 ROWS, 50 COLUMNS ATTRIBUTE(STYLE=l_styl,TEXT=l_titl)
+	OPEN WINDOW w_menu WITH 1 ROWS, 1 COLUMNS ATTRIBUTE(STYLE=l_styl,TEXT=l_titl)
 	LET l_f = ui.Window.getCurrent().createForm("Menu").getNode()
 	CALL l_f.setAttribute("text",l_titl)
 	CALL l_f.setAttribute("style",l_styl)
-
+-- Create Toolbar
 	IF this.toolbar.getLength() > 0 THEN
 		LET l_vb = l_f.createChild("ToolBar")
 	END IF
@@ -37,13 +39,10 @@ FUNCTION (this dynForm) buildForm( l_titl STRING, l_styl STRING ) RETURNS ()
 	LET l_grid = l_vb.createChild("Grid")
 	CALL l_grid.setAttribute("width",C_WIDTH+6)
 	CALL l_grid.setAttribute("height",1)
-
-	CALL this.inpFields.clear()
-	LET this.no_of_flds = 0
 	FOR id = 1 TO this.treeData.getLength()
 		LET l_fldnam = this.treeData[id].field CLIPPED
 		LET l_desc = this.treeData[id].description CLIPPED
-		CALL debug.output(SFMT("%1:%2:%3:%4:%5",this.treeData[id].type.subString(1,2),l_fldnam,IIF(this.treeData[id].hidden,"T","F"),l_desc,IIF(l_sgroup IS NULL,"G","SG")), FALSE)
+		--CALL debug.output(SFMT("%1:%2:%3:%4:%5",this.treeData[id].type.subString(1,2),l_fldnam,IIF(this.treeData[id].hidden,"T","F"),l_desc,IIF(l_sgroup IS NULL,"G","SG")), FALSE)
 		IF this.treeData[id].hidden THEN CONTINUE FOR END IF
 		CASE this.treeData[id].type
 			WHEN "Type"
@@ -80,7 +79,7 @@ FUNCTION (this dynForm) buildForm( l_titl STRING, l_styl STRING ) RETURNS ()
 					CALL this.addField(id, l_items, 5, l_cont, "", l_desc,"Label", C_WIDTH)
 				END IF
 				IF this.treeData[id].option_name IS NOT NULL THEN
-					CALL this.addField(id, l_items, 15,l_cont, l_fldnam||"o1", this.treeData[id].option_name,"CheckBox", C_WIDTH)
+					CALL this.addField(id, l_items, 16,l_cont, l_fldnam||"o1", this.treeData[id].option_name,"CheckBox", C_WIDTH)
 				END IF
 		END CASE
 	END FOR
@@ -93,7 +92,7 @@ FUNCTION (this dynForm) buildForm( l_titl STRING, l_styl STRING ) RETURNS ()
 		CALL l_group.setAttribute("colName",this.inpFields[id].l_fldName.subString(y+1,this.inpFields[id].l_fldName.getLength()))
 		CALL l_group.setAttribute("fieldIdRef",id)
 	END FOR
-	CALL ui.Interface.refresh()
+
 	CALL l_f.writeXml("generated.42f") -- for debug only!
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------

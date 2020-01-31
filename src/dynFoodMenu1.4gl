@@ -6,27 +6,20 @@ IMPORT FGL about
 DEFINE m_data menuData
 DEFINE m_form dynForm
 DEFINE m_dialog ui.Dialog
-DEFINE m_showDebug BOOLEAN = FALSE
-MAIN
-	CALL ui.Interface.loadStyles( DOWNSHIFT( ui.Interface.getFrontEndName()) )
-	CALL debug.output("Started",FALSE)
-	LET m_showDebug = fgl_getEnv("DEBUG")
-	CALL showMenu("MEN1")
-END MAIN
 --------------------------------------------------------------------------------------------------------------
 FUNCTION showMenu(l_menuName STRING)
 	CALL m_data.load(l_menuName) -- Load the menu data
 	LET m_form.treeData = m_data.menuTree -- give the ui library the menu data
 	LET m_form.toolbar[1] = "submit"
 	LET m_form.toolbar[2] = "quit"
-	LET m_form.toolbar[3] = "debug"
-	LET m_form.toolbar[4] = "about"
+	LET m_form.toolbar[3] = "about"
+	LET m_form.toolbar[4] = "debug"
 	CALL m_form.buildForm("Dynamic Menu Demo", "main2") -- create the form
 	IF inp() THEN -- do the input
-		CALL debug.output("Accepted", m_showDebug)
+		CALL debug.output("Accepted", FALSE)
 		CALL m_data.save()
 	ELSE
-		CALL debug.output("Cancelled", m_showDebug)
+		CALL debug.output("Cancelled", FALSE)
 	END IF
 	CALL m_form.close()
 END FUNCTION
@@ -56,8 +49,8 @@ FUNCTION inp() RETURNS (BOOLEAN)
 		CASE l_event
 			WHEN "ON ACTION close" EXIT WHILE
 			WHEN "ON ACTION quit" EXIT WHILE
-			WHEN "ON ACTION debug" LET m_showDebug = TRUE
 			WHEN "ON ACTION about" CALL about.show()
+			WHEN "ON ACTION debug" LET debug.m_showDebug = TRUE
 			WHEN "ON ACTION submit"
 				IF input_okay() THEN
 					LET l_accept = TRUE
@@ -102,10 +95,12 @@ FUNCTION input_okay() RETURNS BOOLEAN
 			END IF
 		END IF
 	END FOR
-	CALL debug.output("input_okay: Finished", FALSE)
+	CALL debug.output("input_okay: Do confirm", FALSE)
 	IF fgl_winQuestion("Confirm",l_order,"Yes","Yes|No","question",0) = "No" THEN
+		CALL debug.output("input_okay: Confirmed - No", FALSE)
 		RETURN FALSE
 	END IF
+	CALL debug.output("input_okay: Confirmed- Yes", FALSE)
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------

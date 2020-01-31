@@ -2,6 +2,7 @@ IMPORT os
 --&define USEFILE
 DEFINE m_debugText STRING = "Debug:\n"
 DEFINE m_winOpen BOOLEAN = FALSE
+PUBLIC DEFINE m_showDebug BOOLEAN = FALSE
 --------------------------------------------------------------------------------------------------------------
 FUNCTION clear()
 	IF os.path.exists("debug.log") THEN

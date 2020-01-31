@@ -1,4 +1,5 @@
 IMPORT FGL menuData
+IMPORT FGL debug
 
 CONSTANT C_WIDTH=20
 
@@ -15,16 +16,14 @@ END RECORD
 --------------------------------------------------------------------------------------------------------------
 -- Generate the screen form and recordView.
 FUNCTION (this dynForm) buildForm( l_titl STRING, l_styl STRING ) RETURNS ()
-	DEFINE l_f, l_w, l_vb, l_grid, l_group, l_sgroup, l_cont om.DomNode
+	DEFINE l_f, l_vb, l_grid, l_group, l_sgroup, l_cont om.DomNode
 	DEFINE l_fldnam, l_desc STRING
 	DEFINE id,y,l_items SMALLINT
 -- Create and setup Form / Window
+	OPEN WINDOW w_menu WITH 50 ROWS, 50 COLUMNS ATTRIBUTE(STYLE=l_styl,TEXT=l_titl)
 	LET l_f = ui.Window.getCurrent().createForm("Menu").getNode()
 	CALL l_f.setAttribute("text",l_titl)
 	CALL l_f.setAttribute("style",l_styl)
-	LET l_w = l_f.getParent()
-	CALL l_w.setAttribute("text",l_titl)
-	CALL l_w.setAttribute("style",l_styl)
 
 	IF this.toolbar.getLength() > 0 THEN
 		LET l_vb = l_f.createChild("ToolBar")
@@ -44,7 +43,7 @@ FUNCTION (this dynForm) buildForm( l_titl STRING, l_styl STRING ) RETURNS ()
 	FOR id = 1 TO this.treeData.getLength()
 		LET l_fldnam = this.treeData[id].field CLIPPED
 		LET l_desc = this.treeData[id].description CLIPPED
-		DISPLAY  this.treeData[id].type[1,2],":",l_fldnam,":",IIF(this.treeData[id].hidden,"T","F"),":",l_desc,":",IIF(l_sgroup IS NULL,"G","SG")
+		CALL debug.output(SFMT("%1:%2:%3:%4:%5",this.treeData[id].type.subString(1,2),l_fldnam,IIF(this.treeData[id].hidden,"T","F"),l_desc,IIF(l_sgroup IS NULL,"G","SG")), FALSE)
 		IF this.treeData[id].hidden THEN CONTINUE FOR END IF
 		CASE this.treeData[id].type
 			WHEN "Type"
@@ -59,7 +58,7 @@ FUNCTION (this dynForm) buildForm( l_titl STRING, l_styl STRING ) RETURNS ()
 				IF l_cont IS NOT NULL AND l_items > 0 THEN -- set height for previous grid
 					CALL l_cont.setAttribute("height",l_items)
 				END IF
-				IF this.treeData[id].visible THEN
+				IF NOT this.treeData[id].hidden THEN
 					IF l_group.getTagName() = "Group" THEN
 						LET l_group = l_group.createChild("VBox")
 					END IF
@@ -148,4 +147,8 @@ PRIVATE FUNCTION (this dynForm) addField(id SMALLINT, x SMALLINT, y SMALLINT, l_
 		CALL l_w.setAttribute("valueMin",this.treeData[id].minval)
 		CALL l_w.setAttribute("valueMax",this.treeData[id].maxval)
 	END IF
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION (this dynForm) close()
+	CLOSE WINDOW w_menu
 END FUNCTION

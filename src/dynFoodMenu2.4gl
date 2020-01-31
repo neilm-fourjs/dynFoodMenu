@@ -6,7 +6,7 @@ TYPE t_rec RECORD
 	id CHAR(6),
 	type CHAR(20),
 	description STRING,
-	visible BOOLEAN,
+	conditional BOOLEAN,
 	minval INTEGER,
 	maxval INTEGER,
 	field CHAR(50),
@@ -100,7 +100,7 @@ FUNCTION buildForm( l_n om.DomNode, l_titl STRING, l_styl STRING ) RETURNS ()
 				IF l_cont IS NOT NULL AND l_items > 0 THEN -- set height for previous grid
 					CALL l_cont.setAttribute("height",l_items)
 				END IF
-				IF m_tree[id].visible THEN
+				IF m_tree[id].hidden THEN
 					IF l_group.getTagName() = "Group" THEN
 						LET l_group = l_group.createChild("VBox")
 					END IF

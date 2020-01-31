@@ -1,24 +1,33 @@
 IMPORT FGL menuData
 IMPORT FGL dynForm
+IMPORT FGL debug
 
 DEFINE m_data menuData
 DEFINE m_form dynForm
 DEFINE m_dialog ui.Dialog
+DEFINE m_showDebug BOOLEAN = FALSE
 MAIN
 	CALL ui.Interface.loadStyles( DOWNSHIFT( ui.Interface.getFrontEndName()) )
-	CURRENT WINDOW IS SCREEN
-	CALL m_data.load() -- Load the menu data
+	CALL debug.output("Started",FALSE)
+	LET m_showDebug = fgl_getEnv("DEBUG")
+	CALL showMenu("MEN1")
+END MAIN
+--------------------------------------------------------------------------------------------------------------
+FUNCTION showMenu(l_menuName STRING)
+	CALL m_data.load(l_menuName) -- Load the menu data
 	LET m_form.treeData = m_data.menuTree -- give the ui library the menu data
 	LET m_form.toolbar[1] = "submit"
 	LET m_form.toolbar[2] = "quit"
+	LET m_form.toolbar[3] = "debug"
 	CALL m_form.buildForm("Dynamic Menu Demo", "main2") -- create the form
 	IF inp() THEN -- do the input
-		DISPLAY "Accepted"
+		CALL debug.output("Accepted", m_showDebug)
 		CALL m_data.save()
 	ELSE
-		DISPLAY "Cancelled"
+		CALL debug.output("Cancelled", m_showDebug)
 	END IF
-END MAIN
+	CALL m_form.close()
+END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- Do the screen record INPUT.
 FUNCTION inp() RETURNS (BOOLEAN)
@@ -29,6 +38,7 @@ FUNCTION inp() RETURNS (BOOLEAN)
 	CALL m_dialog.addTrigger("ON ACTION close")
 	CALL m_dialog.addTrigger("ON ACTION submit")
 	CALL m_dialog.addTrigger("ON ACTION quit")
+	CALL m_dialog.addTrigger("ON ACTION debug")
 	FOR x = 1 TO m_form.inpFields.getLength()
 		CALL m_dialog.setFieldValue(m_form.inpFields[x].l_fldName,0)
 	END FOR
@@ -42,6 +52,7 @@ FUNCTION inp() RETURNS (BOOLEAN)
 		CASE l_event
 			WHEN "ON ACTION close" EXIT WHILE
 			WHEN "ON ACTION quit" EXIT WHILE
+			WHEN "ON ACTION debug" LET m_showDebug = TRUE
 			WHEN "ON ACTION submit"
 				IF input_okay() THEN
 					LET l_accept = TRUE
@@ -51,6 +62,7 @@ FUNCTION inp() RETURNS (BOOLEAN)
 				MESSAGE "Event:",l_event
 		END CASE
 	END WHILE
+	CALL m_dialog.close()
 	RETURN l_accept
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
@@ -90,93 +102,65 @@ END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION validate()
 	DEFINE l_fld, l_val STRING
-	DEFINE l_id, l_c_id, l_d_no, l_i_id SMALLINT
+	DEFINE x, l_id, l_pid, l_pid_pid SMALLINT
+	DEFINE l_cond, l_pid_cond BOOLEAN
 	LET l_fld = m_dialog.getCurrentItem()
 	LET l_val = m_dialog.getFieldValue(l_fld)
 	FOR l_id = 1 TO m_data.menuTree.getLength()
 		IF m_data.menuTree[l_id].field = l_fld THEN EXIT FOR END IF
 	END FOR
-	DISPLAY SFMT("Field: %1 = %2 Desc: %3", l_fld, l_val, m_data.menuTree[l_id].description)
-	LET l_i_id = m_data.menuTree[l_id].t_id
-	FOR l_c_id = 1 TO m_data.menuConditions.getLength()
-		LET l_d_no = checkCondition( l_c_id, l_i_id )
-		IF l_d_no > 0 THEN
-			DISPLAY m_data.menuConditions[l_c_id].cond.name
-			CALL clearItems( l_c_id, 1, l_i_id )
-			CALL clearItems( l_c_id, 2, l_i_id )
-			CALL clearItems( l_c_id, 3, l_i_id )
-			CALL clearItems( l_c_id, 4, l_i_id )
-		END IF
-	END FOR
-END FUNCTION
---------------------------------------------------------------------------------------------------------------
-FUNCTION checkCondition( l_c_id SMALLINT, l_i_id SMALLINT) RETURNS SMALLINT
-	DEFINE l_d_id SMALLINT
-	FOR l_d_id = 1 TO m_data.menuConditions[l_c_id].d1_arr.getLength()
-		IF m_data.menuConditions[l_c_id].d1_arr[l_d_id].item_id = l_i_id THEN
-			RETURN 1
-		END IF
-	END FOR
-	FOR l_d_id = 1 TO m_data.menuConditions[l_c_id].d2_arr.getLength()
-		IF m_data.menuConditions[l_c_id].d2_arr[l_d_id].item_id = l_i_id THEN
-			RETURN 2
-		END IF
-	END FOR
-	FOR l_d_id = 1 TO m_data.menuConditions[l_c_id].d3_arr.getLength()
-		IF m_data.menuConditions[l_c_id].d3_arr[l_d_id].item_id = l_i_id THEN
-			RETURN 3
-		END IF
-	END FOR
-	FOR l_d_id = 1 TO m_data.menuConditions[l_c_id].d4_arr.getLength()
-		IF m_data.menuConditions[l_c_id].d4_arr[l_d_id].item_id = l_i_id THEN
-			RETURN 4
-		END IF
-	END FOR
-	RETURN 0
-END FUNCTION
---------------------------------------------------------------------------------------------------------------
-FUNCTION clearItems( l_c_id SMALLINT, l_d_no SMALLINT, l_i_id SMALLINT )
-	DEFINE x SMALLINT
-	DISPLAY "CleanItems - Cond:",l_c_id," except:",l_i_id
-	CASE l_d_no
-		WHEN 1
-			FOR x = 1 TO m_data.menuConditions[l_c_id].d1_arr.getLength()
-				IF  m_data.menuConditions[l_c_id].d1_arr[x].item_id != l_i_id THEN
-					CALL clearItem( m_data.menuConditions[l_c_id].d1_arr[x].item_id )
-				END IF
-			END FOR
-		WHEN 2
-			FOR x = 1 TO m_data.menuConditions[l_c_id].d2_arr.getLength()
-				IF  m_data.menuConditions[l_c_id].d2_arr[x].item_id != l_i_id THEN
-					CALL clearItem( m_data.menuConditions[l_c_id].d2_arr[x].item_id )
-				END IF
-			END FOR
-		WHEN 3
-			FOR x = 1 TO m_data.menuConditions[l_c_id].d3_arr.getLength()
-				IF  m_data.menuConditions[l_c_id].d3_arr[x].item_id != l_i_id THEN
-					CALL clearItem( m_data.menuConditions[l_c_id].d3_arr[x].item_id )
-				END IF
-			END FOR
-		WHEN 4
-			FOR x = 1 TO m_data.menuConditions[l_c_id].d4_arr.getLength()
-				IF  m_data.menuConditions[l_c_id].d4_arr[x].item_id != l_i_id THEN
-					CALL clearItem( m_data.menuConditions[l_c_id].d4_arr[x].item_id )
-				END IF
-			END FOR
-	END CASE
-END FUNCTION
---------------------------------------------------------------------------------------------------------------
-FUNCTION clearItem( l_id SMALLINT )
-	DEFINE x SMALLINT
-	DEFINE l_found BOOLEAN = FALSE
+	LET l_pid = m_data.menuTree[l_id].t_pid
+	LET l_cond = m_data.menuTree[l_id].conditional
+	CALL debug.output(SFMT("Validate Field: %1 = %2 Desc: %3 PID: %4 Cond: %5", l_fld, l_val, m_data.menuTree[l_id].description, l_pid, l_cond), FALSE)
+	IF NOT l_cond THEN RETURN END IF
+
+-- Clear items in same subgroup
 	FOR x = 1 TO m_data.menuTree.getLength()
-		IF m_data.menuTree[x].t_id = l_id THEN
-			LET l_found = TRUE
-			DISPLAY "CleanItem:",l_id, ":",m_data.menuTree[x].description
-			CALL m_dialog.setFieldValue(m_data.menuTree[x].field,0)
+		IF m_data.menuTree[x].t_id = l_pid THEN
+			LET l_pid_cond = m_data.menuTree[x].conditional
+			LET l_pid_pid = m_data.menuTree[x].t_pid
+			CALL debug.output(SFMT("%1) Parent: %2 Cond: %3 PIDPID: %4", m_data.menuTree[x].level,m_data.menuTree[x].description, l_pid_cond, l_pid_pid ), FALSE)
+		END IF
+		IF m_data.menuTree[x].t_pid = l_pid THEN
+			IF x != l_id AND m_data.menuTree[x].conditional THEN
+				CALL debug.output(SFMT("CleanItem: %1 : %2",m_data.menuTree[x].t_id, m_data.menuTree[x].description), FALSE)
+				CALL m_dialog.setFieldValue(m_data.menuTree[x].field,0)
+			END IF 
 		END IF
 	END FOR
-	IF NOT l_found THEN
-		DISPLAY "CleanItem:",l_id, " not found!"
+
+	IF NOT l_pid_cond THEN RETURN END IF
+	CALL clearOtherGroups(1, l_pid, l_pid_pid)
+
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION clearOtherGroups(l_depth SMALLINT, l_pid SMALLINT, l_pid_pid SMALLINT)
+	DEFINE x, l_s_pid, l_pid_pid2, l_g_pid SMALLINT
+	CALL debug.output(SFMT("Checking Parent Items: %1 Depth: %2", l_pid_pid,l_depth), FALSE)
+-- Clear items in conditional groups
+	FOR x = 1 TO m_data.menuTree.getLength()
+		IF m_data.menuTree[x].t_id = l_pid_pid THEN
+			LET l_pid_pid2 = m_data.menuTree[x].t_pid
+		END IF
+		IF m_data.menuTree[x].t_pid = l_pid_pid AND m_data.menuTree[x].t_id != l_pid THEN
+			CALL debug.output(SFMT("%1) Item: %2 Cond: %3", m_data.menuTree[x].level, m_data.menuTree[x].description,m_data.menuTree[x].conditional), FALSE)
+			IF m_data.menuTree[x].conditional THEN
+				LET l_g_pid = m_data.menuTree[x].t_id
+			END IF
+		END IF
+		IF m_data.menuTree[x].t_pid = l_g_pid THEN
+			CALL debug.output(SFMT("%1) Item: %2", m_data.menuTree[x].level, m_data.menuTree[x].description), FALSE)
+			LET l_s_pid = m_data.menuTree[x].t_id
+		END IF
+		IF m_data.menuTree[x].t_pid = l_s_pid THEN
+			IF m_data.menuTree[x].field.getLength() > 1 AND m_data.menuTree[x].t_pid != l_pid THEN
+				CALL debug.output(SFMT("CleanItem: %1 : %2",m_data.menuTree[x].t_id, m_data.menuTree[x].description), FALSE)
+				CALL m_dialog.setFieldValue(m_data.menuTree[x].field,0)
+			END IF
+		END IF
+	END FOR
+	IF l_pid_pid2 > 1 THEN
+		CALL clearOtherGroups(l_depth+1, l_pid, l_pid_pid2 )
 	END IF
 END FUNCTION
+--------------------------------------------------------------------------------------------------------------

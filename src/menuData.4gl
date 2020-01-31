@@ -2,52 +2,24 @@
 -- TODO: Get data from a web service
 IMPORT util
 IMPORT os
+IMPORT FGL debug
+
 PUBLIC TYPE menuRecord RECORD
 		t_id INTEGER,
 		t_pid INTEGER,
 		id CHAR(6),
-		type CHAR(20),
+		type STRING,
 		description STRING,
-		visible BOOLEAN,
+		conditional BOOLEAN,
 		minval INTEGER,
 		maxval INTEGER,
 		field STRING,
 		option_id STRING,
 		option_name STRING,
-		hidden BOOLEAN
+		hidden BOOLEAN,
+		level SMALLINT
 	END RECORD
-PUBLIC TYPE condRecord RECORD
-    cond RECORD
-        menu_id STRING,
-        type_id STRING,
-        id FLOAT,
-        name STRING
-    END RECORD,
-    d1_arr DYNAMIC ARRAY OF RECORD
-        menu_id STRING,
-        type_id STRING,
-        cond_id FLOAT,
-        item_id FLOAT
-    END RECORD,
-    d2_arr DYNAMIC ARRAY OF RECORD
-        menu_id STRING,
-        type_id STRING,
-        cond_id FLOAT,
-        item_id FLOAT
-    END RECORD,
-    d3_arr DYNAMIC ARRAY OF RECORD
-        menu_id STRING,
-        type_id STRING,
-        cond_id FLOAT,
-        item_id FLOAT
-    END RECORD,
-    d4_arr DYNAMIC ARRAY OF RECORD
-        menu_id STRING,
-        type_id STRING,
-        cond_id FLOAT,
-        item_id FLOAT
-    END RECORD
-	END RECORD
+
 PUBLIC TYPE orderRecord RECORD
 		id INTEGER,
 		description STRING,
@@ -58,13 +30,15 @@ PUBLIC TYPE orderRecord RECORD
 PUBLIC TYPE menuData RECORD
 	fileName STRING,
 	menuTree DYNAMIC ARRAY OF menuRecord,
-	menuConditions DYNAMIC ARRAY OF condRecord,
 	ordered DYNAMIC ARRAY OF orderRecord
 END RECORD
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this menuData ) load()
-	CALL this.loadData()
-	CALL this.loadConditions()
+FUNCTION (this menuData ) load(l_menuName STRING)
+	CALL debug.output(SFMT("Load %1",l_menuName), FALSE)
+	CALL this.loadData(l_menuName)
+	CALL debug.output(SFMT("Loaded %1",this.fileName), FALSE)
+	CALL this.calcLevels()
+	CALL debug.output("Level calced", FALSE)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION (this menuData ) save()
@@ -74,13 +48,12 @@ FUNCTION (this menuData ) save()
 	DISPLAY "Save:", l_order
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this menuData ) loadData()
+FUNCTION (this menuData ) loadData(l_menuName STRING)
 	DEFINE l_json TEXT
 -- get test data
-	IF os.path.exists("../etc/data.json") THEN
-		LET this.fileName = "../etc/data.json"
-	ELSE
-		LET this.fileName = "data.json"
+	LET this.fileName = "../etc/"||l_menuName||".json"
+	IF NOT os.path.exists(this.fileName) THEN
+		LET this.fileName = l_menuName||".json"
 	END IF
 	TRY
 		LOCATE l_json IN FILE this.fileName
@@ -91,18 +64,38 @@ FUNCTION (this menuData ) loadData()
 	CALL util.JSON.parse(l_json, this.menuTree)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this menuData ) loadConditions()
-	DEFINE l_json TEXT
-	IF os.path.exists("../etc/cond.json") THEN
-		LET this.fileName = "../etc/cond.json"
-	ELSE
-		LET this.fileName = "cond.json"
-	END IF
-	TRY
-		LOCATE l_json IN FILE this.fileName
-	CATCH
-		CALL fgl_winMessage("Error","Failed to load Menu Data!","exclamation")
-		EXIT PROGRAM
-	END TRY
-	CALL util.JSON.parse(l_json, this.menuConditions)
+FUNCTION (this menuData ) calcLevels()
+	DEFINE x, y, l_id, l_pid, l_lev SMALLINT
+	DEFINE l_levs DYNAMIC ARRAY OF RECORD
+		pid SMALLINT,
+		lev SMALLINT
+	END RECORD
+	DEFINE l_found BOOLEAN
+	LET l_lev = 0
+	FOR x = 1 TO this.menuTree.getLength() 
+		LET l_id = this.menuTree[x].t_id
+		LET l_pid = this.menuTree[x].t_pid
+		LET l_found = FALSE
+		FOR y = 1 TO l_levs.getLength()
+			IF l_levs[y].pid = l_pid THEN
+				LET l_found = TRUE
+				LET l_lev = l_levs[y].lev
+			END IF
+		END FOR
+		IF NOT l_found THEN LET l_lev = l_lev + 1 END IF
+		LET l_levs[l_id].pid = this.menuTree[x].t_pid
+		LET l_levs[l_id].lev = l_lev
+	END FOR
+	FOR x = 1 TO this.menuTree.getLength()
+		LET this.menuTree[x].level = l_levs[this.menuTree[x].t_id].lev
+{
+		DISPLAY SFMT("%1 Type: %2 Id: %3 Pid: %4 Cond: %5 Desc: %6",
+			(this.menuTree[x].level SPACES),
+			this.menuTree[x].type.subString(1,4),
+			this.menuTree[x].t_id,
+			this.menuTree[x].t_pid,
+			this.menuTree[x].conditional,
+			this.menuTree[x].description)
+}
+	END FOR
 END FUNCTION

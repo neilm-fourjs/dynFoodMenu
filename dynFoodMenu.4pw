@@ -65,13 +65,13 @@
   <LanguageList version="1.0"/>
   <PlatformList version="1.0"/>
   <Group id="674884836" label="Packages" language="Genero">
-    <Package binaryName="dynFoodMenu" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840" description="Android Package" id="187810339" label="dynFoodMenu" platform="Android">
+    <Package binaryName="dynFoodMenu" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022" description="Android Package" id="187810339" label="dynFoodMenu" platform="Android">
       <DynamicProperty name="packageId" value="com.fjsemea.dynFoodMenu"/>
       <DynamicProperty name="packageLabel" value="dynFoodMenu"/>
       <Directory description="Binaries" excludedFiles="Test.42r" includedFiles="*.42?" label="Binaries" recursive="false" sourceDirectory="$(ProjectDir)/bin"/>
       <Directory description="Database" includedFiles="*.db" label="Database" recursive="false" sourceDirectory="$(ProjectDir)/database"/>
       <Directory description="Configuration Files" label="etc" recursive="false" sourceDirectory="$(ProjectDir)/etc"/>
-      <Directory description="Images" includedFiles="*.png,*.jpg,*.ttf,image2font.txt" label="Images" sourceDirectory="$(ProjectDir)/images"/>
+      <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>
     </Package>
   </Group>
   <Group environment="filelist:FGLPROFILE=$(ProjectDir)/etc/fglprofile,dirlist:DBPATH=$(ProjectDir)/database;$(DBPATH)" id="10414220" label="Project" language="Genero">

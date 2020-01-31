@@ -33,12 +33,13 @@ PUBLIC TYPE menuData RECORD
 	ordered DYNAMIC ARRAY OF orderRecord
 END RECORD
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this menuData ) load(l_menuName STRING)
+FUNCTION (this menuData ) load(l_menuName STRING) RETURNS BOOLEAN
 	CALL debug.output(SFMT("Load %1",l_menuName), FALSE)
-	CALL this.loadData(l_menuName)
+	IF NOT this.loadData(l_menuName) THEN RETURN FALSE END IF
 	CALL debug.output(SFMT("Loaded %1",this.fileName), FALSE)
 	CALL this.calcLevels()
 	CALL debug.output("Levels calced", FALSE)
+	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION (this menuData ) save()
@@ -48,20 +49,20 @@ FUNCTION (this menuData ) save()
 	DISPLAY "Save:", l_order
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this menuData ) loadData(l_menuName STRING)
+FUNCTION (this menuData ) loadData(l_menuName STRING) RETURNS BOOLEAN
 	DEFINE l_json TEXT
 -- get test data
 	LET this.fileName = "../etc/"||l_menuName||".json"
 	IF NOT os.path.exists(this.fileName) THEN
 		LET this.fileName = l_menuName||".json"
 	END IF
-	TRY
-		LOCATE l_json IN FILE this.fileName
-	CATCH
+	LOCATE l_json IN FILE this.fileName
+	IF l_json.getLength() < 2 THEN
 		CALL fgl_winMessage("Error","Failed to load Menu Data!","exclamation")
-		EXIT PROGRAM
-	END TRY
+		RETURN FALSE
+	END IF
 	CALL util.JSON.parse(l_json, this.menuTree)
+	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION (this menuData ) calcLevels()

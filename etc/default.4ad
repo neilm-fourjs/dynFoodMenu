@@ -41,6 +41,12 @@ Property of Four Js*
   <ActionDefault name="prevtab" text="Previous Folder Tab" acceleratorName="Control-Shift-Tab" contextMenu="no"/>
   <ActionDefault name="dialogtouched" validate="no" defaultView="no"  contextMenu="no"/>
 
+  <ActionDefault name="menu1" defaultView="no" contextMenu="no"/>
+  <ActionDefault name="menu2" defaultView="no" contextMenu="no"/>
+  <ActionDefault name="menu3" defaultView="no" contextMenu="no"/>
+  <ActionDefault name="menu4" defaultView="no" contextMenu="no"/>
+  <ActionDefault name="menu5" defaultView="no" contextMenu="no"/>
+
   <ActionDefault name="submit" text="submit" comment="Submit your order" image="fa-check" contextMenu="no"/>
   <ActionDefault name="debug" text="Debug" comment="Debug" image="fa-bug" validate="no" defaultView="no" contextMenu="yes"/>
   <ActionDefault name="about" text="About" comment="About" image="fa-info" validate="no" defaultView="no" contextMenu="yes"/>

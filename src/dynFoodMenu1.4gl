@@ -8,7 +8,7 @@ DEFINE m_form dynForm
 DEFINE m_dialog ui.Dialog
 --------------------------------------------------------------------------------------------------------------
 FUNCTION showMenu(l_menuName STRING)
-	CALL m_data.load(l_menuName) -- Load the menu data
+	IF NOT m_data.load(l_menuName) THEN RETURN END IF-- Load the menu data
 	LET m_form.treeData = m_data.menuTree -- give the ui library the menu data
 	LET m_form.toolbar[1] = "submit"
 	LET m_form.toolbar[2] = "cancel"

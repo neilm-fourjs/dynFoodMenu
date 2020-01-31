@@ -1,0 +1,29 @@
+
+#logo {
+	text-align: center;
+}
+
+.menuimg {
+	text-align: center;
+}
+
+#menu {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: flex-center;
+	align-items: stretch;
+}
+
+#menuitem {
+	width: 100px;
+	padding: 2px;
+	text-align: center;
+}
+
+#debug {
+	background-color: #ffdddd;
+	border: solid 1px black;
+	display: none;
+}

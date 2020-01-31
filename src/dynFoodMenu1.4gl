@@ -11,21 +11,18 @@ FUNCTION showMenu(l_menuName STRING)
 	CALL m_data.load(l_menuName) -- Load the menu data
 	LET m_form.treeData = m_data.menuTree -- give the ui library the menu data
 	LET m_form.toolbar[1] = "submit"
-	LET m_form.toolbar[2] = "quit"
+	LET m_form.toolbar[2] = "cancel"
 	LET m_form.toolbar[3] = "about"
 	LET m_form.toolbar[4] = "debug"
 	CALL m_form.buildForm("Dynamic Menu Demo", "main2") -- create the form
-	IF inp() THEN -- do the input
-		CALL debug.output("Accepted", FALSE)
+	IF inpByName() THEN -- do the input
 		CALL m_data.save()
-	ELSE
-		CALL debug.output("Cancelled", FALSE)
 	END IF
 	CALL m_form.close()
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- Do the screen record INPUT.
-FUNCTION inp() RETURNS (BOOLEAN)
+FUNCTION inpByName() RETURNS (BOOLEAN)
 	DEFINE l_event STRING
 	DEFINE x SMALLINT
 	DEFINE l_accept BOOLEAN = FALSE
@@ -48,7 +45,7 @@ FUNCTION inp() RETURNS (BOOLEAN)
 		END IF
 		CASE l_event
 			WHEN "ON ACTION close" EXIT WHILE
-			WHEN "ON ACTION quit" EXIT WHILE
+			WHEN "ON ACTION cancel" EXIT WHILE
 			WHEN "ON ACTION about" CALL about.show()
 			WHEN "ON ACTION debug" LET debug.m_showDebug = TRUE
 			WHEN "ON ACTION submit"
@@ -61,7 +58,7 @@ FUNCTION inp() RETURNS (BOOLEAN)
 		END CASE
 	END WHILE
 	CALL m_dialog.close()
-	CALL debug.output("inp: Finished", FALSE)
+	CALL debug.output(SFMT("inp: Finished Accept %1",IIF(l_accept,"True","False")), FALSE)
 	RETURN l_accept
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------

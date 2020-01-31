@@ -76,14 +76,10 @@
   </Group>
   <Group environment="filelist:FGLPROFILE=$(ProjectDir)/etc/fglprofile,dirlist:DBPATH=$(ProjectDir)/database;$(DBPATH)" id="10414220" label="Project" language="Genero">
     <Library binaryName="Database" id="455109296" label="Database"/>
-    <Application binaryName="dynFoodMenu" dependencies="159917928,212784684,362164715,455109296,-541155840" environment="dirlist:FGLIMAGEPATH=$(ProjectDir)/images;$(FGLDIR)/lib/image2font.txt;$(ProjectDir);$(FGLIMAGEPATH)" id="400358049" label="dynFoodMenu">
+    <Application binaryName="dynFoodMenu" dependencies="159917928,212784684,362164715,455109296,-541155840,91913022" environment="dirlist:FGLIMAGEPATH=$(ProjectDir)/pics;$(FGLDIR)/lib/image2font.txt;$(ProjectDir);$(FGLIMAGEPATH)" id="400358049" label="dynFoodMenu">
       <File filePath="src/dynFoodMenu1.4gl"/>
-      <File filePath="src/dynForm.4gl"/>
       <File filePath="src/main.4gl"/>
       <File filePath="src/menuData.4gl"/>
-    </Application>
-    <Application binaryName="dynFoodMenu2" dependencies="362164715" id="1005836130" label="dynFoodMenu2" targetDirectory="$(ProjectDir)/bin2">
-      <File filePath="src/dynFoodMenu2.4gl"/>
     </Application>
     <Library binaryName="etc" id="362164715" label="etc">
       <File filePath="etc/data.json"/>
@@ -98,9 +94,17 @@
       <File filePath="src/about.4gl"/>
       <File filePath="src/debug.4gl"/>
       <File filePath="src/debug.per"/>
+      <File filePath="src/dynForm.4gl"/>
+    </Library>
+    <Library binaryName="wc_iconMenu" id="91913022" label="wc_iconMenu">
+      <File filePath="src/wc_iconMenu.4gl"/>
+      <File filePath="src/wc_iconMenu.per"/>
     </Library>
   </Group>
   <Group id="-973564800" label="Tests" language="Genero" targetDirectory="$(ProjectDir)/testbin">
+    <Application binaryName="dynFoodMenu2" dependencies="362164715" id="1005836130" label="dynFoodMenu2">
+      <File filePath="tests/dynFoodMenu2.4gl"/>
+    </Application>
     <Application binaryName="test" id="-1267941975" label="test" language="Genero">
       <File filePath="tests/generated.per"/>
       <File filePath="tests/test.4gl"/>

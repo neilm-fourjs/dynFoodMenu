@@ -11,7 +11,7 @@ Property of Four Js*
 
 <ActionDefaultList>
   <ActionDefault name="accept" text="OK" acceleratorName="Return" acceleratorName2="Enter" contextMenu="no"/>
-  <ActionDefault name="cancel" validate="no" text="Cancel" acceleratorName="Escape" contextMenu="no"/>
+  <ActionDefault name="cancel" image="cancel" validate="no" text="Cancel" acceleratorName="Escape" contextMenu="no"/>
   <ActionDefault name="insert" text="Insert" acceleratorName="F3" contextMenu="no"/>
   <ActionDefault name="append" text="Append" acceleratorName="Control-F3" contextMenu="no"/>
   <ActionDefault name="update" text="Update" contextMenu="no"/>

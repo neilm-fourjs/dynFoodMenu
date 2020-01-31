@@ -14,7 +14,7 @@ FUNCTION showMenu(l_menuName STRING)
 	LET m_form.toolbar[2] = "cancel"
 	LET m_form.toolbar[3] = "about"
 	LET m_form.toolbar[4] = "debug"
-	CALL m_form.buildForm("Dynamic Menu Demo", "main2") -- create the form
+	CALL m_form.buildForm("Menu", "main2") -- create the form
 	IF inpByName() THEN -- do the input
 		CALL m_data.save()
 	END IF

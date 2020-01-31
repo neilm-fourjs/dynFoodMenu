@@ -42,7 +42,7 @@ FUNCTION (this dynForm) buildForm( l_titl STRING, l_styl STRING ) RETURNS ()
 	FOR id = 1 TO this.treeData.getLength()
 		LET l_fldnam = this.treeData[id].field CLIPPED
 		LET l_desc = this.treeData[id].description CLIPPED
-		--CALL debug.output(SFMT("%1:%2:%3:%4:%5",this.treeData[id].type.subString(1,2),l_fldnam,IIF(this.treeData[id].hidden,"T","F"),l_desc,IIF(l_sgroup IS NULL,"G","SG")), FALSE)
+		CALL debug.output(SFMT("buildForm:%1:%2:%3:%4:%5",this.treeData[id].type.subString(1,2),l_fldnam,IIF(this.treeData[id].hidden,"T","F"),l_desc,IIF(l_sgroup IS NULL,"G","SG")), FALSE)
 		IF this.treeData[id].hidden THEN CONTINUE FOR END IF
 		CASE this.treeData[id].type
 			WHEN "Type"

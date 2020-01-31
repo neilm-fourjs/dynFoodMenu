@@ -17,7 +17,11 @@ FUNCTION output(l_str STRING, l_wait BOOLEAN)
 	DISPLAY l_str
 	CALL c.writeLine(l_str)
 	CALL c.close()
-	CALL showDebug(l_str, l_wait)
+	IF l_wait THEN
+		CALL showDebug(l_str, l_wait)
+	ELSE
+		LET m_debugText = m_debugText.append(l_str || "\n")
+	END IF
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION showWinDebug()

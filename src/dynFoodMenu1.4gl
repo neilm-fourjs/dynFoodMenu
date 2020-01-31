@@ -112,20 +112,22 @@ FUNCTION validate()
 	LET l_pid = m_data.menuTree[l_id].t_pid
 	LET l_cond = m_data.menuTree[l_id].conditional
 	CALL debug.output(SFMT("Validate Field: %1 = %2 Desc: %3 PID: %4 Cond: %5", l_fld, l_val, m_data.menuTree[l_id].description, l_pid, l_cond), FALSE)
-	IF NOT l_cond THEN RETURN END IF
 
 -- Clear items in same subgroup
+
 	FOR x = 1 TO m_data.menuTree.getLength()
 		IF m_data.menuTree[x].t_id = l_pid THEN
 			LET l_pid_cond = m_data.menuTree[x].conditional
 			LET l_pid_pid = m_data.menuTree[x].t_pid
 			CALL debug.output(SFMT("%1) Parent: %2 Cond: %3 PIDPID: %4", m_data.menuTree[x].level,m_data.menuTree[x].description, l_pid_cond, l_pid_pid ), FALSE)
 		END IF
-		IF m_data.menuTree[x].t_pid = l_pid THEN
-			IF x != l_id AND m_data.menuTree[x].conditional THEN
-				CALL debug.output(SFMT("CleanItem: %1 : %2",m_data.menuTree[x].t_id, m_data.menuTree[x].description), FALSE)
-				CALL m_dialog.setFieldValue(m_data.menuTree[x].field,0)
-			END IF 
+		IF l_cond THEN
+			IF m_data.menuTree[x].t_pid = l_pid THEN
+				IF x != l_id AND m_data.menuTree[x].conditional THEN
+					CALL debug.output(SFMT("CleanItem: %1 : %2",m_data.menuTree[x].t_id, m_data.menuTree[x].description), FALSE)
+					CALL m_dialog.setFieldValue(m_data.menuTree[x].field,0)
+				END IF 
+			END IF
 		END IF
 	END FOR
 

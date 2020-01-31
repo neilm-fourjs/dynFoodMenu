@@ -39,11 +39,10 @@ FUNCTION inp() RETURNS (BOOLEAN)
 	CALL debug.output("inp: Start", FALSE)
 	LET m_dialog = ui.Dialog.createInputByName( m_form.inpFields )
 	CALL m_dialog.addTrigger("ON ACTION close")
-	CALL m_dialog.addTrigger("ON ACTION submit")
-	CALL m_dialog.addTrigger("ON ACTION quit")
-	CALL m_dialog.addTrigger("ON ACTION debug")
-	CALL m_dialog.addTrigger("ON ACTION about")
-	FOR x = 1 TO m_form.inpFields.getLength()
+	FOR x = 1 TO m_form.toolbar.getLength() -- add actions from tool to dialog
+		CALL m_dialog.addTrigger("ON ACTION "||m_form.toolbar[x])
+	END FOR
+	FOR x = 1 TO m_form.inpFields.getLength() -- set all fields to 0
 		CALL m_dialog.setFieldValue(m_form.inpFields[x].l_fldName,0)
 	END FOR
 	CALL debug.output("inp: Built", FALSE)
@@ -73,6 +72,7 @@ FUNCTION inp() RETURNS (BOOLEAN)
 	RETURN l_accept
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
+-- Show order details and confirm okay
 FUNCTION input_okay() RETURNS BOOLEAN
 	DEFINE x, order_lines SMALLINT
 	DEFINE l_val, l_opt SMALLINT
@@ -123,7 +123,6 @@ FUNCTION validate()
 	CALL debug.output(SFMT("Validate Field: %1 = %2 Desc: %3 PID: %4 Cond: %5", l_fld, l_val, m_data.menuTree[l_id].description, l_pid, l_cond), FALSE)
 
 -- Clear items in same subgroup
-
 	FOR x = 1 TO m_data.menuTree.getLength()
 		IF m_data.menuTree[x].t_id = l_pid THEN
 			LET l_pid_cond = m_data.menuTree[x].conditional
@@ -139,7 +138,6 @@ FUNCTION validate()
 			END IF
 		END IF
 	END FOR
-
 	IF NOT l_pid_cond THEN RETURN END IF
 	CALL clearOtherGroups(1, l_pid, l_pid_pid)
 

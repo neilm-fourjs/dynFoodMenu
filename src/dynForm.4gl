@@ -94,8 +94,7 @@ FUNCTION (this dynForm) buildForm( l_titl STRING, l_styl STRING ) RETURNS ()
 		CALL l_group.setAttribute("fieldIdRef",id)
 	END FOR
 
-	CALL l_f.writeXml("generated.42f") -- for debug only!
-
+--	CALL l_f.writeXml("generated.42f") -- for debug only!
 	CALL debug.output("buildForm: Finished", FALSE)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------

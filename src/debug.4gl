@@ -1,4 +1,5 @@
 IMPORT os
+--&define USEFILE
 DEFINE m_debugText STRING = "Debug:\n"
 DEFINE m_winOpen BOOLEAN = FALSE
 --------------------------------------------------------------------------------------------------------------
@@ -11,12 +12,14 @@ END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION output(l_str STRING, l_wait BOOLEAN)
 	DEFINE c base.Channel
+	LET l_str = SFMT("%1) %2", CURRENT, l_str)
+&ifdef USEFILE
 	LET c = base.Channel.create()
 	CALL c.openFile("debug.log", "a+")
-	LET l_str = SFMT("%1) %2", CURRENT, l_str)
-	DISPLAY l_str
 	CALL c.writeLine(l_str)
 	CALL c.close()
+&endif
+	DISPLAY l_str
 	IF l_wait THEN
 		CALL showDebug(l_str, l_wait)
 	ELSE

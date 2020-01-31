@@ -21,6 +21,7 @@ FUNCTION (this dynForm) buildForm( l_titl STRING, l_styl STRING ) RETURNS ()
 	DEFINE id,y,l_items SMALLINT
 	CALL this.inpFields.clear()
 	LET this.no_of_flds = 0
+	CALL debug.output("buildForm: Start", FALSE)
 -- Create and setup Form / Window
 	OPEN WINDOW w_menu WITH 1 ROWS, 1 COLUMNS ATTRIBUTE(STYLE=l_styl,TEXT=l_titl)
 	LET l_f = ui.Window.getCurrent().createForm("Menu").getNode()
@@ -94,6 +95,8 @@ FUNCTION (this dynForm) buildForm( l_titl STRING, l_styl STRING ) RETURNS ()
 	END FOR
 
 	CALL l_f.writeXml("generated.42f") -- for debug only!
+
+	CALL debug.output("buildForm: Finished", FALSE)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 PRIVATE FUNCTION (this dynForm) addGroup(id SMALLINT, l_n om.DomNode, l_desc STRING) RETURNS (om.DomNode)

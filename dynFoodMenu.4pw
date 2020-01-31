@@ -65,7 +65,7 @@
   <LanguageList version="1.0"/>
   <PlatformList version="1.0"/>
   <Group id="674884836" label="Packages" language="Genero">
-    <Package binaryName="dynFoodMenu" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474" description="Android Package" id="187810339" label="dynFoodMenu" platform="Android">
+    <Package binaryName="dynFoodMenu" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840" description="Android Package" id="187810339" label="dynFoodMenu" platform="Android">
       <DynamicProperty name="packageId" value="com.fjsemea.dynFoodMenu"/>
       <DynamicProperty name="packageLabel" value="dynFoodMenu"/>
       <Directory description="Binaries" excludedFiles="Test.42r" includedFiles="*.42?" label="Binaries" recursive="false" sourceDirectory="$(ProjectDir)/bin"/>
@@ -94,6 +94,7 @@
       <File filePath="etc/MEN1.json"/>
     </Library>
     <Library binaryName="lib" id="-541155840" label="lib">
+      <File filePath="src/about.4gl"/>
       <File filePath="src/debug.4gl"/>
       <File filePath="src/debug.per"/>
     </Library>

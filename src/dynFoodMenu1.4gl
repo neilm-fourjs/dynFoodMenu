@@ -1,6 +1,7 @@
 IMPORT FGL menuData
 IMPORT FGL dynForm
 IMPORT FGL debug
+IMPORT FGL about
 
 DEFINE m_data menuData
 DEFINE m_form dynForm
@@ -19,6 +20,7 @@ FUNCTION showMenu(l_menuName STRING)
 	LET m_form.toolbar[1] = "submit"
 	LET m_form.toolbar[2] = "quit"
 	LET m_form.toolbar[3] = "debug"
+	LET m_form.toolbar[4] = "about"
 	CALL m_form.buildForm("Dynamic Menu Demo", "main2") -- create the form
 	IF inp() THEN -- do the input
 		CALL debug.output("Accepted", m_showDebug)
@@ -34,14 +36,17 @@ FUNCTION inp() RETURNS (BOOLEAN)
 	DEFINE l_event STRING
 	DEFINE x SMALLINT
 	DEFINE l_accept BOOLEAN = FALSE
+	CALL debug.output("inp: Start", FALSE)
 	LET m_dialog = ui.Dialog.createInputByName( m_form.inpFields )
 	CALL m_dialog.addTrigger("ON ACTION close")
 	CALL m_dialog.addTrigger("ON ACTION submit")
 	CALL m_dialog.addTrigger("ON ACTION quit")
 	CALL m_dialog.addTrigger("ON ACTION debug")
+	CALL m_dialog.addTrigger("ON ACTION about")
 	FOR x = 1 TO m_form.inpFields.getLength()
 		CALL m_dialog.setFieldValue(m_form.inpFields[x].l_fldName,0)
 	END FOR
+	CALL debug.output("inp: Built", FALSE)
 	WHILE TRUE
 		LET l_event = m_dialog.nextEvent()
 		IF l_event.subString(1,10) = "ON CHANGE " THEN
@@ -53,6 +58,7 @@ FUNCTION inp() RETURNS (BOOLEAN)
 			WHEN "ON ACTION close" EXIT WHILE
 			WHEN "ON ACTION quit" EXIT WHILE
 			WHEN "ON ACTION debug" LET m_showDebug = TRUE
+			WHEN "ON ACTION about" CALL about.show()
 			WHEN "ON ACTION submit"
 				IF input_okay() THEN
 					LET l_accept = TRUE
@@ -63,6 +69,7 @@ FUNCTION inp() RETURNS (BOOLEAN)
 		END CASE
 	END WHILE
 	CALL m_dialog.close()
+	CALL debug.output("inp: Finished", FALSE)
 	RETURN l_accept
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
@@ -71,6 +78,7 @@ FUNCTION input_okay() RETURNS BOOLEAN
 	DEFINE l_val, l_opt SMALLINT
 	DEFINE l_order STRING = "Your Order is:\n"
 	DEFINE l_desc STRING
+	CALL debug.output("input_okay: Started", FALSE)
 	CALL m_data.ordered.clear()
 	LET order_lines = 1
 	FOR x = 1 TO m_data.menuTree.getLength()
@@ -94,6 +102,7 @@ FUNCTION input_okay() RETURNS BOOLEAN
 			END IF
 		END IF
 	END FOR
+	CALL debug.output("input_okay: Finished", FALSE)
 	IF fgl_winQuestion("Confirm",l_order,"Yes","Yes|No","question",0) = "No" THEN
 		RETURN FALSE
 	END IF

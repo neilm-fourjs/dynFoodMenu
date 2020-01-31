@@ -86,13 +86,13 @@
       <File filePath="src/menuData.4gl"/>
     </Application>
     <Library binaryName="etc" id="362164715" label="etc">
-      <File filePath="etc/data.json"/>
       <File filePath="etc/default.4ad"/>
       <File filePath="etc/fglprofile"/>
       <File filePath="etc/gbc.4st"/>
       <File filePath="etc/gdc.4st"/>
       <File filePath="etc/gma.4st"/>
-      <File filePath="etc/MEN1.json"/>
+      <File filePath="etc/menu1.json"/>
+      <File filePath="etc/menu2.json"/>
     </Library>
     <Library binaryName="lib" id="-541155840" label="lib">
       <File filePath="src/about.4gl"/>
@@ -107,6 +107,7 @@
   </Group>
   <Group id="-973564800" label="Tests" language="Genero" targetDirectory="$(ProjectDir)/testbin">
     <Application binaryName="dynFoodMenu2" dependencies="362164715" id="1005836130" label="dynFoodMenu2">
+      <File filePath="etc/data.json"/>
       <File filePath="tests/dynFoodMenu2.4gl"/>
     </Application>
     <Application binaryName="test" id="-1267941975" label="test" language="Genero">

@@ -8,7 +8,7 @@ PUBLIC FUNCTION getToken(l_id CHAR(6) ATTRIBUTE(WSParam), l_pwd STRING ATTRIBUTE
 		WSPath = "/getToken/{l_id}/{l_pwd}", 
 		WSGet,
 		WSDescription = "Validate User and get Token")
-	RETURNS (userRecord ATTRIBUTES(WSMedia = 'application/json,application/xml'))
+	RETURNS (userRecord ATTRIBUTES(WSMedia = 'application/json'))
 	DEFINE l_rec userRecord
 
 --TODO: validate the password
@@ -26,7 +26,7 @@ PUBLIC FUNCTION getMenus() ATTRIBUTES(
 		WSPath = "/getMenus", 
 		WSGet, 
 		WSDescription = "Get list of Menus")
-	RETURNS (menuList ATTRIBUTES(WSMedia = 'application/json,application/xml'))
+	RETURNS (menuList ATTRIBUTES(WSMedia = 'application/json'))
 	DEFINE l_rec menuList
 {
 	DEFINE l_in RECORD
@@ -58,7 +58,7 @@ PUBLIC FUNCTION getMenu(l_id VARCHAR(6) ATTRIBUTE(WSParam)) ATTRIBUTES(
 		WSPath = "/getMenu/{l_id}", 
 		WSGet, 
 		WSDescription = "Get a Menu")
-	RETURNS (MenuRecord ATTRIBUTES(WSMedia = 'application/json,application/xml'))
+	RETURNS (MenuRecord ATTRIBUTES(WSMedia = 'application/json'))
 	DEFINE l_menu menuData
 	IF NOT l_menu.load(l_id) THEN
 		LET l_menu.menuData.description = "Invalid MenuID!"
@@ -80,10 +80,10 @@ END FUNCTION
 #+ POST <server>/dynFoodRest/placeOrder
 #+ result: String
 PUBLIC FUNCTION placeOrder(l_order orderRecord) ATTRIBUTES( 
-		WSPath = "/addMenu/", 
+		WSPath = "/placeOrder", 
 		WSPost, 
 		WSDescription = "Place an Order")
-	RETURNS (INT,STRING ATTRIBUTES(WSMedia = 'application/json,application/xml'))
+	RETURNS (INT,STRING ATTRIBUTES(WSMedia = 'application/json'))
 
 	DISPLAY l_order.*
 

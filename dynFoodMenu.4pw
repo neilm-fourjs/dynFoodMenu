@@ -102,10 +102,10 @@
       <File filePath="etc/menu1.json"/>
       <File filePath="etc/menu2.json"/>
     </Library>
-    <Library binaryName="libMobile" id="-541155840" label="libMobile">
+    <Library binaryName="libMobile" dependencies="-1361191823,1074706446" id="-541155840" label="libMobile">
       <File filePath="src/about.4gl"/>
-      <File filePath="src/backEnd.4gl"/>
       <File filePath="src/login.4gl"/>
+      <File filePath="src/wsBackEnd.4gl"/>
     </Library>
     <Library binaryName="wc_iconMenu" id="91913022" label="wc_iconMenu">
       <File filePath="src/wc_iconMenu.4gl"/>
@@ -126,7 +126,7 @@
       <Directory description="Configuration Files" label="etc" recursive="false" sourceDirectory="$(ProjectDir)/etc"/>
       <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>
     </Package>
-    <Package binaryName="dynFoodRest" dependencies="-593227916,-1361191823,1074484008,1074706446" description="WS dynFood Server" id="-255363164" label="dynFoodRest" platform="Genero Application Server">
+    <Package binaryName="dynFoodRest" dependencies="-593227916,-1361191823,1074484008,1074706446,1770744530" description="WS dynFood Server" id="-255363164" label="dynFoodRest" platform="Genero Application Server">
       <DynamicProperty name="packageId" value="dynFoodRest"/>
       <DynamicProperty name="packageLabel" value="dynFoodRest"/>
       <Directory excludedFiles="Test.42r" includedFiles="*.42?" label="Binaries" sourceDirectory="$(ProjectDir)/binBackEnd"/>

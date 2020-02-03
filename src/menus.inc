@@ -1,4 +1,7 @@
 
+
+CONSTANT C_WS_BACKEND="https://generodemos.dynu.net/g/ws/r/dynFoodRest"
+
 PUBLIC TYPE menuList RECORD
 		list DYNAMIC ARRAY OF RECORD
 			menuName STRING,

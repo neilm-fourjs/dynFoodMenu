@@ -13,9 +13,11 @@ MAIN
 	CALL debug.output("Started", FALSE)
 
 	IF NOT m_user.login() THEN
+		CALL debug.output(SFMT("Invalid login %1 %2",m_user.user_id, m_user.user_name),FALSE)
 		EXIT PROGRAM
 	END IF
 	IF NOT m_data.getMenuList() THEN
+		CALL debug.output("Failed to get Menu list.",FALSE)
 		EXIT PROGRAM
 	END IF
 -- Use a JSON file for the menu data

@@ -81,7 +81,7 @@
       <File filePath="src/debug.4gl"/>
       <File filePath="src/debug.per"/>
     </Library>
-    <Library binaryName="libFoodMenu" id="1770744530" label="libFoodMenu" targetDirectory="$(ProjectDir)/binCommon">
+    <Library binaryName="libFoodMenu" dependencies="-541155840" id="1770744530" label="libFoodMenu" targetDirectory="$(ProjectDir)/binCommon">
       <File filePath="src/menuData.4gl"/>
     </Library>
   </Group>
@@ -158,6 +158,9 @@
       <File filePath="tests/dynFoodTest.4gl"/>
       <File filePath="tests/dynFormTest.4gl"/>
       <File filePath="tests/menuData.4gl"/>
+    </Application>
+    <Application binaryName="wsCliTest" dependencies="-541155840" id="-1109916243" label="wsCliTest">
+      <File filePath="tests/wsCliTest.4gl"/>
     </Application>
   </Group>
 </Project>

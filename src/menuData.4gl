@@ -3,6 +3,7 @@
 IMPORT util
 IMPORT os
 IMPORT FGL debug
+IMPORT FGL wsBackEnd
 
 &include "menus.inc"
 
@@ -23,18 +24,29 @@ FUNCTION (this menuData ) load(l_menuName STRING) RETURNS BOOLEAN
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this menuData ) getMenuList() RETURNS BOOLEAN
+FUNCTION (this menuData ) getMenuList(l_netWork BOOLEAN) RETURNS BOOLEAN
+	DEFINE l_stat INT
+
 -- TODO: get list from WS backend
-	LET this.menuList.list[1].menuName = "menu1"
-	LET this.menuList.list[1].menuDesc = "Breakfast"
-	LET this.menuList.list[1].menuImage = "breakfast.png"
-	LET this.menuList.list[2].menuName = "menu2"
-	LET this.menuList.list[2].menuDesc = "Lunch"
-	LET this.menuList.list[2].menuImage = "lunch.png"
-	LET this.menuList.list[3].menuName = "menu3"
-	LET this.menuList.list[3].menuDesc = "Dinner"
-	LET this.menuList.list[3].menuImage = "dinner.png"
-	LET this.menuList.rows = 3
+	IF l_netWork THEN
+		LET wsBackEnd.Endpoint.Address.Uri = C_WS_BACKEND
+		CALL wsBackEnd.getMenus() RETURNING l_stat,this.menuList.*
+		IF l_stat != 0 THEN
+			CALL debug.output(SFMT("getMenus: %1", l_stat),FALSE)
+			RETURN FALSE
+		END IF
+	ELSE
+		LET this.menuList.list[1].menuName = "menu1"
+		LET this.menuList.list[1].menuDesc = "Breakfast"
+		LET this.menuList.list[1].menuImage = "breakfast.png"
+		LET this.menuList.list[2].menuName = "menu2"
+		LET this.menuList.list[2].menuDesc = "Lunch"
+		LET this.menuList.list[2].menuImage = "lunch.png"
+		LET this.menuList.list[3].menuName = "menu3"
+		LET this.menuList.list[3].menuDesc = "Dinner"
+		LET this.menuList.list[3].menuImage = "dinner.png"
+		LET this.menuList.rows = 3
+	END IF
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------

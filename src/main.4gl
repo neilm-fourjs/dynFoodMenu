@@ -5,21 +5,32 @@ IMPORT FGL login
 IMPORT FGL menuData
 DEFINE myMenu wc_iconMenu.wc_iconMenu
 DEFINE m_user login.userRecord
+DEFINE m_fe STRING
+DEFINE m_netWork BOOLEAN = TRUE
 MAIN
 	DEFINE l_menuItem STRING = "."
 	DEFINE m_data menuData
 	DEFINE x SMALLINT
-	CALL ui.Interface.loadStyles(DOWNSHIFT(ui.Interface.getFrontEndName()))
+	DEFINE l_netWork STRING
+	LET m_fe = DOWNSHIFT(ui.Interface.getFrontEndName())
+	CALL ui.Interface.loadStyles(m_fe)
 	CALL debug.output("Started", FALSE)
 
-	IF NOT m_user.login() THEN
+	IF base.Application.isMobile() THEN
+		CALL ui.Interface.frontCall("mobile","connectivity", [], [l_netWork] )
+	END IF
+
+	IF m_netWork = "NONE" THEN LET m_netWork = FALSE END IF
+
+	IF NOT m_user.login(m_netWork) THEN
 		CALL debug.output(SFMT("Invalid login %1 %2",m_user.user_id, m_user.user_name),FALSE)
 		EXIT PROGRAM
 	END IF
-	IF NOT m_data.getMenuList() THEN
+	IF NOT m_data.getMenuList(m_netWork) THEN
 		CALL debug.output("Failed to get Menu list.",FALSE)
 		EXIT PROGRAM
 	END IF
+
 -- Use a JSON file for the menu data
 --        LET myMenu.fileName = "myMenu.js"
 -- or

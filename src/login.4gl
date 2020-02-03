@@ -4,16 +4,22 @@ IMPORT FGL wsBackEnd
 
 &include "menus.inc"
 
-FUNCTION (this userRecord) login() RETURNS BOOLEAN
+FUNCTION (this userRecord) login(l_network BOOLEAN) RETURNS BOOLEAN
 	DEFINE l_stat INT
-	LET this.user_id = "NJM"
-	LET this.user_pwd = "test"
 --TODO: login screen
-	LET wsBackEnd.Endpoint.Address.Uri = C_WS_BACKEND
-	CALL wsBackEnd.getToken(this.user_id, this.user_pwd) RETURNING l_stat, this.*
-	IF l_stat != 0 THEN
-		CALL debug.output(SFMT("getToken: %1, reply: %2 : %3",this.user_id, l_stat, this.user_name),FALSE)
-		RETURN FALSE
+	IF l_network THEN
+		LET this.user_id = "NJM"
+		LET this.user_name = "test"
+		LET wsBackEnd.Endpoint.Address.Uri = C_WS_BACKEND
+		CALL debug.output(SFMT("Getting token for: %1 from: %2 ", this.user_id, wsBackEnd.Endpoint.Address.Uri), FALSE)
+		CALL wsBackEnd.getToken(this.user_id, this.user_pwd) RETURNING l_stat, this.*
+		IF l_stat != 0 THEN
+			CALL debug.output(SFMT("getToken: %1, reply: %2 : %3",this.user_id, l_stat, this.user_name),FALSE)
+			RETURN FALSE
+		END IF
+	ELSE
+		LET this.user_id = "DUMMY"
+		LET this.user_name = "offline"
 	END IF
 
 	IF this.user_token IS NOT NULL THEN

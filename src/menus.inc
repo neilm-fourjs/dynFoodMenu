@@ -8,7 +8,7 @@ PUBLIC TYPE menuList RECORD
 			menuDesc STRING,
 			menuImage STRING
 		END RECORD,
-		rows SMALLINT
+		rows INTEGER
 	END RECORD
 
 PUBLIC TYPE menuItem RECORD

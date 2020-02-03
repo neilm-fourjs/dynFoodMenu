@@ -4,33 +4,12 @@ IMPORT util
 IMPORT os
 IMPORT FGL debug
 
-PUBLIC TYPE menuRecord RECORD
-		t_id INTEGER,
-		t_pid INTEGER,
-		id CHAR(6),
-		type STRING,
-		description STRING,
-		conditional BOOLEAN,
-		minval INTEGER,
-		maxval INTEGER,
-		field STRING,
-		option_id STRING,
-		option_name STRING,
-		hidden BOOLEAN,
-		level SMALLINT
-	END RECORD
-
-PUBLIC TYPE orderRecord RECORD
-		id INTEGER,
-		description STRING,
-		qty SMALLINT,
-		optional BOOLEAN
-	END RECORD
+&include "menus.inc"
 
 PUBLIC TYPE menuData RECORD
 	fileName STRING,
-	menuTree DYNAMIC ARRAY OF menuRecord,
-	ordered DYNAMIC ARRAY OF orderRecord
+	menuData menuRecord,
+	ordered orderRecord
 END RECORD
 --------------------------------------------------------------------------------------------------------------
 FUNCTION (this menuData ) load(l_menuName STRING) RETURNS BOOLEAN
@@ -61,7 +40,8 @@ FUNCTION (this menuData ) loadData(l_menuName STRING) RETURNS BOOLEAN
 		CALL fgl_winMessage("Error","Failed to load Menu Data!","exclamation")
 		RETURN FALSE
 	END IF
-	CALL util.JSON.parse(l_json, this.menuTree)
+	CALL util.JSON.parse(l_json, this.menuData.items)
+	LET this.menuData.rows = this.menuData.items.getLength()
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
@@ -73,9 +53,9 @@ FUNCTION (this menuData ) calcLevels()
 	END RECORD
 	DEFINE l_found BOOLEAN
 	LET l_lev = 0
-	FOR x = 1 TO this.menuTree.getLength() 
-		LET l_id = this.menuTree[x].t_id
-		LET l_pid = this.menuTree[x].t_pid
+	FOR x = 1 TO this.menuData.rows
+		LET l_id = this.menuData.items[x].t_id
+		LET l_pid = this.menuData.items[x].t_pid
 		LET l_found = FALSE
 		FOR y = 1 TO l_levs.getLength()
 			IF l_levs[y].pid = l_pid THEN
@@ -84,19 +64,19 @@ FUNCTION (this menuData ) calcLevels()
 			END IF
 		END FOR
 		IF NOT l_found THEN LET l_lev = l_lev + 1 END IF
-		LET l_levs[l_id].pid = this.menuTree[x].t_pid
+		LET l_levs[l_id].pid = this.menuData.items[x].t_pid
 		LET l_levs[l_id].lev = l_lev
 	END FOR
-	FOR x = 1 TO this.menuTree.getLength()
-		LET this.menuTree[x].level = l_levs[this.menuTree[x].t_id].lev
+	FOR x = 1 TO this.menuData.rows
+		LET this.menuData.items[x].level = l_levs[this.menuData.items[x].t_id].lev
 {
 		DISPLAY SFMT("%1 Type: %2 Id: %3 Pid: %4 Cond: %5 Desc: %6",
-			(this.menuTree[x].level SPACES),
-			this.menuTree[x].type.subString(1,4),
-			this.menuTree[x].t_id,
-			this.menuTree[x].t_pid,
-			this.menuTree[x].conditional,
-			this.menuTree[x].description)
+			(this.menuData.items[x].level SPACES),
+			this.menuData.items[x].type.subString(1,4),
+			this.menuData.items[x].t_id,
+			this.menuData.items[x].t_pid,
+			this.menuData.items[x].conditional,
+			this.menuData.items[x].description)
 }
 	END FOR
 END FUNCTION

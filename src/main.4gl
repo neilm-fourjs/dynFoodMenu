@@ -1,11 +1,17 @@
 IMPORT FGL debug
 IMPORT FGL wc_iconMenu
 IMPORT FGL dynFoodMenu1
+IMPORT FGL login
 DEFINE myMenu wc_iconMenu.wc_iconMenu
+DEFINE m_user login.userRecord
 MAIN
 	DEFINE l_menuItem STRING = "."
 	CALL ui.Interface.loadStyles(DOWNSHIFT(ui.Interface.getFrontEndName()))
 	CALL debug.output("Started", FALSE)
+
+	IF NOT m_user.login() THEN
+		EXIT PROGRAM
+	END IF
 
 -- Use a JSON file for the menu data
 --        LET myMenu.fileName = "myMenu.js"
@@ -19,7 +25,8 @@ MAIN
 	IF NOT myMenu.init(myMenu.fileName) THEN -- something wrong?
 		EXIT PROGRAM
 	END IF
-
+	LET dynFoodMenu1.m_user_token =  m_user.user_token
+	LET dynFoodMenu1.m_user_id = m_user.user_id
 	WHILE l_menuItem != "close"
 		LET l_menuItem = myMenu.ui() -- show icon menu and wait for selection.
 		CALL debug.output(SFMT("menu item %1 selected",l_menuItem), FALSE)

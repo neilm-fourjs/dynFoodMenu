@@ -6,10 +6,12 @@ IMPORT FGL about
 DEFINE m_data menuData
 DEFINE m_form dynForm
 DEFINE m_dialog ui.Dialog
+PUBLIC DEFINE m_user_token STRING
+PUBLIC DEFINE m_user_id STRING
 --------------------------------------------------------------------------------------------------------------
 FUNCTION showMenu(l_menuName STRING)
 	IF NOT m_data.load(l_menuName) THEN RETURN END IF-- Load the menu data
-	LET m_form.treeData = m_data.menuTree -- give the ui library the menu data
+	LET m_form.menuData = m_data.menuData -- give the ui library the menu data
 	LET m_form.toolbar[1] = "submit"
 	LET m_form.toolbar[2] = "cancel"
 	LET m_form.toolbar[3] = "about"
@@ -69,29 +71,33 @@ FUNCTION input_okay() RETURNS BOOLEAN
 	DEFINE l_order STRING = "Your Order is:\n"
 	DEFINE l_desc STRING
 	CALL debug.output("input_okay: Started", FALSE)
-	CALL m_data.ordered.clear()
-	LET order_lines = 1
-	FOR x = 1 TO m_data.menuTree.getLength()
-		IF m_data.menuTree[x].field.getLength() > 2 THEN
+	CALL m_data.ordered.items.clear()
+	LET m_data.ordered.dte = TODAY
+	LET m_data.ordered.user_id = m_user_id
+	LET m_data.ordered.user_token = m_user_token
+	LET order_lines = 0
+	FOR x = 1 TO m_data.menuData.rows
+		IF m_data.menuData.items[x].field.getLength() > 2 THEN
 			LET l_opt = 0
-			LET l_val = m_dialog.getFieldValue(m_data.menuTree[x].field)
+			LET l_val = m_dialog.getFieldValue(m_data.menuData.items[x].field)
 			IF l_val > 0 THEN
-				LET l_desc = m_data.menuTree[x].description
-				IF m_data.menuTree[x].option_id.getLength()  > 2 THEN
-					LET l_opt = m_dialog.getFieldValue(m_data.menuTree[x].field||"o1")
+				LET l_desc = m_data.menuData.items[x].description
+				IF m_data.menuData.items[x].option_id.getLength()  > 2 THEN
+					LET l_opt = m_dialog.getFieldValue(m_data.menuData.items[x].field||"o1")
 					IF l_opt = 1 THEN
-						LET l_desc = l_desc.append(" "||m_data.menuTree[x].option_name)
+						LET l_desc = l_desc.append(" "||m_data.menuData.items[x].option_name)
 					END IF
 				END IF
 				LET l_order = l_order.append(SFMT("%1 %2\n",l_val, l_desc))
-				LET m_data.ordered[ order_lines ].id = m_data.menuTree[x].t_id
-				LET m_data.ordered[ order_lines ].description = l_desc
-				LET m_data.ordered[ order_lines ].qty = l_val
-				LET m_data.ordered[ order_lines ].optional = l_opt
 				LET order_lines = order_lines + 1
+				LET m_data.ordered.items[ order_lines ].item_id= m_data.menuData.items[x].t_id
+				LET m_data.ordered.items[ order_lines ].description = l_desc
+				LET m_data.ordered.items[ order_lines ].qty = l_val
+				LET m_data.ordered.items[ order_lines ].optional = l_opt
 			END IF
 		END IF
 	END FOR
+	LET m_data.ordered.rows = order_lines
 	CALL debug.output("input_okay: Do confirm", FALSE)
 	IF fgl_winQuestion("Confirm",l_order,"Yes","Yes|No","question",0) = "No" THEN
 		CALL debug.output("input_okay: Confirmed - No", FALSE)
@@ -107,25 +113,25 @@ FUNCTION validate()
 	DEFINE l_cond, l_pid_cond BOOLEAN
 	LET l_fld = m_dialog.getCurrentItem()
 	LET l_val = m_dialog.getFieldValue(l_fld)
-	FOR l_id = 1 TO m_data.menuTree.getLength()
-		IF m_data.menuTree[l_id].field = l_fld THEN EXIT FOR END IF
+	FOR l_id = 1 TO m_data.menuData.rows
+		IF m_data.menuData.items[l_id].field = l_fld THEN EXIT FOR END IF
 	END FOR
-	LET l_pid = m_data.menuTree[l_id].t_pid
-	LET l_cond = m_data.menuTree[l_id].conditional
-	CALL debug.output(SFMT("Validate Field: %1 = %2 Desc: %3 PID: %4 Cond: %5", l_fld, l_val, m_data.menuTree[l_id].description, l_pid, l_cond), FALSE)
+	LET l_pid = m_data.menuData.items[l_id].t_pid
+	LET l_cond = m_data.menuData.items[l_id].conditional
+	CALL debug.output(SFMT("Validate Field: %1 = %2 Desc: %3 PID: %4 Cond: %5", l_fld, l_val, m_data.menuData.items[l_id].description, l_pid, l_cond), FALSE)
 
 -- Clear items in same subgroup
-	FOR x = 1 TO m_data.menuTree.getLength()
-		IF m_data.menuTree[x].t_id = l_pid THEN
-			LET l_pid_cond = m_data.menuTree[x].conditional
-			LET l_pid_pid = m_data.menuTree[x].t_pid
-			CALL debug.output(SFMT("%1) Parent: %2 Cond: %3 PIDPID: %4", m_data.menuTree[x].level,m_data.menuTree[x].description, l_pid_cond, l_pid_pid ), FALSE)
+	FOR x = 1 TO m_data.menuData.rows
+		IF m_data.menuData.items[x].t_id = l_pid THEN
+			LET l_pid_cond = m_data.menuData.items[x].conditional
+			LET l_pid_pid = m_data.menuData.items[x].t_pid
+			CALL debug.output(SFMT("%1) Parent: %2 Cond: %3 PIDPID: %4", m_data.menuData.items[x].level,m_data.menuData.items[x].description, l_pid_cond, l_pid_pid ), FALSE)
 		END IF
 		IF l_cond THEN
-			IF m_data.menuTree[x].t_pid = l_pid THEN
-				IF x != l_id AND m_data.menuTree[x].conditional THEN
-					CALL debug.output(SFMT("CleanItem: %1 : %2",m_data.menuTree[x].t_id, m_data.menuTree[x].description), FALSE)
-					CALL m_dialog.setFieldValue(m_data.menuTree[x].field,0)
+			IF m_data.menuData.items[x].t_pid = l_pid THEN
+				IF x != l_id AND m_data.menuData.items[x].conditional THEN
+					CALL debug.output(SFMT("CleanItem: %1 : %2",m_data.menuData.items[x].t_id, m_data.menuData.items[x].description), FALSE)
+					CALL m_dialog.setFieldValue(m_data.menuData.items[x].field,0)
 				END IF 
 			END IF
 		END IF
@@ -139,24 +145,24 @@ FUNCTION clearOtherGroups(l_depth SMALLINT, l_pid SMALLINT, l_pid_pid SMALLINT)
 	DEFINE x, l_s_pid, l_pid_pid2, l_g_pid SMALLINT
 	CALL debug.output(SFMT("Checking Parent Items: %1 Depth: %2", l_pid_pid,l_depth), FALSE)
 -- Clear items in conditional groups
-	FOR x = 1 TO m_data.menuTree.getLength()
-		IF m_data.menuTree[x].t_id = l_pid_pid THEN
-			LET l_pid_pid2 = m_data.menuTree[x].t_pid
+	FOR x = 1 TO m_data.menuData.rows
+		IF m_data.menuData.items[x].t_id = l_pid_pid THEN
+			LET l_pid_pid2 = m_data.menuData.items[x].t_pid
 		END IF
-		IF m_data.menuTree[x].t_pid = l_pid_pid AND m_data.menuTree[x].t_id != l_pid THEN
-			CALL debug.output(SFMT("%1) Item: %2 Cond: %3", m_data.menuTree[x].level, m_data.menuTree[x].description,m_data.menuTree[x].conditional), FALSE)
-			IF m_data.menuTree[x].conditional THEN
-				LET l_g_pid = m_data.menuTree[x].t_id
+		IF m_data.menuData.items[x].t_pid = l_pid_pid AND m_data.menuData.items[x].t_id != l_pid THEN
+			CALL debug.output(SFMT("%1) Item: %2 Cond: %3", m_data.menuData.items[x].level, m_data.menuData.items[x].description,m_data.menuData.items[x].conditional), FALSE)
+			IF m_data.menuData.items[x].conditional THEN
+				LET l_g_pid = m_data.menuData.items[x].t_id
 			END IF
 		END IF
-		IF m_data.menuTree[x].t_pid = l_g_pid THEN
-			CALL debug.output(SFMT("%1) Item: %2", m_data.menuTree[x].level, m_data.menuTree[x].description), FALSE)
-			LET l_s_pid = m_data.menuTree[x].t_id
+		IF m_data.menuData.items[x].t_pid = l_g_pid THEN
+			CALL debug.output(SFMT("%1) Item: %2", m_data.menuData.items[x].level, m_data.menuData.items[x].description), FALSE)
+			LET l_s_pid = m_data.menuData.items[x].t_id
 		END IF
-		IF m_data.menuTree[x].t_pid = l_s_pid THEN
-			IF m_data.menuTree[x].field.getLength() > 1 AND m_data.menuTree[x].t_pid != l_pid THEN
-				CALL debug.output(SFMT("CleanItem: %1 : %2",m_data.menuTree[x].t_id, m_data.menuTree[x].description), FALSE)
-				CALL m_dialog.setFieldValue(m_data.menuTree[x].field,0)
+		IF m_data.menuData.items[x].t_pid = l_s_pid THEN
+			IF m_data.menuData.items[x].field.getLength() > 1 AND m_data.menuData.items[x].t_pid != l_pid THEN
+				CALL debug.output(SFMT("CleanItem: %1 : %2",m_data.menuData.items[x].t_id, m_data.menuData.items[x].description), FALSE)
+				CALL m_dialog.setFieldValue(m_data.menuData.items[x].field,0)
 			END IF
 		END IF
 	END FOR

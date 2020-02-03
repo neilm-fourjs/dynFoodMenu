@@ -51,11 +51,11 @@ MAIN
 		CALL debug.output(SFMT("menu item %1 selected",l_menuItem), FALSE)
 		CASE l_menuItem
 			WHEN "close" EXIT WHILE
-			WHEN "menu1" CALL dynFoodMenu1.showMenu("menu1")
-			WHEN "menu2" CALL dynFoodMenu1.showMenu("menu2")
-			WHEN "menu3" CALL dynFoodMenu1.showMenu("menu3")
-			WHEN "menu4" CALL dynFoodMenu1.showMenu("menu4")
-			WHEN "menu5" CALL dynFoodMenu1.showMenu("menu5")
+			WHEN "menu1" CALL dynFoodMenu1.showMenu("menu1", m_netWork)
+			WHEN "menu2" CALL dynFoodMenu1.showMenu("menu2", m_netWork)
+			WHEN "menu3" CALL dynFoodMenu1.showMenu("menu3", m_netWork)
+			WHEN "menu4" CALL dynFoodMenu1.showMenu("menu4", m_netWork)
+			WHEN "menu5" CALL dynFoodMenu1.showMenu("menu5", m_netWork)
 			OTHERWISE
 				CALL fgl_winMessage("Info", SFMT("Menu item = '%1'", l_menuItem), "information")
 		END CASE

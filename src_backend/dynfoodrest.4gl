@@ -1,5 +1,6 @@
 IMPORT security
 IMPORT FGL menuData
+IMPORT FGL debug
 &include "../src/menus.inc"
 --------------------------------------------------------------------------------
 #+ GET <server>/dynFoodRest/getToken/id/pwd
@@ -10,13 +11,12 @@ PUBLIC FUNCTION getToken(l_id CHAR(6) ATTRIBUTE(WSParam), l_pwd STRING ATTRIBUTE
 		WSDescription = "Validate User and get Token")
 	RETURNS (userRecord ATTRIBUTES(WSMedia = 'application/json'))
 	DEFINE l_rec userRecord
-
 --TODO: validate the password
 	LET l_rec.user_id = l_id
 	LET l_rec.user_pwd = l_pwd
 	LET l_rec.user_name = "Neil J Martin"
 	LET l_rec.user_token = security.RandomGenerator.CreateUUIDString()
-
+	CALL debug.output(SFMT("getToken: %1 %2",l_rec.user_id, l_rec.user_token), FALSE)
 	RETURN l_rec.*
 END FUNCTION
 --------------------------------------------------------------------------------
@@ -27,29 +27,12 @@ PUBLIC FUNCTION getMenus() ATTRIBUTES(
 		WSGet, 
 		WSDescription = "Get list of Menus")
 	RETURNS (menuList ATTRIBUTES(WSMedia = 'application/json'))
-	DEFINE l_rec menuList
-{
-	DEFINE l_in RECORD
-		menuName VARCHAR(6),
-		menuDesc VARCHAR(30)
-	END RECORD
-	DECLARE l_cur1 CURSOR FOR SELECT id,description FROM menus
-		WHERE type = "Menu"
-	FOREACH l_cur1 INTO l_in.*
-		LET l_rec.list[l_rec.rows].menuName = l_in.menuName
-		LET l_rec.list[l_rec.rows].menuDesc = l_in.menuDesc
-	END FOREACH
-}
-	LET l_rec.list[1].menuName = "menu1"
-	LET l_rec.list[1].menuDesc = "Breakfast"
-	LET l_rec.list[1].menuImage = "breakfast.png"
-	LET l_rec.list[2].menuName = "menu2"
-	LET l_rec.list[2].menuDesc = "Lunch"
-	LET l_rec.list[2].menuImage = "lunch.png"
-	LET l_rec.rows = 2
 
-	LET l_rec.rows = l_rec.list.getLength()
-	RETURN l_rec.*
+	DEFINE l_menu menuData
+	IF NOT l_menu.getMenuList(FALSE) THEN
+	END IF
+	CALL debug.output(SFMT("getMenus items: %1",l_menu.menuList.rows), FALSE)
+	RETURN l_menu.menuList.*
 END FUNCTION
 --------------------------------------------------------------------------------
 #+ GET <server>/dynFoodRest/getMenu/<id>
@@ -60,20 +43,11 @@ PUBLIC FUNCTION getMenu(l_id VARCHAR(6) ATTRIBUTE(WSParam)) ATTRIBUTES(
 		WSDescription = "Get a Menu")
 	RETURNS (MenuRecord ATTRIBUTES(WSMedia = 'application/json'))
 	DEFINE l_menu menuData
-	IF NOT l_menu.load(l_id) THEN
-		LET l_menu.menuData.description = "Invalid MenuID!"
+	IF NOT l_menu.load(l_id, FALSE) THEN
+		LET l_menu.menuData.menu_id = "Invalid MenuID!"
 		LET l_menu.menuData.rows = 0
-		RETURN l_menu.menuData.*
 	END IF
-{
-	DECLARE l_cur2 CURSOR FOR SELECT * FROM menus
-		WHERE menu_name = l_id
-	LET l_menu.rows = 1
-	FOREACH l_cur2 INTO l_menu.items[l_menu.rows].*
-		LET l_menu.rows = l_menu.rows + 1
-	END FOREACH
-}
-
+	CALL debug.output(SFMT("getMenu id: %1 Items: %2",l_id, l_menu.menuData.rows), FALSE)
 	RETURN l_menu.menuData.*
 END FUNCTION
 --------------------------------------------------------------------------------

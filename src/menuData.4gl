@@ -14,10 +14,14 @@ PUBLIC TYPE menuData RECORD
 	ordered orderRecord
 END RECORD
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this menuData ) load(l_menuName STRING) RETURNS BOOLEAN
+FUNCTION (this menuData ) load(l_menuName STRING, l_netWork BOOLEAN) RETURNS BOOLEAN
 	CALL debug.output(SFMT("Load %1",l_menuName), FALSE)
 	LET this.menuData.menu_id = l_menuName
-	IF NOT this.loadData(l_menuName) THEN RETURN FALSE END IF
+	IF l_netWork THEN
+		IF NOT this.getData(l_menuName) THEN RETURN FALSE END IF
+	ELSE
+		IF NOT this.loadData(l_menuName) THEN RETURN FALSE END IF
+	END IF
 	CALL debug.output(SFMT("Loaded %1",this.fileName), FALSE)
 	CALL this.calcLevels()
 	CALL debug.output("Levels calced", FALSE)
@@ -35,6 +39,7 @@ FUNCTION (this menuData ) getMenuList(l_netWork BOOLEAN) RETURNS BOOLEAN
 			CALL debug.output(SFMT("getMenus: %1", l_stat),FALSE)
 			RETURN FALSE
 		END IF
+		CALL debug.output(SFMT("getMenus From WS: %1", this.menuList.rows),FALSE)
 	ELSE
 		LET this.menuList.list[1].menuName = "menu1"
 		LET this.menuList.list[1].menuDesc = "Breakfast"
@@ -46,6 +51,7 @@ FUNCTION (this menuData ) getMenuList(l_netWork BOOLEAN) RETURNS BOOLEAN
 		LET this.menuList.list[3].menuDesc = "Dinner"
 		LET this.menuList.list[3].menuImage = "dinner.png"
 		LET this.menuList.rows = 3
+		CALL debug.output(SFMT("getMenus HardCode: %1", this.menuList.rows),FALSE)
 	END IF
 	RETURN TRUE
 END FUNCTION
@@ -55,6 +61,18 @@ FUNCTION (this menuData ) save()
 --TODO: send the order
 	LET l_order = util.JSON.stringify(this.ordered)
 	DISPLAY "Save:", l_order
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION (this menuData ) getData(l_menuName STRING) RETURNS BOOLEAN
+	DEFINE l_stat INT
+	LET wsBackEnd.Endpoint.Address.Uri = C_WS_BACKEND
+	CALL wsBackEnd.getMenu(l_menuName) RETURNING l_stat,this.menuData.*
+	IF l_stat != 0 THEN
+		CALL debug.output(SFMT("getMenu: %1 Stat: %2", l_menuName, l_stat),FALSE)
+		RETURN FALSE
+	END IF
+	CALL debug.output(SFMT("getMenu: %1 Rows: %2", l_menuName, this.menuData.rows),FALSE)
+	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION (this menuData ) loadData(l_menuName STRING) RETURNS BOOLEAN

@@ -66,11 +66,7 @@ PUBLIC TYPE getTokenResponseBodyType RECORD
 END RECORD
 
 # generated getMenuResponseBodyType
-PUBLIC TYPE getMenuResponseBodyType RECORD
-	menu_id STRING,
-	description STRING,
-	image STRING,
-	items DYNAMIC ARRAY OF RECORD
+PUBLIC TYPE menuItem RECORD
 		t_id INTEGER,
 		t_pid INTEGER,
 		id STRING,
@@ -83,8 +79,11 @@ PUBLIC TYPE getMenuResponseBodyType RECORD
 		option_id STRING,
 		option_name STRING,
 		hidden BOOLEAN,
-		level INTEGER
-	END RECORD,
+		level SMALLINT
+	END RECORD
+PUBLIC TYPE getMenuResponseBodyType RECORD
+	menu_id STRING,
+	items DYNAMIC ARRAY OF menuItem,
 	rows INTEGER
 END RECORD
 

@@ -14,7 +14,7 @@ PUBLIC TYPE menuList RECORD
 PUBLIC TYPE menuItem RECORD
 		t_id INTEGER,
 		t_pid INTEGER,
-		id VARCHAR(6),
+		id STRING,
 		type STRING,
 		description STRING,
 		conditional BOOLEAN,
@@ -29,10 +29,8 @@ PUBLIC TYPE menuItem RECORD
 
 PUBLIC TYPE menuRecord RECORD
 		menu_id STRING,
-		description STRING,
-		image STRING,
 		items DYNAMIC ARRAY OF menuItem,
-		rows SMALLINT
+		rows INTEGER
 	END RECORD
 
 PUBLIC TYPE orderRecord RECORD

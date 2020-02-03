@@ -9,7 +9,7 @@ FUNCTION (this userRecord) login(l_network BOOLEAN) RETURNS BOOLEAN
 --TODO: login screen
 	IF l_network THEN
 		LET this.user_id = "NJM"
-		LET this.user_name = "test"
+		LET this.user_pwd = "test"
 		LET wsBackEnd.Endpoint.Address.Uri = C_WS_BACKEND
 		CALL debug.output(SFMT("Getting token for: %1 from: %2 ", this.user_id, wsBackEnd.Endpoint.Address.Uri), FALSE)
 		CALL wsBackEnd.getToken(this.user_id, this.user_pwd) RETURNING l_stat, this.*

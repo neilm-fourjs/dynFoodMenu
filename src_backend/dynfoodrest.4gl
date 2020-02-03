@@ -42,8 +42,10 @@ PUBLIC FUNCTION getMenus() ATTRIBUTES(
 }
 	LET l_rec.list[1].menuName = "menu1"
 	LET l_rec.list[1].menuDesc = "Breakfast"
+	LET l_rec.list[1].menuImage = "breakfast.png"
 	LET l_rec.list[2].menuName = "menu2"
 	LET l_rec.list[2].menuDesc = "Lunch"
+	LET l_rec.list[2].menuImage = "lunch.png"
 	LET l_rec.rows = 2
 
 	LET l_rec.rows = l_rec.list.getLength()

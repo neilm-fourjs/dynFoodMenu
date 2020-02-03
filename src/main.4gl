@@ -2,24 +2,30 @@ IMPORT FGL debug
 IMPORT FGL wc_iconMenu
 IMPORT FGL dynFoodMenu1
 IMPORT FGL login
+IMPORT FGL menuData
 DEFINE myMenu wc_iconMenu.wc_iconMenu
 DEFINE m_user login.userRecord
 MAIN
 	DEFINE l_menuItem STRING = "."
+	DEFINE m_data menuData
+	DEFINE x SMALLINT
 	CALL ui.Interface.loadStyles(DOWNSHIFT(ui.Interface.getFrontEndName()))
 	CALL debug.output("Started", FALSE)
 
 	IF NOT m_user.login() THEN
 		EXIT PROGRAM
 	END IF
-
+	IF NOT m_data.getMenuList() THEN
+		EXIT PROGRAM
+	END IF
 -- Use a JSON file for the menu data
 --        LET myMenu.fileName = "myMenu.js"
 -- or
 -- set the 4gl array for the menu data.
-	CALL myMenu.addMenuItem("Breakfast", "breakfast.png", "menu1")
-	CALL myMenu.addMenuItem("Lunch", "lunch.png", "menu2")
-	CALL myMenu.addMenuItem("Dinner", "dinner.png", "menu3")
+
+	FOR x = 1 TO m_data.menuList.rows
+		CALL myMenu.addMenuItem( m_data.menuList.list[x].menuDesc, m_data.menuList.list[x].menuImage, m_data.menuList.list[x].menuName)
+	END FOR
 	CALL myMenu.addMenuItem("Close", "poweroff.png", "close")
 
 	IF NOT myMenu.init(myMenu.fileName) THEN -- something wrong?

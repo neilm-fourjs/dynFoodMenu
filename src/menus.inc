@@ -2,7 +2,8 @@
 PUBLIC TYPE menuList RECORD
 		list DYNAMIC ARRAY OF RECORD
 			menuName STRING,
-			menuDesc STRING
+			menuDesc STRING,
+			menuImage STRING
 		END RECORD,
 		rows SMALLINT
 	END RECORD
@@ -24,7 +25,9 @@ PUBLIC TYPE menuItem RECORD
 	END RECORD
 
 PUBLIC TYPE menuRecord RECORD
+		menu_id STRING,
 		description STRING,
+		image STRING,
 		items DYNAMIC ARRAY OF menuItem,
 		rows SMALLINT
 	END RECORD

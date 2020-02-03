@@ -8,16 +8,33 @@ IMPORT FGL debug
 
 PUBLIC TYPE menuData RECORD
 	fileName STRING,
+	menuList menuList,
 	menuData menuRecord,
 	ordered orderRecord
 END RECORD
 --------------------------------------------------------------------------------------------------------------
 FUNCTION (this menuData ) load(l_menuName STRING) RETURNS BOOLEAN
 	CALL debug.output(SFMT("Load %1",l_menuName), FALSE)
+	LET this.menuData.menu_id = l_menuName
 	IF NOT this.loadData(l_menuName) THEN RETURN FALSE END IF
 	CALL debug.output(SFMT("Loaded %1",this.fileName), FALSE)
 	CALL this.calcLevels()
 	CALL debug.output("Levels calced", FALSE)
+	RETURN TRUE
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION (this menuData ) getMenuList() RETURNS BOOLEAN
+-- TODO: get list from WS backend
+	LET this.menuList.list[1].menuName = "menu1"
+	LET this.menuList.list[1].menuDesc = "Breakfast"
+	LET this.menuList.list[1].menuImage = "breakfast.png"
+	LET this.menuList.list[2].menuName = "menu2"
+	LET this.menuList.list[2].menuDesc = "Lunch"
+	LET this.menuList.list[2].menuImage = "lunch.png"
+	LET this.menuList.list[3].menuName = "menu3"
+	LET this.menuList.list[3].menuDesc = "Dinner"
+	LET this.menuList.list[3].menuImage = "dinner.png"
+	LET this.menuList.rows = 3
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------

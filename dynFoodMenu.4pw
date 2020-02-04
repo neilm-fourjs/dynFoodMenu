@@ -74,7 +74,8 @@
       <File filePath="src_backend/userMaint.per"/>
     </Application>
     <Library binaryName="ws_xcf" id="-593227916" label="xcf">
-      <File filePath="ws_xcf/dynFoodRest.xcf"/>
+      <File filePath="xcf/dynFoodMenu.xcf"/>
+      <File filePath="xcf/dynFoodRest.xcf"/>
       <File filePath="xcf/dynFoodUser.xcf"/>
     </Library>
   </Group>
@@ -99,7 +100,6 @@
     </Application>
     <Library binaryName="etc" id="362164715" label="etc">
       <File filePath="etc/default.4ad"/>
-      <File filePath="ua_xcf/dynFoodMenu.xcf"/>
       <File filePath="etc/fglprofile"/>
       <File filePath="etc/gbc.4st"/>
       <File filePath="etc/gdc.4st"/>

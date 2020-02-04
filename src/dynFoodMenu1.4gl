@@ -16,7 +16,7 @@ FUNCTION showMenu(l_menuName STRING, l_netWork BOOLEAN)
 	LET m_form.toolbar[2] = "cancel"
 	LET m_form.toolbar[3] = "about"
 	LET m_form.toolbar[4] = "debug"
-	CALL m_form.buildForm("Menu", "main2") -- create the form
+	CALL m_form.buildForm("Menu", "main2", "icon32") -- create the form
 	IF inpByName() THEN -- do the input
 		CALL m_data.save()
 	END IF
@@ -41,7 +41,7 @@ FUNCTION inpByName() RETURNS (BOOLEAN)
 	WHILE TRUE
 		LET l_event = m_dialog.nextEvent()
 		IF l_event.subString(1,10) = "ON CHANGE " THEN
-			MESSAGE SFMT("Field %1 changed.", l_event.subString(11,l_event.getLength()))
+			--MESSAGE SFMT("Field %1 changed.", l_event.subString(11,l_event.getLength()))
 			CALL validate( )
 			CONTINUE WHILE
 		END IF
@@ -56,7 +56,7 @@ FUNCTION inpByName() RETURNS (BOOLEAN)
 					EXIT WHILE
 				END IF
 			OTHERWISE
-				MESSAGE "Event:",l_event
+				--MESSAGE "Event:",l_event
 		END CASE
 	END WHILE
 	CALL m_dialog.close()

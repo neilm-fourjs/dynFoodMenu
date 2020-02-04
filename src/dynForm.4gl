@@ -15,7 +15,7 @@ END RECORD
 
 --------------------------------------------------------------------------------------------------------------
 -- Generate the screen form and recordView.
-FUNCTION (this dynForm) buildForm( l_titl STRING, l_styl STRING ) RETURNS ()
+FUNCTION (this dynForm) buildForm( l_titl STRING, l_styl STRING, l_img STRING ) RETURNS ()
 	DEFINE l_f, l_vb, l_grid, l_group, l_sgroup, l_cont om.DomNode
 	DEFINE l_fldnam, l_desc STRING
 	DEFINE id,y,l_items SMALLINT
@@ -24,6 +24,7 @@ FUNCTION (this dynForm) buildForm( l_titl STRING, l_styl STRING ) RETURNS ()
 	CALL debug.output("buildForm: Start", FALSE)
 -- Create and setup Form / Window
 	OPEN WINDOW w_menu WITH 1 ROWS, 1 COLUMNS ATTRIBUTE(STYLE=l_styl,TEXT=l_titl)
+	CALL ui.Window.getCurrent().setImage(l_img)
 	LET l_f = ui.Window.getCurrent().createForm("Menu").getNode()
 	CALL l_f.setAttribute("text",l_titl)
 	CALL l_f.setAttribute("style",l_styl)

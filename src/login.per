@@ -1,11 +1,14 @@
-LAYOUT (TEXT="Menu Login",STYLE="dialog")
+LAYOUT (TEXT="Menu Login",STYLE="dialog", IMAGE="icon32")
 GRID
 {
-[l001    |f001  ]
-[l002    |f002             ]
+<G login                     >
+ [l001    |f001  ]
+ [l002    |f002             ]
+<                            >
 }
 END -- GRID
 ATTRIBUTES
+GROUP login : login, TEXT=%"Login", STYLE="login";
 LABEL l001 : l_userid, TEXT=%"User ID:", JUSTIFY=RIGHT;
 LABEL l002 : l_passwd, TEXT=%"Password:", JUSTIFY=RIGHT;
 EDIT f001 = FORMONLY.user_id, NOT NULL, REQUIRED, UPSHIFT;

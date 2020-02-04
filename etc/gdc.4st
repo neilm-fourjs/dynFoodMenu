@@ -10,9 +10,20 @@ Property of Four Js*
 -->
 
 <StyleList>
+  <Style name="Group">
+     <StyleAttribute name="backgroundColor" value="#accbb8" />
+  </Style>
+  <Style name=":active">
+     <StyleAttribute name="backgroundColor" value="#ffddff" />
+  </Style>
+  <Style name=":focus">
+     <StyleAttribute name="backgroundColor" value="#b3e89c" />
+  </Style>
   <Style name="Window">
      <StyleAttribute name="windowType" value="normal" />
      <StyleAttribute name="fontSize" value="0.9em" />
+     <StyleAttribute name="backgroundColor" value="white" />
+     <StyleAttribute name="textColor" value="#324127" />
   </Style>
   <Style name="Window.main">
      <StyleAttribute name="windowType" value="normal" />

@@ -4,6 +4,7 @@ IMPORT util
 IMPORT os
 IMPORT FGL debug
 IMPORT FGL wsBackEnd
+IMPORT FGL libCommon
 
 &include "menus.inc"
 
@@ -33,8 +34,10 @@ FUNCTION (this menuData ) getMenuList(l_netWork BOOLEAN) RETURNS BOOLEAN
 	DEFINE l_json TEXT
 	DEFINE l_fileName STRING = "menus.json"
 	IF l_netWork THEN
+		CALL libCommon.processing("Loading Menus ...",1)
 		LET wsBackEnd.Endpoint.Address.Uri = C_WS_BACKEND
 		CALL wsBackEnd.getMenus() RETURNING l_stat,this.menuList.*
+		CALL libCommon.processing("Loading Menus ...",3)
 		IF l_stat != 0 THEN
 			CALL debug.output(SFMT("getMenus: %1", l_stat),FALSE)
 			RETURN FALSE
@@ -63,7 +66,9 @@ END FUNCTION
 FUNCTION (this menuData ) getData(l_menuName STRING) RETURNS BOOLEAN
 	DEFINE l_stat INT
 	LET wsBackEnd.Endpoint.Address.Uri = C_WS_BACKEND
+	CALL libCommon.processing("Loading Menu ...",1)
 	CALL wsBackEnd.getMenu(l_menuName) RETURNING l_stat,this.menuData.*
+	CALL libCommon.processing("Loading Menu ...",3)
 	IF l_stat != 0 THEN
 		CALL debug.output(SFMT("getMenu: %1 Stat: %2", l_menuName, l_stat),FALSE)
 		RETURN FALSE

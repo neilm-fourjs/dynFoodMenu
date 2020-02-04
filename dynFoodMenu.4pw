@@ -86,12 +86,14 @@
     <Library binaryName="libCommon" id="1074706446" label="libCommon" targetDirectory="$(ProjectDir)/binCommon">
       <File filePath="src/debug.4gl"/>
       <File filePath="src/debug.per"/>
+      <File filePath="src/libCommon.4gl"/>
+      <File filePath="src/processing.per"/>
     </Library>
     <Library binaryName="libFoodMenu" dependencies="-541155840" id="1770744530" label="libFoodMenu" targetDirectory="$(ProjectDir)/binCommon">
       <File filePath="src/menuData.4gl"/>
     </Library>
   </Group>
-  <Group environment="filelist:FGLPROFILE=$(ProjectDir)/etc/fglprofile,dirlist:DBPATH=$(ProjectDir)/database;$(DBPATH)" id="10414220" label="Mobile" language="Genero">
+  <Group environment="filelist:FGLPROFILE=$(ProjectDir)/etc/fglprofile.gst,dirlist:DBPATH=$(ProjectDir)/database;$(DBPATH)" id="10414220" label="Mobile" language="Genero">
     <Library binaryName="Database" id="455109296" label="Database"/>
     <Application binaryName="dynFoodMenu" dependencies="159917928,212784684,362164715,455109296,-541155840,91913022,-1361191823,1770744530,1074706446" environment="dirlist:FGLIMAGEPATH=$(ProjectDir)/pics;$(FGLDIR)/lib/image2font.txt;$(ProjectDir);$(FGLIMAGEPATH)" id="400358049" label="dynFoodMenu">
       <File filePath="src/dynFoodMenu1.4gl"/>
@@ -101,6 +103,7 @@
     <Library binaryName="etc" id="362164715" label="etc">
       <File filePath="etc/default.4ad"/>
       <File filePath="etc/fglprofile"/>
+      <File filePath="etc/fglprofile.gst"/>
       <File filePath="etc/gbc.4st"/>
       <File filePath="etc/gdc.4st"/>
       <File filePath="etc/gma.4st"/>
@@ -128,6 +131,7 @@
       <Directory label="Common" sourceDirectory="$(ProjectDir)/binCommon"/>
       <Directory label="Config" sourceDirectory="$(ProjectDir)/etc"/>
       <Directory label="ConfigBE" sourceDirectory="$(ProjectDir)/etcBackEnd"/>
+      <Directory label="pics" sourceDirectory="$(ProjectDir)/pics"/>
       <Directory label="xcf" sourceDirectory="$(ProjectDir)/xcf"/>
     </Package>
     <Package binaryName="dynFoodMenu_GMA" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022" description="Android Package" id="187810339" label="dynFoodMenu_GMA" platform="Android">

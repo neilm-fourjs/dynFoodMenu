@@ -1,0 +1,21 @@
+LAYOUT (TEXT="User Maintenance", STYLE="main")
+TABLE
+{
+[f001  |f002                          |f003                |f004               |f005             ]
+[f001  |f002                          |f003                |f004               |f005             ]
+[f001  |f002                          |f003                |f004               |f005             ]
+[f001  |f002                          |f003                |f004               |f005             ]
+[f001  |f002                          |f003                |f004               |f005             ]
+[f001  |f002                          |f003                |f004               |f005             ]
+[f001  |f002                          |f003                |f004               |f005             ]
+[f001  |f002                          |f003                |f004               |f005             ]
+}
+END -- TABLE
+ATTRIBUTES
+f001 = FORMONLY.user_id, TITLE=%"ID", UPSHIFT, REQUIRED, NOT NULL;
+f002 = FORMONLY.user_name, TITLE=%"Name", REQUIRED, NOT NULL;
+f003 = FORMONLY.user_pwd, TITLE=%"Password", INVISIBLE, REQUIRED, NOT NULL;
+f004 = FORMONLY.user_token, TITLE=%"Token", NOENTRY;
+f005 = FORMONLY.token_ts, TITLE=%"Token TS", NOENTRY;
+INSTRUCTIONS
+SCREEN RECORD arr ( FORMONLY.user_id THRU FORMONLY.token_ts )

@@ -1,7 +1,9 @@
 IMPORT security
+IMPORT util
 IMPORT FGL menuData
 IMPORT FGL debug
 &include "../src/menus.inc"
+DEFINE m_users DYNAMIC ARRAY OF userRecord
 --------------------------------------------------------------------------------
 #+ GET <server>/dynFoodRest/getToken/id/pwd
 #+ result: A Record that contains uesr information
@@ -10,12 +12,27 @@ PUBLIC FUNCTION getToken(l_id CHAR(6) ATTRIBUTE(WSParam), l_pwd STRING ATTRIBUTE
 		WSGet,
 		WSDescription = "Validate User and get Token")
 	RETURNS (userRecord ATTRIBUTES(WSMedia = 'application/json'))
-	DEFINE l_rec userRecord
+	DEFINE x SMALLINT
+	DEFINE l_rec userRecord = (
+    user_id: "ERROR", 
+		user_name: "Invalid User Id!" )
+
 --TODO: validate the password
-	LET l_rec.user_id = l_id
-	LET l_rec.user_pwd = l_pwd
-	LET l_rec.user_name = "Neil J Martin"
-	LET l_rec.user_token = security.RandomGenerator.CreateUUIDString()
+	IF m_users.getLength() = 0 THEN
+		CALL getUsers()
+	END IF
+	IF l_pwd != C_APIPASS THEN
+		CALL debug.output(SFMT("getToken: User:%1 API:%2 Invalid APIPASS",l_rec.user_id, l_pwd), FALSE)
+		RETURN l_rec.*
+	END IF
+	FOR x = 1 TO m_users.getLength()
+		IF l_id = m_users[x].user_id THEN
+			LET l_rec.* = m_users[x].*
+			LET l_rec.user_token = security.RandomGenerator.CreateUUIDString()
+			LET l_rec.token_ts = CURRENT
+		END IF
+	END FOR
+	CALL updateUsers()
 	CALL debug.output(SFMT("getToken: %1 %2",l_rec.user_id, l_rec.user_token), FALSE)
 	RETURN l_rec.*
 END FUNCTION
@@ -70,5 +87,17 @@ PUBLIC FUNCTION placeOrder(l_order orderRecord) ATTRIBUTES(
 		RETURN 101,"Failed to place order!"
 	END IF
 	RETURN 0,"Okay"
+END FUNCTION
+--------------------------------------------------------------------------------
+PRIVATE FUNCTION getUsers()
+	DEFINE l_json TEXT
+	LOCATE l_json IN FILE "users.json"
+	CALL util.JSON.parse(l_json, m_users)
+END FUNCTION
+--------------------------------------------------------------------------------
+PRIVATE FUNCTION updateUsers()
+	DEFINE l_json TEXT
+	LOCATE l_json IN FILE "users.json"
+	LET l_json = util.JSON.stringify(m_users)
 END FUNCTION
 --------------------------------------------------------------------------------

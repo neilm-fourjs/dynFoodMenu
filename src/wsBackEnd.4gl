@@ -60,9 +60,10 @@ END RECORD
 # generated getTokenResponseBodyType
 PUBLIC TYPE getTokenResponseBodyType RECORD
 	user_id STRING,
-	user_pwd STRING,
 	user_name STRING,
-	user_token STRING
+	user_pwd STRING,
+	user_token STRING,
+	token_ts DATETIME YEAR TO MINUTE
 END RECORD
 
 # generated getMenuResponseBodyType

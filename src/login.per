@@ -1,0 +1,12 @@
+LAYOUT (TEXT="Menu Login",STYLE="dialog")
+GRID
+{
+[l001    |f001  ]
+[l002    |f002             ]
+}
+END -- GRID
+ATTRIBUTES
+LABEL l001 : l_userid, TEXT=%"User ID:", JUSTIFY=RIGHT;
+LABEL l002 : l_passwd, TEXT=%"Password:", JUSTIFY=RIGHT;
+EDIT f001 = FORMONLY.user_id, NOT NULL, REQUIRED, UPSHIFT;
+EDIT f002 = FORMONLY.user_pwd, INVISIBLE, NOT NULL, REQUIRED;

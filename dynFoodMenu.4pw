@@ -69,8 +69,13 @@
       <File filePath="src_backend/dynfoodrest.4gl"/>
       <File filePath="src_backend/ws_main.4gl"/>
     </Application>
+    <Application binaryName="dynFoodUser" dependencies="-1361191823,1074706446" id="875344568" label="dynFoodUser">
+      <File filePath="src_backend/userMaint.4gl"/>
+      <File filePath="src_backend/userMaint.per"/>
+    </Application>
     <Library binaryName="ws_xcf" id="-593227916" label="xcf">
       <File filePath="ws_xcf/dynFoodRest.xcf"/>
+      <File filePath="xcf/dynFoodUser.xcf"/>
     </Library>
   </Group>
   <Group id="-1827913814" label="Common" language="Genero">
@@ -105,6 +110,8 @@
     <Library binaryName="libMobile" dependencies="-1361191823,1074706446" id="-541155840" label="libMobile">
       <File filePath="src/about.4gl"/>
       <File filePath="src/login.4gl"/>
+      <File filePath="src/login.per"/>
+      <File filePath="src/mobLib.4gl"/>
       <File filePath="src/wsBackEnd.4gl"/>
     </Library>
     <Library binaryName="wc_iconMenu" id="91913022" label="wc_iconMenu">
@@ -113,6 +120,16 @@
     </Library>
   </Group>
   <Group id="674884836" label="Packages" language="Genero">
+    <Package binaryName="dynFoodBackEnd" dependencies="-593227916,-1361191823,1074484008,1074706446,1770744530,-541155840,400358049,455109296,91913022,875344568,362164715" description="WS dynFood Server" id="-255363164" label="dynFoodBackEnd" platform="Genero Application Server">
+      <DynamicProperty name="packageId" value="dynFoodRest"/>
+      <DynamicProperty name="packageLabel" value="dynFoodRest"/>
+      <Directory label="Bin" sourceDirectory="$(ProjectDir)/bin"/>
+      <Directory excludedFiles="Test.42r" includedFiles="*.42?" label="BinBE" sourceDirectory="$(ProjectDir)/binBackEnd"/>
+      <Directory label="Common" sourceDirectory="$(ProjectDir)/binCommon"/>
+      <Directory label="Config" sourceDirectory="$(ProjectDir)/etc"/>
+      <Directory label="ConfigBE" sourceDirectory="$(ProjectDir)/etcBackEnd"/>
+      <Directory label="xcf" sourceDirectory="$(ProjectDir)/xcf"/>
+    </Package>
     <Package binaryName="dynFoodMenu_GMA" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022" description="Android Package" id="187810339" label="dynFoodMenu_GMA" platform="Android">
       <DynamicProperty name="gma-accent-color" value="#b3e89c"/>
       <DynamicProperty name="gma-navigationBarBackground-color" value="#225a1e"/>
@@ -125,24 +142,6 @@
       <Directory description="Database" includedFiles="*.db" label="Database" recursive="false" sourceDirectory="$(ProjectDir)/database"/>
       <Directory description="Configuration Files" label="etc" recursive="false" sourceDirectory="$(ProjectDir)/etc"/>
       <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>
-    </Package>
-    <Package binaryName="dynFoodRest" dependencies="-593227916,-1361191823,1074484008,1074706446,1770744530" description="WS dynFood Server" id="-255363164" label="dynFoodRest" platform="Genero Application Server">
-      <DynamicProperty name="packageId" value="dynFoodRest"/>
-      <DynamicProperty name="packageLabel" value="dynFoodRest"/>
-      <Directory excludedFiles="Test.42r" includedFiles="*.42?" label="Binaries" sourceDirectory="$(ProjectDir)/binBackEnd"/>
-      <Directory label="Common" sourceDirectory="$(ProjectDir)/binCommon"/>
-      <Directory label="Config" sourceDirectory="$(ProjectDir)/etc"/>
-      <Directory label="xcf" sourceDirectory="$(ProjectDir)/ws_xcf"/>
-    </Package>
-    <Package binaryName="dynFoodMenu" dependencies="-593227916,-1361191823,1074484008,1074706446" description="dynFoodMenu" id="-1625494396" label="dynFoodMenu" platform="Genero Application Server">
-      <DynamicProperty name="packageId" value="dynFoodMenu"/>
-      <DynamicProperty name="packageLabel" value="dynFoodMenu"/>
-      <Directory description="Binaries" excludedFiles="Test.42r" includedFiles="*.42?" label="Binaries" recursive="false" sourceDirectory="$(ProjectDir)/bin"/>
-      <Directory label="Common" sourceDirectory="$(ProjectDir)/binCommon"/>
-      <Directory description="Database" includedFiles="*.db" label="Database" recursive="false" sourceDirectory="$(ProjectDir)/database"/>
-      <Directory description="Configuration Files" label="etc" recursive="false" sourceDirectory="$(ProjectDir)/etc"/>
-      <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>
-      <Directory label="xcf" sourceDirectory="$(ProjectDir)/ua_xcf"/>
     </Package>
   </Group>
   <Group id="-973564800" label="Tests" language="Genero" targetDirectory="$(ProjectDir)/testbin">

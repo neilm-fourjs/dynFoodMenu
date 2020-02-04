@@ -3,6 +3,7 @@ IMPORT FGL wc_iconMenu
 IMPORT FGL dynFoodMenu1
 IMPORT FGL login
 IMPORT FGL menuData
+IMPORT FGL mobLib
 DEFINE myMenu wc_iconMenu.wc_iconMenu
 DEFINE m_user login.userRecord
 DEFINE m_fe STRING
@@ -11,21 +12,16 @@ MAIN
 	DEFINE l_menuItem STRING = "."
 	DEFINE m_data menuData
 	DEFINE x SMALLINT
-	DEFINE l_netWork STRING
 	LET m_fe = DOWNSHIFT(ui.Interface.getFrontEndName())
 	CALL ui.Interface.loadStyles(m_fe)
 	CALL debug.output("Started", FALSE)
 
-	IF base.Application.isMobile() THEN
-		CALL ui.Interface.frontCall("mobile","connectivity", [], [l_netWork] )
-	END IF
-
-	IF m_netWork = "NONE" THEN LET m_netWork = FALSE END IF
-
-	IF NOT m_user.login(m_netWork) THEN
+	IF NOT m_user.login() THEN
 		CALL debug.output(SFMT("Invalid login %1 %2",m_user.user_id, m_user.user_name),FALSE)
 		EXIT PROGRAM
 	END IF
+
+	LET m_netWork = mobLib.gotNetwork()
 	IF NOT m_data.getMenuList(m_netWork) THEN
 		CALL debug.output("Failed to get Menu list.",FALSE)
 		EXIT PROGRAM

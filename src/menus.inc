@@ -1,6 +1,7 @@
 
 
 CONSTANT C_WS_BACKEND="https://generodemos.dynu.net/g/ws/r/dynFoodRest"
+CONSTANT C_APIPASS="dynFoodMenuDemofqqGQg43ppgjcaqz"
 
 PUBLIC TYPE menuList RECORD
 		list DYNAMIC ARRAY OF RECORD
@@ -48,7 +49,8 @@ PUBLIC TYPE orderRecord RECORD
 
 PUBLIC TYPE userRecord RECORD
 		user_id VARCHAR(6),
-		user_pwd VARCHAR(20),
 		user_name VARCHAR(30),
-		user_token STRING
+		user_pwd VARCHAR(60),
+		user_token STRING,
+		token_ts DATETIME YEAR TO MINUTE
 	END RECORD

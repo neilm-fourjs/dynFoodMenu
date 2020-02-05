@@ -13,7 +13,7 @@ There are two versions of the program:
 ![ss3n](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss3nat.png "SS3NAT")
 ![ss4n](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss4nat.png "SS4NAT")
 
-## Running on the Android Phone using Universal Rendering
+## Running on Android Emulator using Universal Rendering
 ![ss0u](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss0ur.png "SS0UA")
 ![ss1u](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss1ur.png "SS1UA")
 ![ss2u](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss2ur.png "SS2UA")

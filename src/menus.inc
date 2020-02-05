@@ -1,6 +1,6 @@
 
 
-CONSTANT C_WS_BACKEND="https://generodemos.dynu.net/g/ws/r/dynFoodRest"
+CONSTANT C_WS_BACKEND="https://generodemos.dynu.net/g/ws/r/dyn/dynFoodRest"
 CONSTANT C_APIPASS="dynFoodMenuDemofqqGQg43ppgjcaqz"
 
 PUBLIC TYPE menuList RECORD

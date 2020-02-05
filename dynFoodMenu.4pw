@@ -74,8 +74,8 @@
       <File filePath="src_backend/userMaint.per"/>
     </Application>
     <Library binaryName="ws_xcf" id="-593227916" label="xcf">
+      <File filePath="xcf/dyn.xcf"/>
       <File filePath="xcf/dynFoodMenu.xcf"/>
-      <File filePath="xcf/dynFoodRest.xcf"/>
       <File filePath="xcf/dynFoodUser.xcf"/>
     </Library>
   </Group>

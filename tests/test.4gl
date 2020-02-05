@@ -45,6 +45,8 @@ FUNCTION inp()
 		ON ACTION quit EXIT INPUT
 		ON ACTION dump
 			CALL ui.window.getCurrent().getNode().getFirstChild().writeXml("dump.xml")
+		BEFORE INPUT
+	CALL DIALOG.getForm().setElementStyle("mylabel","dim")
 	END INPUT
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------

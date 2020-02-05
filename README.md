@@ -21,7 +21,7 @@ There are two versions of the program:
 ![ss4u](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss4ur.png "SS4UA")
 
 ## Running in the GDC ( Linux with dark theme )
-![ss4](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss4.png "SS4")
+![ss1d](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss1gdc.png "SS1D")
 
 ## Running in the GBC ( Chrome )
-![ss5](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss5.png "SS5")
+![ss1b](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss1gbc.png "SS1B")

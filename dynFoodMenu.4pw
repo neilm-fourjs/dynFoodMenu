@@ -140,7 +140,7 @@
       <Directory label="pics" sourceDirectory="$(ProjectDir)/pics"/>
       <Directory label="xcf" sourceDirectory="$(ProjectDir)/xcf"/>
     </Package>
-    <Package binaryName="dynFoodMenu_GMA" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022" description="Android Package" excludeFromBuild="true" id="187810339" label="dynFoodMenu_GMA" platform="Android">
+    <Package binaryName="dynFoodMenu_GMA" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022" description="Android Package" id="187810339" label="dynFoodMenu_GMA" platform="Android">
       <DynamicProperty name="gma-accent-color" value="#70a770"/>
       <DynamicProperty name="gma-navigationBarBackground-color" value="#225a1e"/>
       <DynamicProperty name="gma-primary-color" value="#38503a"/>

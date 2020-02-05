@@ -10,6 +10,24 @@ Property of Four Js*
 -->
 
 <StyleList>
+  <Style name="Group">
+     <StyleAttribute name="backgroundColor" value="#accbb8" />
+  </Style>
+  <Style name="Edit:active">
+     <StyleAttribute name="backgroundColor" value="#ddffdd" />
+  </Style>
+  <Style name="Edit:focus">
+     <StyleAttribute name="backgroundColor" value="#b3e89c" />
+  </Style>
+  <Style name="CheckBox:focus">
+     <StyleAttribute name="backgroundColor" value="#b3e89c" />
+  </Style>
+  <Style name="SpinEdit:active">
+     <StyleAttribute name="backgroundColor" value="#ddffdd" />
+  </Style>
+  <Style name="SpinEdit:focus">
+     <StyleAttribute name="backgroundColor" value="#b3e89c" />
+  </Style>
   <Style name="Window">
      <StyleAttribute name="windowType" value="normal" />
   </Style>

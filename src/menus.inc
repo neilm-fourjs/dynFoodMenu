@@ -13,6 +13,7 @@ PUBLIC TYPE menuList RECORD
 	END RECORD
 
 PUBLIC TYPE menuItem RECORD
+		menuName VARCHAR(6),
 		t_id INTEGER,
 		t_pid INTEGER,
 		id STRING,
@@ -29,21 +30,25 @@ PUBLIC TYPE menuItem RECORD
 	END RECORD
 
 PUBLIC TYPE menuRecord RECORD
-		menu_id STRING,
+		menuName STRING,
 		items DYNAMIC ARRAY OF menuItem,
 		rows INTEGER
 	END RECORD
 
-PUBLIC TYPE orderRecord RECORD
-		user_token STRING,
-		user_id STRING,
-		dte DATE,
-		items DYNAMIC ARRAY OF RECORD
+PUBLIC TYPE orderItemsRecord RECORD
 			item_id INTEGER,
 			description STRING,
 			qty SMALLINT,
 			optional BOOLEAN
-		END RECORD,
+		END RECORD
+
+PUBLIC TYPE orderRecord RECORD
+		order_id INTEGER,
+		user_token STRING,
+		user_id STRING,
+		placed DATETIME YEAR TO SECOND,
+		menu_id STRING,
+		items DYNAMIC ARRAY OF orderItemsRecord,
 		rows SMALLINT
 	END RECORD
 

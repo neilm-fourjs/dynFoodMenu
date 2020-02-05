@@ -4,7 +4,9 @@ IMPORT util
 IMPORT os
 IMPORT FGL debug
 IMPORT FGL wsBackEnd
+IMPORT FGL db
 IMPORT FGL libCommon
+IMPORT FGL libMobile
 
 &include "menus.inc"
 
@@ -15,70 +17,73 @@ PUBLIC TYPE menuData RECORD
 	ordered orderRecord
 END RECORD
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this menuData ) load(l_menuName STRING, l_netWork BOOLEAN) RETURNS BOOLEAN
+FUNCTION (this menuData) getMenu(l_menuName STRING) RETURNS BOOLEAN
 	CALL debug.output(SFMT("Load %1",l_menuName), FALSE)
-	LET this.menuData.menu_id = l_menuName
-	IF l_netWork THEN
-		IF NOT this.getData(l_menuName) THEN RETURN FALSE END IF
+	LET this.menuData.menuName = l_menuName
+	IF libMobile.gotNetwork() THEN
+		IF NOT this.getMenuWS(l_menuName) THEN RETURN FALSE END IF
 	ELSE
-		IF NOT this.loadData(l_menuName) THEN RETURN FALSE END IF
+		IF NOT this.getMenuJSON(l_menuName) THEN RETURN FALSE END IF
 	END IF
 	CALL debug.output(SFMT("Loaded %1",this.fileName), FALSE)
-	CALL this.calcLevels()
-	CALL debug.output("Levels calced", FALSE)
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this menuData ) getMenuList(l_netWork BOOLEAN) RETURNS BOOLEAN
-	DEFINE l_stat INT
+FUNCTION (this menuData) getMenuList() RETURNS BOOLEAN
+	CALL this.menulist.list.clear()
+	IF libMobile.gotNetwork() THEN
+		RETURN this.getMenuListWS()
+	ELSE
+		RETURN this.getMenuListJSON()
+	END IF
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+-- DB Code
+FUNCTION (this menuData) getMenuListDB() RETURNS BOOLEAN
+	IF this.menuList.rows = 0 THEN
+		IF NOT db.connect() THEN EXIT PROGRAM END IF
+		DECLARE l_cur1 CURSOR FOR SELECT * FROM menus
+		LET this.menulist.rows = 0
+		FOREACH l_cur1 INTO this.menulist.list[ this.menulist.rows + 1 ].*
+			LET this.menulist.rows = this.menulist.rows + 1
+		END FOREACH
+		CALL this.menulist.list.deleteElement(this.menulist.rows+1)
+	END IF
+	CALL debug.output(SFMT("getMenuListDB: %1", this.menuList.rows),FALSE)
+	RETURN TRUE
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION (this menuData) getMenuDB(l_menuName STRING) RETURNS BOOLEAN
+	IF this.menuData.rows = 0 THEN
+		IF NOT db.connect() THEN EXIT PROGRAM END IF
+		DECLARE l_cur2 CURSOR FOR SELECT * FROM menuItems WHERE menuName = l_menuName
+		LET this.menuData.rows = 0
+		FOREACH l_cur2 INTO this.menuData.items[ this.menuData.rows + 1 ].*
+			LET this.menuData.rows = this.menuData.rows + 1
+		END FOREACH
+		CALL this.menuData.items.deleteElement(this.menuData.rows+1)
+	END IF
+	CALL debug.output(SFMT("getMenuDB: %1 Items: %2", l_menuName, this.menuData.rows),FALSE)
+	RETURN TRUE
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+-- JSON Code
+FUNCTION (this menuData) getMenuListJSON() RETURNS BOOLEAN
 	DEFINE l_json TEXT
 	DEFINE l_fileName STRING = "menus.json"
-	IF l_netWork THEN
-		CALL libCommon.processing("Loading Menus ...",1)
-		LET wsBackEnd.Endpoint.Address.Uri = C_WS_BACKEND
-		CALL wsBackEnd.getMenus() RETURNING l_stat,this.menuList.*
-		CALL libCommon.processing("Loading Menus ...",3)
-		IF l_stat != 0 THEN
-			CALL debug.output(SFMT("getMenus: %1", l_stat),FALSE)
-			RETURN FALSE
-		END IF
-		CALL debug.output(SFMT("getMenus From WS: %1", this.menuList.rows),FALSE)
-		LOCATE l_json IN FILE l_fileName
-		LET l_json = util.JSON.stringify(this.menulist) -- Save Menu List Locally
-	ELSE
-		IF NOT os.path.exists(l_fileName) THEN
-			LET l_fileName = "../etc/menus.json"
-		END IF
-		LOCATE l_json IN FILE l_fileName -- Use Local Menu List
-		CALL util.JSON.parse(l_json, this.menulist )
-		CALL debug.output(SFMT("getMenus Local: %1", this.menuList.rows),FALSE)
-	END IF
+	IF NOT os.path.exists(l_fileName) THEN
+		LET l_fileName = "../etc/menus.json"		END IF
+	LOCATE l_json IN FILE l_fileName -- Use Local Menu List
+	CALL util.JSON.parse(l_json, this.menulist )
+	LET this.menulist.rows = this.menulist.list.getLength()
+	CALL debug.output(SFMT("getMenuListJSON: %1", this.menuList.rows),FALSE)
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this menuData ) save()
-	DEFINE l_order STRING
---TODO: send the order
-	LET l_order = util.JSON.stringify(this.ordered)
-	DISPLAY "Save:", l_order
-END FUNCTION
---------------------------------------------------------------------------------------------------------------
-FUNCTION (this menuData ) getData(l_menuName STRING) RETURNS BOOLEAN
-	DEFINE l_stat INT
-	LET wsBackEnd.Endpoint.Address.Uri = C_WS_BACKEND
-	CALL libCommon.processing("Loading Menu ...",1)
-	CALL wsBackEnd.getMenu(l_menuName) RETURNING l_stat,this.menuData.*
-	CALL libCommon.processing("Loading Menu ...",3)
-	IF l_stat != 0 THEN
-		CALL debug.output(SFMT("getMenu: %1 Stat: %2", l_menuName, l_stat),FALSE)
-		RETURN FALSE
-	END IF
-	CALL debug.output(SFMT("getMenu: %1 Rows: %2", l_menuName, this.menuData.rows),FALSE)
-	RETURN TRUE
-END FUNCTION
---------------------------------------------------------------------------------------------------------------
-FUNCTION (this menuData ) loadData(l_menuName STRING) RETURNS BOOLEAN
+FUNCTION (this menuData) getMenuJSON(l_menuName STRING) RETURNS BOOLEAN
 	DEFINE l_json TEXT
+	CALL this.menuData.items.clear()
+	CALL debug.output(SFMT("getMenuJSON: %1",l_menuName), FALSE)
 -- get test data
 	LET this.fileName = l_menuName||".json"
 	IF NOT os.path.exists(this.fileName) THEN
@@ -86,15 +91,68 @@ FUNCTION (this menuData ) loadData(l_menuName STRING) RETURNS BOOLEAN
 	END IF
 	LOCATE l_json IN FILE this.fileName
 	IF l_json.getLength() < 2 THEN
-		CALL fgl_winMessage("Error","Failed to load Menu Data!","exclamation")
+		CALL output(SFMT("getMenuJSON: Failed to load Menu Data %1!",l_menuName), FALSE)
+		ERROR SFMT("Failed to load Menu Data %1!",l_menuName)
 		RETURN FALSE
 	END IF
 	CALL util.JSON.parse(l_json, this.menuData.items)
 	LET this.menuData.rows = this.menuData.items.getLength()
+	CALL this.calcLevels(l_menuName)
+	CALL debug.output(SFMT("getMenuJSON: %1 Items: %2", l_menuName, this.menuData.rows),FALSE)
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this menuData ) calcLevels()
+-- WS functions
+--------------------------------------------------------------------------------------------------------------
+FUNCTION (this menuData) getMenuListWS() RETURNS BOOLEAN
+	DEFINE l_stat SMALLINT
+	DEFINE l_json TEXT
+	DEFINE l_fileName STRING = "menus.json"
+	CALL libCommon.processing("Loading Menus ...",1)
+	LET wsBackEnd.Endpoint.Address.Uri = C_WS_BACKEND
+	CALL wsBackEnd.getMenus() RETURNING l_stat,this.menuList.*
+	CALL libCommon.processing("Loading Menus ...",3)
+	IF l_stat != 0 THEN
+		CALL debug.output(SFMT("getMenuListWS: %1", l_stat),FALSE)
+		RETURN FALSE
+	END IF
+	LOCATE l_json IN FILE l_fileName
+	LET l_json = util.JSON.stringify(this.menulist) -- Save Menu List Locally
+	CALL debug.output(SFMT("getMenuListWS: %1", this.menuList.rows),FALSE)
+	RETURN TRUE
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION (this menuData) getMenuWS(l_menuName STRING) RETURNS BOOLEAN
+	DEFINE l_stat INT
+	LET wsBackEnd.Endpoint.Address.Uri = C_WS_BACKEND
+	CALL libCommon.processing("Loading Menu ...",1)
+	CALL wsBackEnd.getMenu(l_menuName) RETURNING l_stat, this.menuData.*
+	CALL libCommon.processing("Loading Menu ...",3)
+	IF l_stat != 0 THEN
+		CALL debug.output(SFMT("getMenuWS: %1 Stat: %2", l_menuName, l_stat),FALSE)
+		RETURN FALSE
+	END IF
+	CALL debug.output(SFMT("getMenuWS: %1 Rows: %2", l_menuName, this.menuData.rows),FALSE)
+	RETURN TRUE
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION (this menuData) save()
+	DEFINE l_stat INT
+	DEFINE l_resp RECORD
+		l_stat INT,
+		l_msg STRING
+	END RECORD
+	LET wsBackEnd.Endpoint.Address.Uri = C_WS_BACKEND
+	LET this.ordered.menu_id = this.menuData.menuName
+	CALL libCommon.processing("Saving Order ...",1)
+	CALL wsBackEnd.placeOrder(this.ordered.*) RETURNING l_stat, l_resp.*
+	CALL libCommon.processing("Saved Order.",3)
+	CALL debug.output(SFMT("save Stat: %1-%2:%3", l_stat,l_resp.l_stat,l_resp.l_msg),FALSE)
+	CALL fgl_winMessage("Info",SFMT("Order Confirmation: %1 : %2",l_resp.l_stat,l_resp.l_msg),"information")
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+-- util function
+PRIVATE FUNCTION (this menuData ) calcLevels(l_menuName STRING)
 	DEFINE x, y, l_id, l_pid, l_lev SMALLINT
 	DEFINE l_levs DYNAMIC ARRAY OF RECORD
 		pid SMALLINT,
@@ -117,15 +175,7 @@ FUNCTION (this menuData ) calcLevels()
 		LET l_levs[l_id].lev = l_lev
 	END FOR
 	FOR x = 1 TO this.menuData.rows
+		LET this.menuData.items[x].menuName = l_menuName
 		LET this.menuData.items[x].level = l_levs[this.menuData.items[x].t_id].lev
-{
-		DISPLAY SFMT("%1 Type: %2 Id: %3 Pid: %4 Cond: %5 Desc: %6",
-			(this.menuData.items[x].level SPACES),
-			this.menuData.items[x].type.subString(1,4),
-			this.menuData.items[x].t_id,
-			this.menuData.items[x].t_pid,
-			this.menuData.items[x].conditional,
-			this.menuData.items[x].description)
-}
 	END FOR
 END FUNCTION

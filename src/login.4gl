@@ -2,7 +2,7 @@ IMPORT util
 IMPORT security
 IMPORT FGL debug
 IMPORT FGL about
-IMPORT FGL mobLib
+IMPORT FGL libMobile
 IMPORT FGL wsBackEnd
 
 &include "menus.inc"
@@ -11,7 +11,7 @@ FUNCTION (this userRecord) login() RETURNS BOOLEAN
 	DEFINE l_network BOOLEAN
 	DEFINE l_stat INT
 	DEFINE l_pwd STRING
-	LET l_netWork = mobLib.gotNetwork()
+	LET l_netWork = libMobile.gotNetwork()
 	IF NOT l_network THEN
 		LET this.user_id = "DUMMY"
 		LET this.user_name = "offline"

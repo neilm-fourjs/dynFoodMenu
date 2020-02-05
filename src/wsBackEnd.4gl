@@ -6,6 +6,8 @@ IMPORT xml
 IMPORT util
 IMPORT os
 
+&include "menus.inc"
+
 #+
 #+ Global Endpoint user-defined type definition
 #+
@@ -28,18 +30,7 @@ PUBLIC DEFINE Endpoint tGlobalEndpointType
 PUBLIC CONSTANT C_SUCCESS = 0
 
 # generated placeOrderRequestBodyType
-PUBLIC TYPE placeOrderRequestBodyType RECORD
-	user_token STRING,
-	user_id STRING,
-	dte DATE,
-	items DYNAMIC ARRAY OF RECORD
-		item_id INTEGER,
-		description STRING,
-		qty INTEGER,
-		optional BOOLEAN
-	END RECORD,
-	rows INTEGER
-END RECORD
+PUBLIC TYPE placeOrderRequestBodyType orderRecord
 
 # generated multipart placeOrderMultipartResponse
 PUBLIC TYPE placeOrderMultipartResponse RECORD
@@ -67,26 +58,7 @@ PUBLIC TYPE getTokenResponseBodyType RECORD
 END RECORD
 
 # generated getMenuResponseBodyType
-PUBLIC TYPE menuItem RECORD
-		t_id INTEGER,
-		t_pid INTEGER,
-		id STRING,
-		type STRING,
-		description STRING,
-		conditional BOOLEAN,
-		minval INTEGER,
-		maxval INTEGER,
-		field STRING,
-		option_id STRING,
-		option_name STRING,
-		hidden BOOLEAN,
-		level SMALLINT
-	END RECORD
-PUBLIC TYPE getMenuResponseBodyType RECORD
-	menu_id STRING,
-	items DYNAMIC ARRAY OF menuItem,
-	rows INTEGER
-END RECORD
+PUBLIC TYPE getMenuResponseBodyType menuRecord
 
 ################################################################################
 # Operation /placeOrder
@@ -103,8 +75,6 @@ PUBLIC FUNCTION placeOrder(p_body placeOrderRequestBodyType)
 	DEFINE resp_body placeOrderMultipartResponse
 	DEFINE part com.HttpPart
 	DEFINE ind INTEGER
-	DEFINE xml_body xml.DomDocument
-	DEFINE xml_node xml.DomNode
 	DEFINE json_body STRING
 
 	TRY
@@ -314,7 +284,7 @@ END FUNCTION
 # VERB: GET
 # DESCRIPTION: Get a Menu
 #
-PUBLIC FUNCTION getMenu(p_l_id STRING) RETURNS(INTEGER, getMenuResponseBodyType)
+PUBLIC FUNCTION getMenu(p_l_menuName STRING) RETURNS(INTEGER, getMenuResponseBodyType)
 	DEFINE fullpath base.StringBuffer
 	DEFINE contentType STRING
 	DEFINE req com.HTTPRequest
@@ -326,8 +296,8 @@ PUBLIC FUNCTION getMenu(p_l_id STRING) RETURNS(INTEGER, getMenuResponseBodyType)
 
 		# Prepare request path
 		LET fullpath = base.StringBuffer.Create()
-		CALL fullpath.append("/getMenu/{l_id}")
-		CALL fullpath.replace("{l_id}", p_l_id, 1)
+		CALL fullpath.append("/getMenu/{l_menuName}")
+		CALL fullpath.replace("{l_menuName}", p_l_menuName, 1)
 
 		# Create request and configure it
 		LET req =

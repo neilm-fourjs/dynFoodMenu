@@ -4,6 +4,7 @@ IMPORT FGL menuData
 IMPORT FGL debug
 &include "../src/menus.inc"
 DEFINE m_users DYNAMIC ARRAY OF userRecord
+DEFINE m_userJSON TEXT
 --------------------------------------------------------------------------------
 #+ GET <server>/dynFoodRest/getToken/id/pwd
 #+ result: A Record that contains uesr information
@@ -44,27 +45,24 @@ PUBLIC FUNCTION getMenus() ATTRIBUTES(
 		WSGet, 
 		WSDescription = "Get list of Menus")
 	RETURNS (menuList ATTRIBUTES(WSMedia = 'application/json'))
-
 	DEFINE l_menu menuData
-	IF NOT l_menu.getMenuList(FALSE) THEN
+	IF NOT l_menu.getMenuListDB() THEN
 	END IF
-	CALL debug.output(SFMT("getMenus items: %1",l_menu.menuList.rows), FALSE)
 	RETURN l_menu.menuList.*
 END FUNCTION
 --------------------------------------------------------------------------------
 #+ GET <server>/dynFoodRest/getMenu/<id>
 #+ result: A menu array by ID
-PUBLIC FUNCTION getMenu(l_id VARCHAR(6) ATTRIBUTE(WSParam)) ATTRIBUTES( 
-		WSPath = "/getMenu/{l_id}", 
+PUBLIC FUNCTION getMenu(l_menuName VARCHAR(6) ATTRIBUTE(WSParam)) ATTRIBUTES( 
+		WSPath = "/getMenu/{l_menuName}", 
 		WSGet, 
 		WSDescription = "Get a Menu")
 	RETURNS (MenuRecord ATTRIBUTES(WSMedia = 'application/json'))
 	DEFINE l_menu menuData
-	IF NOT l_menu.load(l_id, FALSE) THEN
-		LET l_menu.menuData.menu_id = "Invalid MenuID!"
+	IF NOT l_menu.getMenuDB(l_menuName) THEN
+		LET l_menu.menuData.menuName = "Invalid menuName!"
 		LET l_menu.menuData.rows = 0
 	END IF
-	CALL debug.output(SFMT("getMenu id: %1 Items: %2",l_id, l_menu.menuData.rows), FALSE)
 	RETURN l_menu.menuData.*
 END FUNCTION
 --------------------------------------------------------------------------------
@@ -75,14 +73,20 @@ PUBLIC FUNCTION placeOrder(l_order orderRecord) ATTRIBUTES(
 		WSPost, 
 		WSDescription = "Place an Order")
 	RETURNS (INT,STRING ATTRIBUTES(WSMedia = 'application/json'))
+	DEFINE l_json TEXT
+	DEFINE l_fileName STRING
 
-	DISPLAY l_order.*
-
+	DISPLAY "Order:",l_order.*
+	LET l_fileName = "order_"||util.Datetime.format(CURRENT,"%Y%m%d%H%M_")||l_order.user_id||".json"
+	CALL debug.output(SFMT("placeOrder User: %1 Items: %2 Saved: %3",l_order.user_id, l_order.rows, l_fileName), FALSE)
+	LOCATE l_json IN MEMORY
+	LET l_json = util.JSON.stringify(l_order)
+	CALL l_json.writeFile(l_fileName)
 -- TODO: validate that the token is valid.
 	IF STATUS != 0 THEN
 		RETURN 100,"Invalid Token!"
 	END IF
---TODO: store order
+--TODO: store order in DB
 	IF STATUS != 0 THEN
 		RETURN 101,"Failed to place order!"
 	END IF
@@ -90,14 +94,15 @@ PUBLIC FUNCTION placeOrder(l_order orderRecord) ATTRIBUTES(
 END FUNCTION
 --------------------------------------------------------------------------------
 PRIVATE FUNCTION getUsers()
-	DEFINE l_json TEXT
-	LOCATE l_json IN FILE "users.json"
-	CALL util.JSON.parse(l_json, m_users)
+--TODO get users from DB
+	LOCATE m_userJSON IN MEMORY
+	CALL m_userJSON.readFile("users.json")
+	CALL util.JSON.parse(m_userJSON, m_users)
 END FUNCTION
 --------------------------------------------------------------------------------
 PRIVATE FUNCTION updateUsers()
-	DEFINE l_json TEXT
-	LOCATE l_json IN FILE "users.json"
-	LET l_json = util.JSON.stringify(m_users)
+--TODO update user token in DB
+	LET m_userJSON = util.JSON.stringify(m_users)
+	CALL m_userJSON.writeFile("users.json")
 END FUNCTION
 --------------------------------------------------------------------------------

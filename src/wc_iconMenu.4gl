@@ -65,9 +65,9 @@ FUNCTION (this wc_iconMenu) ui() RETURNS STRING
 		END IF
     CASE l_event
 			WHEN "BEFORE INPUT"
-				DISPLAY "BI"
+			--	DISPLAY "BI"
 			WHEN "BEFORE FIELD l_iconmenu"
-				DISPLAY "BF l_iconmenu"
+			--	DISPLAY "BF l_iconmenu"
 			OTHERWISE
 				CALL fgl_winMessage("Event", l_event,"information")
 		END CASE

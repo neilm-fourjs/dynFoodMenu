@@ -1,5 +1,8 @@
+
 dbi.default.driver = "dbmsqt"
-dbi.database.mydatabase.source = "mydatabase.db"
+dbi.database.mydatabase.source = "dynFoodDemo.db"
 #gui.rendering = "universal"
 
 security.global.ca = "CABundle.pem"
+
+my.dbname = "dynFoodDemo.db"

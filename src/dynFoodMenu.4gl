@@ -9,8 +9,8 @@ DEFINE m_dialog ui.Dialog
 PUBLIC DEFINE m_user_token STRING
 PUBLIC DEFINE m_user_id STRING
 --------------------------------------------------------------------------------------------------------------
-FUNCTION showMenu(l_menuName STRING, l_netWork BOOLEAN)
-	IF NOT m_data.load(l_menuName, l_netWork) THEN RETURN END IF-- Load the menu data
+FUNCTION showMenu(l_menuName STRING)
+	IF NOT m_data.getMenu(l_menuName) THEN RETURN END IF-- Load the menu data
 	LET m_form.menuData = m_data.menuData -- give the ui library the menu data
 	LET m_form.toolbar[1] = "submit"
 	LET m_form.toolbar[2] = "cancel"
@@ -72,7 +72,7 @@ FUNCTION input_okay() RETURNS BOOLEAN
 	DEFINE l_desc STRING
 	CALL debug.output("input_okay: Started", FALSE)
 	CALL m_data.ordered.items.clear()
-	LET m_data.ordered.dte = TODAY
+	LET m_data.ordered.placed = CURRENT
 	LET m_data.ordered.user_id = m_user_id
 	LET m_data.ordered.user_token = m_user_token
 	LET order_lines = 0

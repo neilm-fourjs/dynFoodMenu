@@ -1,3 +1,4 @@
+IMPORT FGL debug
 --------------------------------------------------------------------------------------------------------------
 -- Load the style file based on the client:
 -- gm.4st for Mobile ( GMA / GMI native )
@@ -9,6 +10,7 @@ FUNCTION loadStyles()
 	LET l_fe = DOWNSHIFT(ui.Interface.getFrontEndName())
 	LET l_uaName = ui.Interface.getUniversalClientName()
 	IF l_uaName.getLength() > 1 THEN LET l_fe = "gb" END IF -- switch GBC
+	CALL debug.output(SFMT("Loaded styles from %1.4st",l_fe),FALSE)
 	CALL ui.Interface.loadStyles(l_fe)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
@@ -22,3 +24,9 @@ FUNCTION processing(l_str STRING, l_mode SMALLINT)
 	END IF
 	CALL ui.Interface.refresh()
 END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION error(l_str STRING)
+	--CALL fgl_winMessage("Error", l_str, "exclamation")
+	CALL debug.output(SFMT("Error: %1",l_str), FALSE)
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------

@@ -1,4 +1,5 @@
 IMPORT FGL debug
+IMPORT FGL libCommon
 IMPORT FGL wc_iconMenu
 IMPORT FGL dynFoodMenu1
 IMPORT FGL login
@@ -6,14 +7,12 @@ IMPORT FGL menuData
 IMPORT FGL mobLib
 DEFINE myMenu wc_iconMenu.wc_iconMenu
 DEFINE m_user login.userRecord
-DEFINE m_fe STRING
 DEFINE m_netWork BOOLEAN = TRUE
 MAIN
 	DEFINE l_menuItem STRING = "."
 	DEFINE m_data menuData
 	DEFINE x SMALLINT
-	LET m_fe = DOWNSHIFT(ui.Interface.getFrontEndName())
-	CALL ui.Interface.loadStyles(m_fe)
+	CALL libCommon.loadStyles()
 	CALL debug.output("Started", FALSE)
 
 	IF NOT m_user.login() THEN

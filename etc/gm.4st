@@ -10,22 +10,8 @@ Property of Four Js*
 -->
 
 <StyleList>
-  <Style name="Group.login">
-     <StyleAttribute name="collapsible" value="no" />
-  </Style>
-  <Style name="Group">
-     <StyleAttribute name="initiallyCollapsed" value="no" />
-     <StyleAttribute name="collapsible" value="yes" />
-  </Style>
-  <Style name="CheckBox">
-     <StyleAttribute name="customWidget" value="toggleButton" />
-  </Style>
-  <Style name="Group">
-     <StyleAttribute name="backgroundColor" value="#befdbb" />
-  </Style>
   <Style name="Window">
      <StyleAttribute name="windowType" value="normal" />
-     <StyleAttribute name="fontSize" value="1em" />
   </Style>
   <Style name="Window.main">
      <StyleAttribute name="windowType" value="normal" />

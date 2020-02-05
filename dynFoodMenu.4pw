@@ -69,7 +69,7 @@
       <File filePath="src_backend/dynfoodrest.4gl"/>
       <File filePath="src_backend/ws_main.4gl"/>
     </Application>
-    <Application binaryName="dynFoodUser" dependencies="-1361191823,1074706446" id="875344568" label="dynFoodUser">
+    <Application binaryName="dynFoodUser" dependencies="-1361191823,1074706446,362164715,400358049" id="875344568" label="dynFoodUser">
       <File filePath="src_backend/userMaint.4gl"/>
       <File filePath="src_backend/userMaint.per"/>
     </Application>
@@ -84,6 +84,7 @@
       <File filePath="src/menus.inc"/>
     </Library>
     <Library binaryName="libCommon" id="1074706446" label="libCommon" targetDirectory="$(ProjectDir)/binCommon">
+      <File filePath="src/about.4gl"/>
       <File filePath="src/debug.4gl"/>
       <File filePath="src/debug.per"/>
       <File filePath="src/libCommon.4gl"/>
@@ -104,14 +105,13 @@
       <File filePath="etc/default.4ad"/>
       <File filePath="etc/fglprofile"/>
       <File filePath="etc/fglprofile.gst"/>
-      <File filePath="etc/gbc.4st"/>
-      <File filePath="etc/gdc.4st"/>
-      <File filePath="etc/gma.4st"/>
+      <File filePath="etc/gb.4st"/>
+      <File filePath="etc/gd.4st"/>
+      <File filePath="etc/gm.4st"/>
       <File filePath="etc/menu1.json"/>
       <File filePath="etc/menu2.json"/>
     </Library>
     <Library binaryName="libMobile" dependencies="-1361191823,1074706446" id="-541155840" label="libMobile">
-      <File filePath="src/about.4gl"/>
       <File filePath="src/login.4gl"/>
       <File filePath="src/login.per"/>
       <File filePath="src/mobLib.4gl"/>

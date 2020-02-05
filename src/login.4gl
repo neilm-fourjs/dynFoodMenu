@@ -1,6 +1,7 @@
 IMPORT util
 IMPORT security
 IMPORT FGL debug
+IMPORT FGL about
 IMPORT FGL mobLib
 IMPORT FGL wsBackEnd
 
@@ -20,6 +21,7 @@ FUNCTION (this userRecord) login() RETURNS BOOLEAN
 	LET wsBackEnd.Endpoint.Address.Uri = C_WS_BACKEND
 	OPEN WINDOW login WITH FORM "login"
 	INPUT BY NAME this.user_id, this.user_pwd
+		ON ACTION about CALL about.show()
 		AFTER INPUT
 			IF NOT int_flag THEN
 				CALL debug.output(SFMT("Getting token for: %1 from: %2 ", this.user_id, wsBackEnd.Endpoint.Address.Uri), FALSE)

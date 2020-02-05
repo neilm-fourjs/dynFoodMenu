@@ -49,6 +49,6 @@ Property of Four Js*
 
   <ActionDefault name="submit" text="submit" comment="Submit your order" image="fa-check" contextMenu="no"/>
   <ActionDefault name="debug" text="Debug" comment="Debug" image="fa-bug" validate="no" defaultView="no" contextMenu="yes"/>
-  <ActionDefault name="about" text="About" comment="About" image="fa-info" validate="no" defaultView="yes" contextMenu="yes"/>
+  <ActionDefault name="about" text="About" comment="About" image="fa-info" validate="no" defaultView="auto" contextMenu="yes"/>
   <ActionDefault name="quit" text="Quit" comment="Cancel your order" image="fa-power-off" validate="no" acceleratorName="Escape" defaultView="no" contextMenu="yes"/>
 </ActionDefaultList>

@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <APPLICATION Parent="defaultgwc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.4js.com/ns/gas/3.20/cfextwa.xsd">
-  <EXECUTION>
+	<EXECUTION>
 		<ENVIRONMENT_VARIABLE Id="FGLWSDEBUG">0</ENVIRONMENT_VARIABLE>
 		<ENVIRONMENT_VARIABLE Id="FGLPROFILE">fglprofile</ENVIRONMENT_VARIABLE>
-    <PATH>$(res.deployment.path)</PATH>
-    <MODULE>dynFoodUser</MODULE>
-  </EXECUTION>
+		<PATH>$(res.deployment.path)</PATH>
+		<MODULE>dynFoodUser</MODULE>
+	</EXECUTION>
+	<UA_OUTPUT>
+		<PROXY>$(res.uaproxy.cmd)</PROXY>
+		<PUBLIC_IMAGEPATH>$(res.public.resources)</PUBLIC_IMAGEPATH>
+		<GBC>gbc-clean</GBC>
+	</UA_OUTPUT>	
 </APPLICATION>

@@ -1,23 +1,37 @@
-LAYOUT (TEXT="Menu Login",STYLE="main2", IMAGE="icon32")
+
+LAYOUT (TEXT="Menu Login",STYLE="main", IMAGE="icon32")
 GRID
 {
-[: :|icon|logo             |: :]
-<G login                        >
- [l001    |f001  ]
- [l002    |f002                ]
-<                               >
- [a:      :accept |cancel ]
+[: :logo                     : :]
+[: :                         : :]
+[ usr                        ]
+<G login                      >
+ [l001     ]
+ [f001  ]
+ [l002     ]
+ [f002               |a]
+<                             >
+[menu                           ]
+[                               ]
+[                               ]
+[                               ]
+[                               ]
+[                               ]
+[                               ]
 }
 END -- GRID
 ATTRIBUTES
-IMAGE icon : icon, IMAGE="icon", SIZEPOLICY=FIXED, HEIGHT=80 PIXELS, AUTOSCALE, STYLE="noborder";
-IMAGE logo : logo, IMAGE="logo", SIZEPOLICY=FIXED, AUTOSCALE, STYLE="noborder";
-GROUP login : login, TEXT=%"Login", STYLE="login";
-LABEL l001 : l_userid, TEXT=%"User ID:", JUSTIFY=RIGHT;
-LABEL l002 : l_passwd, TEXT=%"Password:", JUSTIFY=RIGHT;
-EDIT f001 = FORMONLY.user_id, NOT NULL, REQUIRED, UPSHIFT;
+IMAGE logo : logo, IMAGE="logo", SIZEPOLICY=FIXED, HEIGHT=64 PIXELS, AUTOSCALE, STYLE="noborder";
+GROUP login : g_login {, TEXT=%"Login"}, STYLE="login", HIDDEN;
+LABEL l001 : l_userid, TEXT=%"User ID:", JUSTIFY=LEFT;
+LABEL l002 : l_passwd, TEXT=%"Password:", JUSTIFY=LEFT;
+EDIT f001 = FORMONLY.user_id, NOT NULL, REQUIRED, UPSHIFT, STYLE="big";
 EDIT f002 = FORMONLY.user_pwd, INVISIBLE, NOT NULL, REQUIRED;
+BUTTON a : accept,TEXT="";
+LABEL usr = FORMONLY.username, STYLE="title",SIZEPOLICY=FIXED,JUSTIFY=CENTER;
 
-BUTTON a : about, TEXT="";
-BUTTON accept : accept;
-BUTTON cancel : cancel;
+WEBCOMPONENT menu=FORMONLY.l_iconmenu, TABINDEX=3,
+   COMPONENTTYPE="iconMenu",
+   SIZEPOLICY=FIXED,
+   STRETCH=BOTH,
+   SCROLLBARS=NONE;

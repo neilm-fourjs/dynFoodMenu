@@ -128,6 +128,11 @@
         <File filePath="src/login.per"/>
       </Library>
       <Library binaryName="wc_iconMenu" id="91913022" label="wc_iconMenu">
+        <VirtualFolder label="wc">
+          <File filePath="pics/webcomponents/iconMenu/iconMenu.css"/>
+          <File filePath="pics/webcomponents/iconMenu/iconMenu.html"/>
+          <File filePath="pics/webcomponents/iconMenu/iconMenu.js"/>
+        </VirtualFolder>
         <File filePath="src/wc_iconMenu.4gl"/>
         <File filePath="src/wc_iconMenu.per"/>
       </Library>
@@ -153,7 +158,7 @@
         <DynamicProperty name="icon-xxhdpi" value="$(ProjectDir)/pics/icon.png"/>
         <DynamicProperty name="packageId" value="com.fjsemea.dynFoodMenu"/>
         <DynamicProperty name="packageLabel" value="FoodMenu"/>
-        <Directory description="Binaries" excludedFiles="Test.42r" label="Binaries" sourceDirectory="$(ProjectDir)/bin"/>
+        <Directory description="Binaries" excludedFiles="Test.42r" includedFiles="*.42?" label="Binaries" sourceDirectory="$(ProjectDir)/bin"/>
         <Directory label="Common" sourceDirectory="$(ProjectDir)/binCommon"/>
         <Directory description="Database" includedFiles="*.db" label="Database" recursive="false" sourceDirectory="$(ProjectDir)/database"/>
         <Directory description="Configuration Files" label="etc" recursive="false" sourceDirectory="$(ProjectDir)/etc"/>
@@ -181,7 +186,7 @@
         <DynamicProperty name="icon-xxhdpi" value="$(ProjectDir)/pics/iconUR.png"/>
         <DynamicProperty name="packageId" value="com.fjsemea.dynFoodMenuUR"/>
         <DynamicProperty name="packageLabel" value="FoodMenu UR"/>
-        <Directory description="Binaries" excludedFiles="Test.42r" label="Binaries" sourceDirectory="$(ProjectDir)/bin"/>
+        <Directory description="Binaries" excludedFiles="Test.42r" includedFiles="*.42?" label="Binaries" sourceDirectory="$(ProjectDir)/bin"/>
         <Directory label="Common" sourceDirectory="$(ProjectDir)/binCommon"/>
         <Directory description="Database" includedFiles="*.db" label="Database" recursive="false" sourceDirectory="$(ProjectDir)/database"/>
         <Directory description="Configuration Files" label="etc" recursive="false" sourceDirectory="$(ProjectDir)/etc"/>

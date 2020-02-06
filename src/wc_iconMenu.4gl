@@ -34,14 +34,22 @@ FUNCTION (this wc_iconMenu) init(l_fileName STRING) RETURNS BOOLEAN
 		LET this.js_str = util.JSON.stringify(this.menuJS)
 	END IF
 	CALL util.JSON.parse(this.js_str, this.menuJS)
-	IF this.menuJS.menu.getLength() = 0 THEN
+	{IF this.menuJS.menu.getLength() = 0 THEN
 		CALL fgl_winMessage("Error","Menu array is empty!","exclation")
 		RETURN FALSE
-	END IF
+	END IF}
 	--DISPLAY "Menu Items:", this.menuJS.menu.getLength()
 	LET this.fields[1].name = "formonly.l_iconmenu"
 	LET this.fields[1].type = "STRING"
 	RETURN TRUE
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION (this wc_iconMenu) sendJSON()
+ DISPLAY this.js_str TO l_iconmenu
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION (this wc_iconMenu) clear()
+ CALL this.menuJS.menu.clear()
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION (this wc_iconMenu) ui() RETURNS STRING
@@ -49,7 +57,7 @@ FUNCTION (this wc_iconMenu) ui() RETURNS STRING
 	DEFINE x SMALLINT
 	DEFINE l_event STRING
 
-	OPEN WINDOW iconMenu WITH FORM "wc_iconMenu"
+--	OPEN WINDOW iconMenu WITH FORM "wc_iconMenu"
 	LET d = ui.Dialog.createInputByName(this.fields)
 	CALL d.setFieldValue( this.fields[1].name, this.js_str)
 	CALL d.addTrigger("ON ACTION close")
@@ -73,7 +81,7 @@ FUNCTION (this wc_iconMenu) ui() RETURNS STRING
 		END CASE
 	END WHILE
 	CALL d.close()
-	CLOSE WINDOW iconMenu
+--	CLOSE WINDOW iconMenu
 	RETURN l_event
 
 END FUNCTION

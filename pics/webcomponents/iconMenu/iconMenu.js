@@ -35,7 +35,7 @@ onICHostReady = function(version) {
 		val1 = eval("(" + data + ")");
 		var menu="";
 	//	alert(val1.menu[1].text);
-		document.getElementById("debug").innerHTML="gicapi:"+data;
+	//	document.getElementById("debug").innerHTML="gicapi:"+data;
 		for (i in val1.menu) {
 		//	alert(i);
 			menuitemdiv = "<div id=\"menuitem\" onclick=\"menuClicked('"+val1.menu[i].action+"')\">";

@@ -10,6 +10,13 @@ Property of Four Js*
 -->
 
 <StyleList>
+  <Style name=".big">
+     <StyleAttribute name="fontSize" value="1.2em" />
+  </Style>
+  <Style name=".title">
+     <StyleAttribute name="fontSize" value="1.2em" />
+     <StyleAttribute name="textColor" value="#225a1e" />
+  </Style>
   <Style name=".noborder">
      <StyleAttribute name="border" value="none" />
   </Style>
@@ -29,6 +36,7 @@ Property of Four Js*
      <StyleAttribute name="ringMenuPosition" value="chrome" />
      <StyleAttribute name="toolBarPosition" value="chrome" />
      <StyleAttribute name="textColor" value="#324127" />
+     <StyleAttribute name="fontSize" value="0.9em" />
   </Style>
   <Style name="Window.main">
      <StyleAttribute name="windowType" value="normal" />

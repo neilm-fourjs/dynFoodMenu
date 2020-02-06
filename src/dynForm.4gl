@@ -48,7 +48,7 @@ FUNCTION (this dynForm) buildForm( l_titl STRING, l_styl STRING, l_img STRING ) 
 		IF this.menuData.items[id].hidden THEN CONTINUE FOR END IF
 		CASE this.menuData.items[id].type
 			WHEN "Type"
-				CALL this.addField(id, 1, 1, l_grid, "",l_desc ,"Label", C_WIDTH)
+				CALL this.addField(id, 1, 1, l_grid, "",l_desc ,"Label", C_WIDTH,"title")
 			WHEN "Group"
 				IF l_cont IS NOT NULL THEN -- set height for previous grid
 					CALL l_cont.setAttribute("height",l_items)
@@ -75,13 +75,13 @@ FUNCTION (this dynForm) buildForm( l_titl STRING, l_styl STRING, l_img STRING ) 
 				END IF
 				LET l_items = l_items + 1
 				IF this.menuData.items[id].maxval = 1 THEN
-					CALL this.addField(id, l_items, 1, l_cont, l_fldnam, l_desc,"CheckBox", C_WIDTH)
+					CALL this.addField(id, l_items, 1, l_cont, l_fldnam, l_desc,"CheckBox", C_WIDTH,"")
 				ELSE
-					CALL this.addField(id, l_items, 1, l_cont, l_fldnam, l_desc,"SpinEdit", 3)
-					CALL this.addField(id, l_items, 5, l_cont, "", l_desc,"Label", C_WIDTH)
+					CALL this.addField(id, l_items, 1, l_cont, l_fldnam, l_desc,"SpinEdit", 3,"")
+					CALL this.addField(id, l_items, 5, l_cont, "", l_desc,"Label", C_WIDTH,"")
 				END IF
 				IF this.menuData.items[id].option_name IS NOT NULL THEN
-					CALL this.addField(id, l_items, 16,l_cont, l_fldnam||"o1", this.menuData.items[id].option_name,"CheckBox", C_WIDTH)
+					CALL this.addField(id, l_items, 16,l_cont, l_fldnam||"o1", this.menuData.items[id].option_name,"CheckBox", C_WIDTH,"")
 				END IF
 		END CASE
 	END FOR
@@ -109,7 +109,7 @@ PRIVATE FUNCTION (this dynForm) addGroup(id SMALLINT, l_n om.DomNode, l_desc STR
 	RETURN l_group
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-PRIVATE FUNCTION (this dynForm) addField(id SMALLINT, x SMALLINT, y SMALLINT, l_n om.DomNode, l_nam STRING, l_desc STRING, l_wdg STRING, l_width SMALLINT) RETURNS ()
+PRIVATE FUNCTION (this dynForm) addField(id SMALLINT, x SMALLINT, y SMALLINT, l_n om.DomNode, l_nam STRING, l_desc STRING, l_wdg STRING, l_width SMALLINT, l_style STRING) RETURNS ()
 	DEFINE l_ff, l_w om.DomNode
 	DEFINE z SMALLINT
 	DEFINE l_typ STRING
@@ -145,6 +145,9 @@ PRIVATE FUNCTION (this dynForm) addField(id SMALLINT, x SMALLINT, y SMALLINT, l_
 	CALL l_w.setAttribute("posY", x)
 	CALL l_w.setAttribute("posX", y)
 	CALL l_w.setAttribute("gridWidth",l_width)
+	IF l_style IS NOT NULL THEN
+		CALL l_w.setAttribute("style",l_style)
+	END IF
 	IF l_wdg = "SpinEdit" THEN
 		CALL l_w.setAttribute("valueMin",this.menuData.items[id].minval)
 		CALL l_w.setAttribute("valueMax",this.menuData.items[id].maxval)

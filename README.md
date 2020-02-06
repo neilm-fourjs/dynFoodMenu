@@ -7,7 +7,7 @@ There are two versions of the program:
 * dynFoodMenu2 - a single .4gl example of just the form generation and input
 
 ## Running on the Android Phone using Native Rendering
-![ss0n](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss0nat.png "SS0NAT")
+![ss0n](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss0nat.png "SS0NAT") Bugs logged!
 ![ss1n](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss1nat.png "SS1NAT")
 ![ss2n](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss2nat.png "SS2NAT")
 ![ss3n](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss3nat.png "SS3NAT")
@@ -24,4 +24,6 @@ There are two versions of the program:
 ![ss2d](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss2gdc.png "SS2D")
 
 ## Running in the GBC ( Chrome )
+![ss0b](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss1gbc.png "SS0B")
+![ss1b](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss2gbc.png "SS1B")
 ![ss2b](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss2gbc.png "SS2B")

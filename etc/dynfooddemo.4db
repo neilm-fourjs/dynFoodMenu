@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Schema gstVersion="31408" id="{65a0acc6-929d-4101-ac0b-dd292efb788c}" version="4.0">
+  <AGSettings version="1.1">
+    <DynamicProperties version="2">
+      <DynamicProperty description="Associated label when generating form" initialValue="" isDefaultInherited="false" isHidden="false" label="Label" name="label" readOnly="false" type="TEXT"/>
+      <DynamicProperty description="Associated widget" editorInfo="contains:ButtonEdit|CheckBox|ComboBox|DateEdit|DateTimeEdit|Edit|FFImage|FFLabel|Field|Phantom|ProgressBar|RadioGroup|Slider|SpinEdit|TextEdit|TimeEdit" initialValue="Edit" isDefaultInherited="false" isHidden="false" label="Widget" name="widget" readOnly="false" type="ENUM"/>
+      <DynamicPropertyGroup collapsed="false" description="Formfied properties" label="Formfield" name="formfieldGroup" properties="label;widget"/>
+    </DynamicProperties>
+    <NodeInfos version="1">
+      <NodeInfo mimeType="db/column" properties="widget;label"/>
+    </NodeInfos>
+  </AGSettings>
+  <ExtractionSettings last="SQLite">
+    <ExtractionOptions casens="LowerCase" cvmeth="AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" ignerr="true" systab="false" type="SQLite"/>
+  </ExtractionSettings>
+  <Table active="true" name="dbver" status="U" uuid="db/table2">
+    <Column fglLength="4" fglType="2" name="dbver" notNull="false" order="1" status="U" uuid="db/column2"/>
+  </Table>
+  <Table active="true" name="menuitems" status="U" uuid="db/table4">
+    <Column fglLength="6" fglType="201" name="menuname" notNull="false" order="1" status="U" uuid="db/column4"/>
+    <Column fglLength="4" fglType="2" name="t_id" notNull="false" order="2" status="U" uuid="db/column6"/>
+    <Column fglLength="4" fglType="2" name="t_pid" notNull="false" order="3" status="U" uuid="db/column8"/>
+    <Column fglLength="6" fglType="201" name="id" notNull="false" order="4" status="U" uuid="db/column10"/>
+    <Column fglLength="10" fglType="201" name="type" notNull="false" order="5" status="U" uuid="db/column12"/>
+    <Column fglLength="30" fglType="201" name="description" notNull="false" order="6" status="U" uuid="db/column14"/>
+    <Column fglLength="1" fglType="45" name="conditional" notNull="false" order="7" status="U" uuid="db/column16"/>
+    <Column fglLength="4" fglType="2" name="minval" notNull="false" order="8" status="U" uuid="db/column18"/>
+    <Column fglLength="4" fglType="2" name="maxval" notNull="false" order="9" status="U" uuid="db/column20"/>
+    <Column fglLength="25" fglType="201" name="field" notNull="false" order="10" status="U" uuid="db/column22"/>
+    <Column fglLength="6" fglType="201" name="option_id" notNull="false" order="11" status="U" uuid="db/column24"/>
+    <Column fglLength="30" fglType="201" name="option_name" notNull="false" order="12" status="U" uuid="db/column26"/>
+    <Column fglLength="1" fglType="45" name="hidden" notNull="false" order="13" status="U" uuid="db/column28"/>
+    <Column fglLength="2" fglType="1" name="level" notNull="false" order="14" status="U" uuid="db/column30"/>
+  </Table>
+  <Table active="true" name="menus" status="U" uuid="db/table6">
+    <Column fglLength="6" fglType="201" name="menuname" notNull="false" order="1" status="U" uuid="db/column32"/>
+    <Column fglLength="30" fglType="201" name="menudesc" notNull="false" order="2" status="U" uuid="db/column34"/>
+    <Column fglLength="20" fglType="201" name="menuimage" notNull="false" order="3" status="U" uuid="db/column36"/>
+  </Table>
+  <Table active="true" name="orderitems" status="U" uuid="db/table8">
+    <Column fglLength="4" fglType="2" name="order_id" notNull="false" order="1" status="U" uuid="db/column38"/>
+    <Column fglLength="4" fglType="2" name="item_id" notNull="false" order="2" status="U" uuid="db/column40"/>
+    <Column fglLength="30" fglType="201" name="description" notNull="false" order="3" status="U" uuid="db/column42"/>
+    <Column fglLength="2" fglType="1" name="qty" notNull="false" order="4" status="U" uuid="db/column44"/>
+    <Column fglLength="1" fglType="45" name="optional" notNull="false" order="5" status="U" uuid="db/column46"/>
+  </Table>
+  <Table active="true" name="orders" status="U" uuid="db/table10">
+    <Column fglLength="4" fglType="6" name="order_id" notNull="false" order="1" status="U" uuid="db/column48"/>
+    <Column fglLength="60" fglType="201" name="user_token" notNull="false" order="2" status="U" uuid="db/column50"/>
+    <Column fglLength="6" fglType="201" name="user_id" notNull="false" order="3" status="U" uuid="db/column52"/>
+    <Column fglLength="6" fglType="201" name="menu_id" notNull="false" order="4" status="U" uuid="db/column54"/>
+    <Column fglLength="3594" fglType="10" name="placed" notNull="false" order="5" status="U" uuid="db/column56"/>
+    <Index indexColumns="order_id" indexConstraint="primaryKey" name="primary_key_orders" status="U" uuid="db/index2"/>
+  </Table>
+  <Table active="true" name="users" status="U" uuid="db/table12">
+    <Column fglLength="6" fglType="201" name="user_id" notNull="false" order="1" status="U" uuid="db/column58"/>
+    <Column fglLength="30" fglType="201" name="user_name" notNull="false" order="2" status="U" uuid="db/column60"/>
+    <Column fglLength="60" fglType="201" name="user_pwd" notNull="false" order="3" status="U" uuid="db/column62"/>
+    <Column fglLength="60" fglType="201" name="user_token" notNull="false" order="4" status="U" uuid="db/column64"/>
+    <Column fglLength="3080" fglType="10" name="token_ts" notNull="false" order="5" status="U" uuid="db/column66"/>
+  </Table>
+  <Views ActiveView="View-1" showLabels="true">
+    <View Name="View-1">
+      <Layout>
+        <![CDATA[AAAAAgAAABIAZABiAC8AdABhAGIAbABlADRAUpaWl8AAAEA3h4eJAAAAP6DlYEGJN08BAAAAEgBkAGIALwB0AGEAYgBsAGUANsBp4eHjgAAAQGBaWltgAAA/n752yLQ5XgEAAAAUAGQAYgAvAHQAYQBiAGwAZQAxADJAdsPDxTAAAEA3h4eJAAAAP6P3ztkWhy8BAAAAEgBkAGIALwB0AGEAYgBsAGUAMsBqWlpcAAAAQDaWlpgAAAA/nbItDlYEHgEAAAASAGQAYgAvAHQAYQBiAGwAZQA4QGiWlpggAABAeUtLTOAAAD+i8an752yPAQAAABQAZABiAC8AdABhAGIAbABlADEAMMBrh4eJQAAAQHkeHh+wAAA/oeuFHrhR7wE=]]>
+      </Layout>
+    </View>
+  </Views>
+</Schema>

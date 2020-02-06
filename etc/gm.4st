@@ -24,6 +24,8 @@ Property of Four Js*
      <StyleAttribute name="windowType" value="normal" />
      <StyleAttribute name="textColor" value="#324127" />
      <StyleAttribute name="fontSize" value="0.9em" />
+     <StyleAttribute name="androidActionWithIcon" value="yes" />
+     <!--StyleAttribute name="androidActionWithText" value="yes" /-->
   </Style>
   <Style name="Window.main">
      <StyleAttribute name="windowType" value="normal" />

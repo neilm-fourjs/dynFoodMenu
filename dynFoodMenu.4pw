@@ -66,11 +66,11 @@
   <PlatformList version="1.0"/>
   <Group environment="value:GBC_USER=gbc-clean,value:GBC_USER_DIR=$(ProjectDir),value:FGLGBCDIR=$(GBC_USER_DIR)/$(GBC_USER),value:FGLIMAGEPATH=../pics:$(FGLDIR)/lib/image2font.txt:$(FGLDIR)/lib,filelist:FGLPROFILE=$(ProjectDir)/etc/fglprofile.gst,dirlist:DBPATH=$(ProjectDir)/database;$(DBPATH)" id="-718261780" label="dynFoodMenu" language="Genero">
     <Group id="-2066936228" label="Backend" language="Genero" targetDirectory="$(ProjectDir)/binBackEnd">
-      <Application binaryName="dynFoodRest" dependencies="-1361191823,1770744530,1074706446,362164715" id="1074484008" label="dynFoodRest">
+      <Application binaryName="dynFoodRest" dependencies="-1361191823,1770744530,1074706446,362164715,1638566760" id="1074484008" label="dynFoodRest">
         <File filePath="src_backend/dynfoodrest.4gl"/>
         <File filePath="src_backend/ws_main.4gl"/>
       </Application>
-      <Application binaryName="dynFoodUser" dependencies="-1361191823,1074706446,362164715" id="875344568" label="dynFoodUser">
+      <Application binaryName="dynFoodUser" dependencies="-1361191823,1074706446,362164715,1638566760" id="875344568" label="dynFoodUser">
         <File filePath="src_backend/userMaint.4gl"/>
         <File filePath="src_backend/userMaint.per"/>
       </Application>
@@ -78,6 +78,9 @@
         <File filePath="src_backend/db_load.4gl"/>
         <File filePath="src_backend/mkdb.4gl"/>
       </Application>
+      <Library binaryName="Users" dependencies="-1361191823,1074706446,362164715" id="1638566760" label="Users">
+        <File filePath="src_backend/Users.4gl"/>
+      </Library>
       <Library binaryName="ws_xcf" id="-593227916" label="xcf">
         <File filePath="xcf/dyn.xcf"/>
         <File filePath="xcf/dynFoodMenu.xcf"/>
@@ -87,6 +90,7 @@
     <Group id="-1827913814" label="Common" language="Genero">
       <Library binaryName="etc" id="362164715" label="etc">
         <File filePath="etc/default.4ad"/>
+        <File filePath="../../../../../opt/fourjs/all/my_github/dynFoodMenu/etc/dynfooddemo.4db"/>
         <File filePath="etc/fglprofile"/>
         <File filePath="etc/fglprofile.gst"/>
         <File filePath="etc/gb.4st"/>
@@ -95,7 +99,7 @@
         <File filePath="etc/menu1.json"/>
         <File filePath="etc/menu2.json"/>
       </Library>
-      <Library binaryName="includes" id="-1361191823" label="includes">
+      <Library binaryName="includes" dependencies="362164715" id="-1361191823" label="includes">
         <File filePath="src/menus.inc"/>
       </Library>
       <Library binaryName="libCommon" dependencies="-1361191823" id="1074706446" label="libCommon" targetDirectory="$(ProjectDir)/binCommon">
@@ -113,7 +117,6 @@
       </Library>
     </Group>
     <Group id="10414220" label="Mobile" language="Genero">
-      <Library binaryName="Database" id="455109296" label="Database"/>
       <Application binaryName="dynFoodMenu" dependencies="159917928,212784684,362164715,455109296,-541155840,91913022,-1361191823,1770744530,1074706446,-4262148" id="400358049" label="dynFoodMenu">
         <File filePath="src/dynFoodMenu.4gl"/>
         <File filePath="src/dynForm.4gl"/>

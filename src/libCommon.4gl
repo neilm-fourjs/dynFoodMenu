@@ -30,3 +30,10 @@ FUNCTION error(l_str STRING)
 	CALL debug.output(SFMT("Error: %1",l_str), FALSE)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
+FUNCTION confirm(l_str STRING) RETURNS BOOLEAN
+	IF fgl_winQuestion("Confirm",l_str,"Yes","Yes|No","question",1) = "Yes" THEN
+		RETURN TRUE
+	ELSE
+		RETURN FALSE
+	END IF
+END FUNCTION

@@ -13,9 +13,9 @@ Property of Four Js*
   <ActionDefault name="accept" image="accept" text="Accept" acceleratorName="Return" acceleratorName2="Enter" contextMenu="no"/>
   <ActionDefault name="cancel" image="cancel" validate="no" text="Cancel" acceleratorName="Escape" contextMenu="no"/>
   <ActionDefault name="insert" text="Insert" acceleratorName="F3" contextMenu="no"/>
-  <ActionDefault name="append" text="Append" acceleratorName="Control-F3" contextMenu="no"/>
-  <ActionDefault name="update" text="Update" contextMenu="no"/>
-  <ActionDefault name="delete" validate="no" text="Delete" acceleratorName="F4" contextMenu="no"/>
+  <ActionDefault name="append" text="Append" image="fa-plus" acceleratorName="Control-F3" contextMenu="no"/>
+  <ActionDefault name="update" text="Update" image="fa-pencil" contextMenu="no"/>
+  <ActionDefault name="delete" validate="no" image="fa-minus" text="Delete" acceleratorName="F4" contextMenu="no"/>
   <ActionDefault name="help" validate="no" text="Help" acceleratorName="F1" contextMenu="no"/>
   <ActionDefault name="close" validate="no" text="Close" acceleratorName="Alt-F4" defaultView="no" contextMenu="no"/>
   <ActionDefault name="interrupt" text="Interrupt" contextMenu="no"/>

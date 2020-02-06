@@ -1,10 +1,10 @@
 IMPORT security
 IMPORT util
 IMPORT FGL menuData
+IMPORT FGL Users
 IMPORT FGL debug
 &include "../src/menus.inc"
-DEFINE m_users DYNAMIC ARRAY OF userRecord
-DEFINE m_userJSON TEXT
+DEFINE m_user Users
 --------------------------------------------------------------------------------
 #+ GET <server>/dynFoodRest/getToken/id/pwd
 #+ result: A Record that contains uesr information
@@ -13,27 +13,21 @@ PUBLIC FUNCTION getToken(l_id CHAR(6) ATTRIBUTE(WSParam), l_pwd STRING ATTRIBUTE
 		WSGet,
 		WSDescription = "Validate User and get Token")
 	RETURNS (userRecord ATTRIBUTES(WSMedia = 'application/json'))
-	DEFINE x SMALLINT
 	DEFINE l_rec userRecord = (
     user_id: "ERROR", 
 		user_name: "Invalid User Id!" )
 
---TODO: validate the password
-	IF m_users.getLength() = 0 THEN
-		CALL getUsers()
-	END IF
 	IF l_pwd != C_APIPASS THEN
 		CALL debug.output(SFMT("getToken: User:%1 API:%2 Invalid APIPASS",l_rec.user_id, l_pwd), FALSE)
 		RETURN l_rec.*
 	END IF
-	FOR x = 1 TO m_users.getLength()
-		IF l_id = m_users[x].user_id THEN
-			LET l_rec.* = m_users[x].*
-			LET l_rec.user_token = security.RandomGenerator.CreateUUIDString()
-			LET l_rec.token_ts = CURRENT
+	IF m_user.get( l_id ) THEN
+		LET m_user.currentUser.user_token = security.RandomGenerator.CreateUUIDString()
+		LET m_user.currentUser.token_ts = CURRENT
+		IF m_user.update() THEN
 		END IF
-	END FOR
-	CALL updateUsers()
+		LET l_rec.* = m_user.currentUser.*
+	END IF
 	CALL debug.output(SFMT("getToken: %1 %2",l_rec.user_id, l_rec.user_token), FALSE)
 	RETURN l_rec.*
 END FUNCTION
@@ -91,18 +85,5 @@ PUBLIC FUNCTION placeOrder(l_order orderRecord) ATTRIBUTES(
 		RETURN 101,"Failed to place order!"
 	END IF
 	RETURN 0,"Okay"
-END FUNCTION
---------------------------------------------------------------------------------
-PRIVATE FUNCTION getUsers()
---TODO get users from DB
-	LOCATE m_userJSON IN MEMORY
-	CALL m_userJSON.readFile("users.json")
-	CALL util.JSON.parse(m_userJSON, m_users)
-END FUNCTION
---------------------------------------------------------------------------------
-PRIVATE FUNCTION updateUsers()
---TODO update user token in DB
-	LET m_userJSON = util.JSON.stringify(m_users)
-	CALL m_userJSON.writeFile("users.json")
 END FUNCTION
 --------------------------------------------------------------------------------

@@ -1,4 +1,6 @@
 
+SCHEMA dynfooddemo
+
 CONSTANT C_APPVER="1.0"
 CONSTANT C_WS_BACKEND="https://generodemos.dynu.net/g/ws/r/dyn/dynFoodRest"
 CONSTANT C_APIPASS="dynFoodMenuDemofqqGQg43ppgjcaqz"

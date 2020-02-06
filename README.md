@@ -24,6 +24,6 @@ There are two versions of the program:
 ![ss2d](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss2gdc.png "SS2D")
 
 ## Running in the GBC ( Chrome )
-![ss0b](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss1gbc.png "SS0B")
-![ss1b](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss2gbc.png "SS1B")
+![ss0b](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss0gbc.png "SS0B")
+![ss1b](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss1gbc.png "SS1B")
 ![ss2b](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss2gbc.png "SS2B")

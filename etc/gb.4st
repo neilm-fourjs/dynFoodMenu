@@ -10,6 +10,9 @@ Property of Four Js*
 -->
 
 <StyleList>
+  <Style name=".noborder">
+     <StyleAttribute name="border" value="none" />
+  </Style>
   <Style name="Group.login">
      <StyleAttribute name="collapsible" value="no" />
   </Style>
@@ -25,6 +28,7 @@ Property of Four Js*
      <StyleAttribute name="actionPanelPosition" value="chrome" />
      <StyleAttribute name="ringMenuPosition" value="chrome" />
      <StyleAttribute name="toolBarPosition" value="chrome" />
+     <StyleAttribute name="textColor" value="#324127" />
   </Style>
   <Style name="Window.main">
      <StyleAttribute name="windowType" value="normal" />

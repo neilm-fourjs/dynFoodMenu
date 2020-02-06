@@ -1,7 +1,7 @@
 
 dbi.default.driver = "dbmsqt"
 dbi.database.mydatabase.source = "dynFoodDemo.db"
-gui.rendering = "native"
+gui.rendering = "universal"
 
 security.global.ca = "CABundle.pem"
 

@@ -64,113 +64,148 @@
   </Settings>
   <LanguageList version="1.0"/>
   <PlatformList version="1.0"/>
-  <Group id="-2066936228" label="Backend" language="Genero" targetDirectory="$(ProjectDir)/binBackEnd">
-    <Application binaryName="dynFoodRest" dependencies="-1361191823,1770744530,1074706446,362164715" id="1074484008" label="dynFoodRest">
-      <File filePath="src_backend/dynfoodrest.4gl"/>
-      <File filePath="src_backend/ws_main.4gl"/>
-    </Application>
-    <Application binaryName="dynFoodUser" dependencies="-1361191823,1074706446,362164715" id="875344568" label="dynFoodUser">
-      <File filePath="src_backend/userMaint.4gl"/>
-      <File filePath="src_backend/userMaint.per"/>
-    </Application>
-    <Application binaryName="mkdb" dependencies="1074706446,-1361191823,362164715,1770744530" id="1321734150" label="mkdb">
-      <File filePath="src_backend/db_load.4gl"/>
-      <File filePath="src_backend/mkdb.4gl"/>
-    </Application>
-    <Library binaryName="ws_xcf" id="-593227916" label="xcf">
-      <File filePath="xcf/dyn.xcf"/>
-      <File filePath="xcf/dynFoodMenu.xcf"/>
-      <File filePath="xcf/dynFoodUser.xcf"/>
-    </Library>
-  </Group>
-  <Group id="-1827913814" label="Common" language="Genero">
-    <Library binaryName="etc" id="362164715" label="etc">
-      <File filePath="etc/default.4ad"/>
-      <File filePath="etc/fglprofile"/>
-      <File filePath="etc/fglprofile.gst"/>
-      <File filePath="etc/gb.4st"/>
-      <File filePath="etc/gd.4st"/>
-      <File filePath="etc/gm.4st"/>
-      <File filePath="etc/menu1.json"/>
-      <File filePath="etc/menu2.json"/>
-    </Library>
-    <Library binaryName="includes" id="-1361191823" label="includes">
-      <File filePath="src/menus.inc"/>
-    </Library>
-    <Library binaryName="libCommon" dependencies="-1361191823" id="1074706446" label="libCommon" targetDirectory="$(ProjectDir)/binCommon">
-      <File filePath="src/about.4gl"/>
-      <File filePath="src_backend/db.4gl"/>
-      <File filePath="src/debug.4gl"/>
-      <File filePath="src/debug.per"/>
-      <File filePath="src/libCommon.4gl"/>
-      <File filePath="src/processing.per"/>
-    </Library>
-    <Library binaryName="libFoodMenu" dependencies="-541155840,-1361191823" id="1770744530" label="libFoodMenu" targetDirectory="$(ProjectDir)/binCommon">
-      <File filePath="src/menuData.4gl"/>
-      <File filePath="src/wsBackEnd.4gl"/>
-    </Library>
-  </Group>
-  <Group environment="filelist:FGLPROFILE=$(ProjectDir)/etc/fglprofile.gst,dirlist:DBPATH=$(ProjectDir)/database;$(DBPATH)" id="10414220" label="Mobile" language="Genero">
-    <Library binaryName="Database" id="455109296" label="Database"/>
-    <Application binaryName="dynFoodMenu" dependencies="159917928,212784684,362164715,455109296,-541155840,91913022,-1361191823,1770744530,1074706446" environment="dirlist:FGLIMAGEPATH=$(ProjectDir)/pics;$(FGLDIR)/lib/image2font.txt;$(ProjectDir);$(FGLIMAGEPATH)" id="400358049" label="dynFoodMenu">
-      <File filePath="src/dynFoodMenu.4gl"/>
-      <File filePath="src/dynForm.4gl"/>
-      <File filePath="src/main.4gl"/>
-    </Application>
-    <Library binaryName="libMobile" dependencies="-1361191823,1074706446" id="-541155840" label="libMobile">
-      <File filePath="src/libMobile.4gl"/>
-      <File filePath="src/login.4gl"/>
-      <File filePath="src/login.per"/>
-    </Library>
-    <Library binaryName="wc_iconMenu" id="91913022" label="wc_iconMenu">
-      <File filePath="src/wc_iconMenu.4gl"/>
-      <File filePath="src/wc_iconMenu.per"/>
-    </Library>
-  </Group>
-  <Group id="674884836" label="Packages" language="Genero">
-    <Package binaryName="dynFoodBackEnd" dependencies="-593227916,-1361191823,1074484008,1074706446,1770744530,-541155840,400358049,455109296,91913022,875344568,362164715" description="WS dynFood Server" id="-255363164" label="dynFoodBackEnd" platform="Genero Application Server">
-      <DynamicProperty name="packageId" value="dynFoodRest"/>
-      <DynamicProperty name="packageLabel" value="dynFoodRest"/>
-      <Directory label="Bin" sourceDirectory="$(ProjectDir)/bin"/>
-      <Directory excludedFiles="Test.42r" includedFiles="*.42?" label="BinBE" sourceDirectory="$(ProjectDir)/binBackEnd"/>
-      <Directory label="Common" sourceDirectory="$(ProjectDir)/binCommon"/>
-      <Directory label="Config" sourceDirectory="$(ProjectDir)/etc"/>
-      <Directory label="ConfigBE" sourceDirectory="$(ProjectDir)/etcBackEnd"/>
-      <Directory includedFiles="*.db" label="Database" sourceDirectory="$(ProjectDir)/database"/>
-      <Directory label="pics" sourceDirectory="$(ProjectDir)/pics"/>
-      <Directory label="xcf" sourceDirectory="$(ProjectDir)/xcf"/>
-    </Package>
-    <Package binaryName="dynFoodMenu_GMA" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022" description="Android Package" environment="value:GBC_USER=gbc-clean,value:GBC_USER_DIR=$(ProjectDir)" id="187810339" label="dynFoodMenu_GMA" platform="Android">
-      <DynamicProperty name="gma-accent-color" value="#70a770"/>
-      <DynamicProperty name="gma-navigationBarBackground-color" value="#225a1e"/>
-      <DynamicProperty name="gma-primary-color" value="#38503a"/>
-      <DynamicProperty name="gma-primary-dark-color" value="#324127"/>
-      <DynamicProperty name="icon-xxhdpi" value="$(ProjectDir)/pics/icon.png"/>
-      <DynamicProperty name="packageId" value="com.fjsemea.dynFoodMenu"/>
-      <DynamicProperty name="packageLabel" value="FoodMenu"/>
-      <Directory description="Binaries" excludedFiles="Test.42r" label="Binaries" sourceDirectory="$(ProjectDir)/bin"/>
-      <Directory label="Common" sourceDirectory="$(ProjectDir)/binCommon"/>
-      <Directory description="Database" includedFiles="*.db" label="Database" recursive="false" sourceDirectory="$(ProjectDir)/database"/>
-      <Directory description="Configuration Files" label="etc" recursive="false" sourceDirectory="$(ProjectDir)/etc"/>
-      <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>
-    </Package>
-  </Group>
-  <Group id="-973564800" label="Tests" language="Genero" targetDirectory="$(ProjectDir)/testbin">
-    <Application binaryName="dynFoodMenu2" dependencies="362164715" id="1005836130" label="dynFoodMenu2">
-      <File filePath="etc/data.json"/>
-      <File filePath="tests/dynFoodMenu2.4gl"/>
-    </Application>
-    <Application binaryName="test" id="-1267941975" label="test" language="Genero">
-      <File filePath="tests/generated.per"/>
-      <File filePath="tests/test.4gl"/>
-    </Application>
-    <Application binaryName="test2" dependencies="-541155840,362164715" id="-1284126652" label="test2">
-      <File filePath="tests/dynFoodTest.4gl"/>
-      <File filePath="tests/dynFormTest.4gl"/>
-      <File filePath="tests/menuData.4gl"/>
-    </Application>
-    <Application binaryName="wsCliTest" dependencies="-541155840" id="-1109916243" label="wsCliTest">
-      <File filePath="tests/wsCliTest.4gl"/>
-    </Application>
+  <Group environment="value:GBC_USER=gbc-clean,value:GBC_USER_DIR=$(ProjectDir),value:FGLGBCDIR=$(GBC_USER_DIR)/$(GBC_USER),value:FGLIMAGEPATH=../pics:$(FGLDIR)/lib/image2font.txt:$(FGLDIR)/lib,filelist:FGLPROFILE=$(ProjectDir)/etc/fglprofile.gst,dirlist:DBPATH=$(ProjectDir)/database;$(DBPATH)" id="-718261780" label="dynFoodMenu" language="Genero">
+    <Group id="-2066936228" label="Backend" language="Genero" targetDirectory="$(ProjectDir)/binBackEnd">
+      <Application binaryName="dynFoodRest" dependencies="-1361191823,1770744530,1074706446,362164715" id="1074484008" label="dynFoodRest">
+        <File filePath="src_backend/dynfoodrest.4gl"/>
+        <File filePath="src_backend/ws_main.4gl"/>
+      </Application>
+      <Application binaryName="dynFoodUser" dependencies="-1361191823,1074706446,362164715" id="875344568" label="dynFoodUser">
+        <File filePath="src_backend/userMaint.4gl"/>
+        <File filePath="src_backend/userMaint.per"/>
+      </Application>
+      <Application binaryName="mkdb" dependencies="1074706446,-1361191823,362164715,1770744530" id="1321734150" label="mkdb">
+        <File filePath="src_backend/db_load.4gl"/>
+        <File filePath="src_backend/mkdb.4gl"/>
+      </Application>
+      <Library binaryName="ws_xcf" id="-593227916" label="xcf">
+        <File filePath="xcf/dyn.xcf"/>
+        <File filePath="xcf/dynFoodMenu.xcf"/>
+        <File filePath="xcf/dynFoodUser.xcf"/>
+      </Library>
+    </Group>
+    <Group id="-1827913814" label="Common" language="Genero">
+      <Library binaryName="etc" id="362164715" label="etc">
+        <File filePath="etc/default.4ad"/>
+        <File filePath="etc/fglprofile"/>
+        <File filePath="etc/fglprofile.gst"/>
+        <File filePath="etc/gb.4st"/>
+        <File filePath="etc/gd.4st"/>
+        <File filePath="etc/gm.4st"/>
+        <File filePath="etc/menu1.json"/>
+        <File filePath="etc/menu2.json"/>
+      </Library>
+      <Library binaryName="includes" id="-1361191823" label="includes">
+        <File filePath="src/menus.inc"/>
+      </Library>
+      <Library binaryName="libCommon" dependencies="-1361191823" id="1074706446" label="libCommon" targetDirectory="$(ProjectDir)/binCommon">
+        <File filePath="src/about.4gl"/>
+        <File filePath="src/about.per"/>
+        <File filePath="src_backend/db.4gl"/>
+        <File filePath="src/debug.4gl"/>
+        <File filePath="src/debug.per"/>
+        <File filePath="src/libCommon.4gl"/>
+        <File filePath="src/processing.per"/>
+      </Library>
+      <Library binaryName="libFoodMenu" dependencies="-541155840,-1361191823" id="1770744530" label="libFoodMenu" targetDirectory="$(ProjectDir)/binCommon">
+        <File filePath="src/menuData.4gl"/>
+        <File filePath="src/wsBackEnd.4gl"/>
+      </Library>
+    </Group>
+    <Group id="10414220" label="Mobile" language="Genero">
+      <Library binaryName="Database" id="455109296" label="Database"/>
+      <Application binaryName="dynFoodMenu" dependencies="159917928,212784684,362164715,455109296,-541155840,91913022,-1361191823,1770744530,1074706446,-4262148" id="400358049" label="dynFoodMenu">
+        <File filePath="src/dynFoodMenu.4gl"/>
+        <File filePath="src/dynForm.4gl"/>
+        <File filePath="src/main.4gl"/>
+      </Application>
+      <Library binaryName="etcUR" id="-4262148" label="etcUR">
+        <File filePath="etc_ur/fglprofile"/>
+      </Library>
+      <Library binaryName="libMobile" dependencies="-1361191823,1074706446" id="-541155840" label="libMobile">
+        <File filePath="src/libMobile.4gl"/>
+        <File filePath="src/login.4gl"/>
+        <File filePath="src/login.per"/>
+      </Library>
+      <Library binaryName="wc_iconMenu" id="91913022" label="wc_iconMenu">
+        <File filePath="src/wc_iconMenu.4gl"/>
+        <File filePath="src/wc_iconMenu.per"/>
+      </Library>
+    </Group>
+    <Group id="674884836" label="Packages" language="Genero">
+      <Package binaryName="dynFoodBackEnd" dependencies="-593227916,-1361191823,1074484008,1074706446,1770744530,-541155840,400358049,455109296,91913022,875344568,362164715" description="WS dynFood Server" id="-255363164" label="dynFoodBackEnd" platform="Genero Application Server">
+        <DynamicProperty name="packageId" value="dynFoodRest"/>
+        <DynamicProperty name="packageLabel" value="dynFoodRest"/>
+        <Directory label="Bin" sourceDirectory="$(ProjectDir)/bin"/>
+        <Directory excludedFiles="Test.42r" includedFiles="*.42?" label="BinBE" sourceDirectory="$(ProjectDir)/binBackEnd"/>
+        <Directory label="Common" sourceDirectory="$(ProjectDir)/binCommon"/>
+        <Directory label="Config" sourceDirectory="$(ProjectDir)/etc"/>
+        <Directory label="ConfigBE" sourceDirectory="$(ProjectDir)/etcBackEnd"/>
+        <Directory includedFiles="*.db" label="Database" sourceDirectory="$(ProjectDir)/database"/>
+        <Directory label="pics" sourceDirectory="$(ProjectDir)/pics"/>
+        <Directory label="xcf" sourceDirectory="$(ProjectDir)/xcf"/>
+      </Package>
+      <Package binaryName="dynFoodMenu_GMA" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022" description="Android Package" id="187810339" label="dynFoodMenu_GMA" platform="Android">
+        <DynamicProperty name="gma-accent-color" value="#70a770"/>
+        <DynamicProperty name="gma-navigationBarBackground-color" value="#225a1e"/>
+        <DynamicProperty name="gma-primary-color" value="#38503a"/>
+        <DynamicProperty name="gma-primary-dark-color" value="#324127"/>
+        <DynamicProperty name="icon-xxhdpi" value="$(ProjectDir)/pics/icon.png"/>
+        <DynamicProperty name="packageId" value="com.fjsemea.dynFoodMenu"/>
+        <DynamicProperty name="packageLabel" value="FoodMenu"/>
+        <Directory description="Binaries" excludedFiles="Test.42r" label="Binaries" sourceDirectory="$(ProjectDir)/bin"/>
+        <Directory label="Common" sourceDirectory="$(ProjectDir)/binCommon"/>
+        <Directory description="Database" includedFiles="*.db" label="Database" recursive="false" sourceDirectory="$(ProjectDir)/database"/>
+        <Directory description="Configuration Files" label="etc" recursive="false" sourceDirectory="$(ProjectDir)/etc"/>
+        <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>
+      </Package>
+      <Package binaryName="dynFoodMenu_GMA8" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022" description="Android Package" distDirectory="$(ProjectDir)/distbin8" id="781176434" label="dynFoodMenu_GMA8" platform="Android">
+        <DynamicProperty name="gma-accent-color" value="#70a770"/>
+        <DynamicProperty name="gma-navigationBarBackground-color" value="#225a1e"/>
+        <DynamicProperty name="gma-primary-color" value="#38503a"/>
+        <DynamicProperty name="gma-primary-dark-color" value="#324127"/>
+        <DynamicProperty name="icon-xxhdpi" value="$(ProjectDir)/pics/icon.png"/>
+        <DynamicProperty name="packageId" value="com.fjsemea.dynFoodMenu8"/>
+        <DynamicProperty name="packageLabel" value="FoodMenu8"/>
+        <Directory description="Binaries" excludedFiles="Test.42r" label="Binaries" sourceDirectory="$(ProjectDir)/bin"/>
+        <Directory label="Common" sourceDirectory="$(ProjectDir)/binCommon"/>
+        <Directory description="Database" includedFiles="*.db" label="Database" recursive="false" sourceDirectory="$(ProjectDir)/database"/>
+        <Directory description="Configuration Files" label="etc" recursive="false" sourceDirectory="$(ProjectDir)/etc"/>
+        <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>
+      </Package>
+      <Package binaryName="dynFoodMenuUR_GMA" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022,-4262148" description="Android Package" distDirectory="$(ProjectDir)/distbinUR" id="1667970550" label="dynFoodMenuUR_GMA" platform="Android">
+        <DynamicProperty name="gma-accent-color" value="#70a770"/>
+        <DynamicProperty name="gma-navigationBarBackground-color" value="#225a1e"/>
+        <DynamicProperty name="gma-primary-color" value="#38503a"/>
+        <DynamicProperty name="gma-primary-dark-color" value="#324127"/>
+        <DynamicProperty name="icon-xxhdpi" value="$(ProjectDir)/pics/iconUR.png"/>
+        <DynamicProperty name="packageId" value="com.fjsemea.dynFoodMenuUR"/>
+        <DynamicProperty name="packageLabel" value="FoodMenu UR"/>
+        <Directory description="Binaries" excludedFiles="Test.42r" label="Binaries" sourceDirectory="$(ProjectDir)/bin"/>
+        <Directory label="Common" sourceDirectory="$(ProjectDir)/binCommon"/>
+        <Directory description="Database" includedFiles="*.db" label="Database" recursive="false" sourceDirectory="$(ProjectDir)/database"/>
+        <Directory description="Configuration Files" label="etc" recursive="false" sourceDirectory="$(ProjectDir)/etc"/>
+        <Directory description="fglprofile" label="etc_ur" recursive="false" sourceDirectory="$(ProjectDir)/etc_ur"/>
+        <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>
+      </Package>
+    </Group>
+    <Group id="-973564800" label="Tests" language="Genero" targetDirectory="$(ProjectDir)/testbin">
+      <Application binaryName="dynFoodMenu2" dependencies="362164715" id="1005836130" label="dynFoodMenu2">
+        <File filePath="etc/data.json"/>
+        <File filePath="tests/dynFoodMenu2.4gl"/>
+      </Application>
+      <Application binaryName="test" id="-1267941975" label="test" language="Genero">
+        <File filePath="tests/generated.per"/>
+        <File filePath="tests/test.4gl"/>
+      </Application>
+      <Application binaryName="test2" dependencies="-541155840,362164715" id="-1284126652" label="test2">
+        <File filePath="tests/dynFoodTest.4gl"/>
+        <File filePath="tests/dynFormTest.4gl"/>
+        <File filePath="tests/menuData.4gl"/>
+      </Application>
+      <Application binaryName="wsCliTest" dependencies="-541155840" id="-1109916243" label="wsCliTest">
+        <File filePath="tests/wsCliTest.4gl"/>
+      </Application>
+    </Group>
   </Group>
 </Project>

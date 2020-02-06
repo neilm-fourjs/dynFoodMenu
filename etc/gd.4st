@@ -10,9 +10,13 @@ Property of Four Js*
 -->
 
 <StyleList>
+  <Style name=".noborder">
+     <StyleAttribute name="border" value="none" />
+  </Style>
   <Style name="Window">
      <StyleAttribute name="windowType" value="normal" />
      <StyleAttribute name="fontSize" value="0.9em" />
+     <StyleAttribute name="textColor" value="#324127" />
   </Style>
   <Style name="Window.main">
      <StyleAttribute name="windowType" value="normal" />

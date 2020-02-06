@@ -1,15 +1,23 @@
-LAYOUT (TEXT="Menu Login",STYLE="dialog", IMAGE="icon32")
+LAYOUT (TEXT="Menu Login",STYLE="main2", IMAGE="icon32")
 GRID
 {
-<G login                     >
+[: :|icon|logo             |: :]
+<G login                        >
  [l001    |f001  ]
- [l002    |f002             ]
-<                            >
+ [l002    |f002                ]
+<                               >
+ [a:      :accept |cancel ]
 }
 END -- GRID
 ATTRIBUTES
+IMAGE icon : icon, IMAGE="icon", SIZEPOLICY=FIXED, HEIGHT=80 PIXELS, AUTOSCALE, STYLE="noborder";
+IMAGE logo : logo, IMAGE="logo", SIZEPOLICY=FIXED, AUTOSCALE, STYLE="noborder";
 GROUP login : login, TEXT=%"Login", STYLE="login";
 LABEL l001 : l_userid, TEXT=%"User ID:", JUSTIFY=RIGHT;
 LABEL l002 : l_passwd, TEXT=%"Password:", JUSTIFY=RIGHT;
 EDIT f001 = FORMONLY.user_id, NOT NULL, REQUIRED, UPSHIFT;
 EDIT f002 = FORMONLY.user_pwd, INVISIBLE, NOT NULL, REQUIRED;
+
+BUTTON a : about, TEXT="";
+BUTTON accept : accept;
+BUTTON cancel : cancel;

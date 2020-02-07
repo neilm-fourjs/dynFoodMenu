@@ -4,7 +4,7 @@ GRID
 {
 [: :logo                     : :]
 [: :                         : :]
-[ usr                        ]
+[ usr                           ]
 <G login                      >
  [l001     ]
  [f001  ]
@@ -25,8 +25,8 @@ IMAGE logo : logo, IMAGE="logo", SIZEPOLICY=FIXED, HEIGHT=64 PIXELS, AUTOSCALE, 
 GROUP login : g_login {, TEXT=%"Login"}, STYLE="login";
 LABEL l001 : l_userid, TEXT=%"User ID:", JUSTIFY=LEFT;
 LABEL l002 : l_passwd, TEXT=%"Password:", JUSTIFY=LEFT;
-EDIT f001 = FORMONLY.user_id, NOT NULL, REQUIRED, UPSHIFT, STYLE="big";
-EDIT f002 = FORMONLY.user_pwd, INVISIBLE, NOT NULL, REQUIRED;
+EDIT f001 = FORMONLY.user_id, NOT NULL, REQUIRED, UPSHIFT, STYLE="big", TABINDEX=0, PLACEHOLDER="User Id" ;
+EDIT f002 = FORMONLY.user_pwd, INVISIBLE, NOT NULL, REQUIRED, TABINDEX=1, PLACEHOLDER="Password";
 BUTTON a : accept,TEXT="";
 LABEL usr = FORMONLY.username, STYLE="title",SIZEPOLICY=FIXED,JUSTIFY=CENTER;
 

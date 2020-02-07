@@ -24,18 +24,16 @@ FUNCTION (this userRecord) login() RETURNS BOOLEAN
 	--OPEN WINDOW login WITH FORM "login"
 	CALL ui.Window.getCurrent().getForm().setElementHidden("g_login",FALSE)
 	CALL ui.Window.getCurrent().getForm().setFieldStyle("formonly.username","title")
-	INPUT BY NAME this.user_id, this.user_pwd
-		AFTER FIELD user_id
-			DISPLAY "" TO username
+	INPUT BY NAME this.user_id, this.user_pwd WITHOUT DEFAULTS
 		BEFORE FIELD user_pwd
+			DISPLAY "" TO username
 			LET this.user_pwd = ""
-		AFTER FIELD user_pwd
-			CALL ui.Window.getCurrent().getForm().setFieldStyle("formonly.username","title curvedborder")
 		ON ACTION about CALL about.show()
 		AFTER INPUT
 			IF NOT int_flag THEN
 				CALL debug.output(SFMT("Getting token for: %1 from: %2 ", this.user_id, wsBackEnd.Endpoint.Address.Uri), FALSE)
 				LET l_pwd = this.user_pwd
+				CALL ui.Window.getCurrent().getForm().setFieldStyle("formonly.username","title curvedborder")
 				CALL wsBackEnd.getToken(this.user_id, C_APIPASS) RETURNING l_stat, this.*
 				CALL debug.output(SFMT("getToken: %1, reply: %2 : %3(%4)",this.user_id, l_stat, this.user_name, this.user_pwd),FALSE)
 				IF l_stat != 0 OR this.user_id = "ERROR" THEN

@@ -196,7 +196,7 @@
         <Directory description="fglprofile" label="etc_ur" recursive="false" sourceDirectory="$(ProjectDir)/etc_ur"/>
         <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>
       </Package>
-      <Package binaryName="dynFoodMenuUR_GMI" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022,-4262148" description="iOS Package" distDirectory="$(ProjectDir)/distbinUR" id="1667970550" label="dynFoodMenuUR_GMI" platform="Android">
+      <Package binaryName="dynFoodMenuUR_GMI" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022,-4262148" description="iOS Package" distDirectory="$(ProjectDir)/distbinUR" id="1975526108" label="dynFoodMenuUR_GMI" platform="iOS">
         <DynamicProperty name="icon-xxhdpi" value="$(ProjectDir)/pics/iconUR.png"/>
         <DynamicProperty name="packageId" value="com.fjsemea.dynFoodMenuUR"/>
         <DynamicProperty name="packageLabel" value="FoodMenu UR"/>

@@ -7,23 +7,20 @@ There are two versions of the program:
 * dynFoodMenu2 - a single .4gl example of just the form generation and input
 
 ## Running on the Android Phone using Native Rendering
-![ss0n](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss0nat.png "SS0NAT")
 ![ss1n](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss1nat.png "SS1NAT")
 ![ss2n](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss2nat.png "SS2NAT")
 ![ss3n](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss3nat.png "SS3NAT")
 ![ss4n](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss4nat.png "SS4NAT")
+![ss5n](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss5nat.png "SS5NAT")
 
 ## Running on Android Emulator using Universal Rendering
-![ss0u](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss0ur.png "SS0UA")
 ![ss1u](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss1ur.png "SS1UA")
 ![ss2u](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss2ur.png "SS2UA")
 ![ss3u](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss3ur.png "SS3UA")
 ![ss4u](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss4ur.png "SS4UA")
-
-## Running in the GDC ( Linux with dark theme )
-![ss2d](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss2gdc.png "SS2D")
+![ss5u](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss5ur.png "SS5UA")
 
 ## Running in the GBC ( Chrome )
-![ss0b](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss0gbc.png "SS0B")
 ![ss1b](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss1gbc.png "SS1B")
 ![ss2b](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss2gbc.png "SS2B")
+![ss3b](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss3gbc.png "SS3B")

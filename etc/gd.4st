@@ -13,6 +13,10 @@ Property of Four Js*
   <Style name=".noborder">
      <StyleAttribute name="border" value="none" />
   </Style>
+  <Style name="Button">
+     <StyleAttribute name="scaleIcon" value="32px" />
+     <StyleAttribute name="border" value="none" />
+  </Style>
   <Style name="Window">
      <StyleAttribute name="windowType" value="normal" />
   </Style>

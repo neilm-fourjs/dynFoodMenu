@@ -90,7 +90,7 @@
     <Group id="-1827913814" label="Common" language="Genero">
       <Library binaryName="etc" id="362164715" label="etc">
         <File filePath="etc/default.4ad"/>
-        <File filePath="../../../../../opt/fourjs/all/my_github/dynFoodMenu/etc/dynfooddemo.4db"/>
+        <File filePath="etc/dynfooddemo.4db"/>
         <File filePath="etc/fglprofile"/>
         <File filePath="etc/fglprofile.gst"/>
         <File filePath="etc/gb.4st"/>

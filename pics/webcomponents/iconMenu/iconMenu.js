@@ -32,6 +32,9 @@ onICHostReady = function(version) {
 	}
 
 	gICAPI.onData = function( data ) {
+		if (data == null || data.length == 0) {
+			return;
+		}
 		val1 = eval("(" + data + ")");
 		var menu="";
 	//	alert(val1.menu[1].text);
@@ -46,4 +49,3 @@ onICHostReady = function(version) {
 		clicked = true;
 	}
 }
-

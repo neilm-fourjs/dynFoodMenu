@@ -18,8 +18,8 @@ FUNCTION showMenu(l_menuName STRING)
 	LET m_form.toolbar[1] = "submit"
 	LET m_form.toolbar[2] = "cancel"
 	LET m_form.toolbar[3] = "about"
-	LET m_form.toolbar[4] = "debug"
-	CALL m_form.buildForm("Menu", "main2", "icon32") -- create the form
+--	LET m_form.toolbar[4] = "debug"
+	CALL m_form.buildForm("Food Menu", "main", "icon32") -- create the form
 	IF inpByName() THEN -- do the input
 		CALL m_data.save()
 	END IF
@@ -52,7 +52,7 @@ FUNCTION inpByName() RETURNS (BOOLEAN)
 			WHEN "ON ACTION close" EXIT WHILE
 			WHEN "ON ACTION cancel" EXIT WHILE
 			WHEN "ON ACTION about" CALL about.show()
-			WHEN "ON ACTION debug" LET debug.m_showDebug = TRUE
+--			WHEN "ON ACTION debug" LET debug.m_showDebug = TRUE
 			WHEN "ON ACTION submit"
 				IF input_okay() THEN
 					LET l_accept = TRUE

@@ -10,6 +10,9 @@ Property of Four Js*
 -->
 
 <StyleList>
+  <Style name=".bold">
+     <StyleAttribute name="fontWeight" value="bold" />
+  </Style>
   <Style name=".big">
      <StyleAttribute name="fontSize" value="1.2em" />
   </Style>

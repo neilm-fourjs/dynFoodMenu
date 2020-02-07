@@ -1,5 +1,5 @@
 
-LAYOUT (TEXT="Menu Login",STYLE="main", IMAGE="icon32")
+LAYOUT (TEXT="Food Menu",STYLE="main", IMAGE="icon32")
 GRID
 {
 [: :logo                  : :]
@@ -23,10 +23,10 @@ END -- GRID
 ATTRIBUTES
 IMAGE logo : logo, IMAGE="logo", SIZEPOLICY=FIXED, HEIGHT=64 PIXELS, AUTOSCALE, STYLE="noborder";
 GROUP login : g_login {, TEXT=%"Login"}, STYLE="login";
-LABEL l001 : l_userid, TEXT=%"User ID:", JUSTIFY=LEFT;
-LABEL l002 : l_passwd, TEXT=%"Password:", JUSTIFY=LEFT;
+LABEL l001 : l_userid, TEXT=%"User ID:", JUSTIFY=LEFT, STYLE="big bold";
+LABEL l002 : l_passwd, TEXT=%"Password:", JUSTIFY=LEFT, STYLE="big bold";
 EDIT f001 = FORMONLY.user_id, NOT NULL, REQUIRED, UPSHIFT, STYLE="big", TABINDEX=0, PLACEHOLDER="User Id" ;
-EDIT f002 = FORMONLY.user_pwd, INVISIBLE, NOT NULL, REQUIRED, TABINDEX=1, PLACEHOLDER="Password";
+EDIT f002 = FORMONLY.user_pwd, INVISIBLE, NOT NULL, REQUIRED, STYLE="big", TABINDEX=1, PLACEHOLDER="Password";
 LABEL usr = FORMONLY.username, STYLE="title",SIZEPOLICY=FIXED,JUSTIFY=CENTER;
 
 WEBCOMPONENT menu=FORMONLY.l_iconmenu, TABINDEX=3, HIDDEN,

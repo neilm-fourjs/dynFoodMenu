@@ -9,6 +9,6 @@
 	<UA_OUTPUT>
 		<PROXY>$(res.uaproxy.cmd)</PROXY>
 		<PUBLIC_IMAGEPATH>$(res.public.resources)</PUBLIC_IMAGEPATH>
-		<GBC>gbc-clean</GBC>
+		<GBC>gbc-foodMenu</GBC>
 	</UA_OUTPUT>	
 </APPLICATION>

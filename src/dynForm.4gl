@@ -29,13 +29,13 @@ FUNCTION (this dynForm) buildForm( l_titl STRING, l_styl STRING, l_img STRING ) 
 	CALL l_f.setAttribute("text",l_titl)
 	CALL l_f.setAttribute("style",l_styl)
 -- Create Toolbar
-	IF this.toolbar.getLength() > 0 THEN
+{	IF this.toolbar.getLength() > 0 THEN
 		LET l_vb = l_f.createChild("ToolBar")
 	END IF
 	FOR y = 1 TO this.toolbar.getLength()
 		LET l_group = l_vb.createChild("ToolBarItem")
 		CALL l_group.setAttribute("name", this.toolbar[y])
-	END FOR
+	END FOR}
 -- Create the content of the form.
 	LET l_vb = l_f.createChild("VBox")
 	LET l_grid = l_vb.createChild("Grid")

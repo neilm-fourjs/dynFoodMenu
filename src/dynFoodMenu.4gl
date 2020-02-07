@@ -114,9 +114,14 @@ FUNCTION input_okay() RETURNS BOOLEAN
 		END IF
 	END FOR
 	LET m_data.ordered.rows = order_lines
-	CALL debug.output("input_okay: Do confirm", FALSE)
-	IF fgl_winQuestion("Confirm",l_order,"Yes","Yes|No","question",0) = "No" THEN
-		CALL debug.output("input_okay: Confirmed - No", FALSE)
+	IF order_lines > 0 THEN
+		CALL debug.output("input_okay: Do confirm", FALSE)
+		IF fgl_winQuestion("Confirm",l_order,"Yes","Yes|No","question",0) = "No" THEN
+			CALL debug.output("input_okay: Confirmed - No", FALSE)
+			RETURN FALSE
+		END IF
+	ELSE
+		ERROR "Empty order ignored!"
 		RETURN FALSE
 	END IF
 	CALL debug.output("input_okay: Confirmed- Yes", FALSE)

@@ -11,13 +11,13 @@ GRID
  [l002     ]
  [f002               |a]
 <                             >
-[menu                           ]
-[                               ]
-[                               ]
-[                               ]
-[                               ]
-[                               ]
-[                               ]
+[menu                          ]
+[                              ]
+[                              ]
+[                              ]
+[                              ]
+[                              ]
+[                              ]
 }
 END -- GRID
 ATTRIBUTES
@@ -30,7 +30,7 @@ EDIT f002 = FORMONLY.user_pwd, INVISIBLE, NOT NULL, REQUIRED, TABINDEX=1, PLACEH
 BUTTON a : accept,TEXT="";
 LABEL usr = FORMONLY.username, STYLE="title",SIZEPOLICY=FIXED,JUSTIFY=CENTER;
 
-WEBCOMPONENT menu=FORMONLY.l_iconmenu, TABINDEX=3,
+WEBCOMPONENT menu=FORMONLY.l_iconmenu, TABINDEX=3, HIDDEN,
    COMPONENTTYPE="iconMenu",
    SIZEPOLICY=FIXED,
    STRETCH=BOTH,

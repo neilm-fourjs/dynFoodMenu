@@ -2,10 +2,13 @@ IMPORT FGL menuData
 IMPORT FGL dynForm
 IMPORT FGL debug
 IMPORT FGL about
+IMPORT FGL login
+IMPORT FGL libMobile
 
 DEFINE m_data menuData
 DEFINE m_form dynForm
 DEFINE m_dialog ui.Dialog
+DEFINE m_user login.userRecord
 PUBLIC DEFINE m_user_token STRING
 PUBLIC DEFINE m_user_id STRING
 --------------------------------------------------------------------------------------------------------------
@@ -71,6 +74,19 @@ FUNCTION input_okay() RETURNS BOOLEAN
 	DEFINE l_order STRING = "Your Order is:\n"
 	DEFINE l_desc STRING
 	CALL debug.output("input_okay: Started", FALSE)
+	IF NOT libMobile.gotNetwork() THEN
+		CALL fgl_winMessage("Error","No connection!","exclamation")
+		RETURN FALSE
+	END IF
+	IF m_user_id = "DUMMY" THEN
+		IF NOT m_user.login(TRUE) OR m_user.user_id = "DUMMY" THEN
+			CALL fgl_winMessage("Error","You are not logged in","exclamation")
+			RETURN FALSE
+		ELSE
+			LET m_user_id = m_user.user_id
+			LET m_user_token = m_user.user_token
+		END IF
+	END IF
 	CALL m_data.ordered.items.clear()
 	LET m_data.ordered.placed = CURRENT
 	LET m_data.ordered.user_id = m_user_id

@@ -7,21 +7,24 @@ IMPORT FGL wsBackEnd
 
 &include "menus.inc"
 
-FUNCTION (this userRecord) login() RETURNS BOOLEAN
-	DEFINE l_network BOOLEAN
+FUNCTION (this userRecord) login(l_win BOOLEAN) RETURNS BOOLEAN
 	DEFINE l_stat INT
 	DEFINE l_pwd STRING
-	LET l_netWork = libMobile.gotNetwork()
-	IF NOT l_network THEN
+	IF NOT libMobile.gotNetwork() THEN
 		LET this.user_id = "DUMMY"
 		LET this.user_name = "Offline"
-		DISPLAY this.user_name TO username
-		CALL ui.Window.getCurrent().getForm().setFieldStyle("formonly.username","title curvedborder")
+		IF NOT l_win THEN
+			DISPLAY this.user_name TO username
+			CALL ui.Window.getCurrent().getForm().setFieldStyle("formonly.username","title curvedborder")
+			CALL ui.Window.getCurrent().getForm().setElementHidden("g_login",TRUE)
+		END IF
 		RETURN TRUE
 	END IF
 	LET int_flag = FALSE
 	LET wsBackEnd.Endpoint.Address.Uri = C_WS_BACKEND
-	--OPEN WINDOW login WITH FORM "login"
+	IF l_win THEN
+		OPEN WINDOW login WITH FORM "login"
+	END IF
 	CALL ui.Window.getCurrent().getForm().setElementHidden("g_login",FALSE)
 	CALL ui.Window.getCurrent().getForm().setFieldStyle("formonly.username","title")
 	INPUT BY NAME this.user_id, this.user_pwd WITHOUT DEFAULTS
@@ -48,8 +51,11 @@ FUNCTION (this userRecord) login() RETURNS BOOLEAN
 			END IF
 	END INPUT
 	DISPLAY SFMT("Welcome %1",this.user_name) TO username
-	CALL ui.Window.getCurrent().getForm().setElementHidden("g_login",TRUE)
---	CLOSE WINDOW login
+	IF NOT l_win THEN
+		CALL ui.Window.getCurrent().getForm().setElementHidden("g_login",TRUE)
+	ELSE
+		CLOSE WINDOW login
+	END IF
 	IF int_flag THEN LET int_flag = FALSE RETURN FALSE END IF
 	CALL debug.output(SFMT("getToken: %1 %2 Okay",this.user_id, this.user_token),FALSE )
 	RETURN TRUE

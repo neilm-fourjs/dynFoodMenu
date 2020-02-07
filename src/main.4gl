@@ -15,18 +15,18 @@ MAIN
 	CALL debug.output("Started", FALSE)
 	OPEN FORM login FROM "login"
 	DISPLAY FORM login
-
+{
 	CALL myMenu.addMenuItem("Close", "poweroff.png", "close")
 	IF NOT myMenu.init(NULL) THEN -- something wrong?
 		EXIT PROGRAM
 	END IF
 	CALL myMenu.sendJSON()
-
-	IF NOT m_user.login() THEN
+}
+	IF NOT m_user.login(FALSE) THEN
 		CALL debug.output(SFMT("Invalid login %1 %2",m_user.user_id, m_user.user_name),FALSE)
 		EXIT PROGRAM
 	END IF
-
+	CALL ui.Window.getCurrent().getForm().setFieldHidden("formonly.l_iconmenu",FALSE)
 	IF NOT m_data.getMenuList() THEN
 		CALL debug.output("Failed to get Menu list.",FALSE)
 		EXIT PROGRAM

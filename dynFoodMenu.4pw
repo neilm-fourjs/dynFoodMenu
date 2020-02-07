@@ -196,6 +196,17 @@
         <Directory description="fglprofile" label="etc_ur" recursive="false" sourceDirectory="$(ProjectDir)/etc_ur"/>
         <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>
       </Package>
+      <Package binaryName="dynFoodMenuUR_GMI" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022,-4262148" description="iOS Package" distDirectory="$(ProjectDir)/distbinUR" id="1667970550" label="dynFoodMenuUR_GMI" platform="Android">
+        <DynamicProperty name="icon-xxhdpi" value="$(ProjectDir)/pics/iconUR.png"/>
+        <DynamicProperty name="packageId" value="com.fjsemea.dynFoodMenuUR"/>
+        <DynamicProperty name="packageLabel" value="FoodMenu UR"/>
+        <Directory description="Binaries" excludedFiles="Test.42r" includedFiles="*.42?" label="Binaries" sourceDirectory="$(ProjectDir)/bin"/>
+        <Directory label="Common" sourceDirectory="$(ProjectDir)/binCommon"/>
+        <Directory description="Database" includedFiles="*.db" label="Database" recursive="false" sourceDirectory="$(ProjectDir)/database"/>
+        <Directory description="Configuration Files" label="etc" recursive="false" sourceDirectory="$(ProjectDir)/etc"/>
+        <Directory description="fglprofile" label="etc_ur" recursive="false" sourceDirectory="$(ProjectDir)/etc_ur"/>
+        <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>
+      </Package>
     </Group>
     <Group id="-973564800" label="Tests" language="Genero" targetDirectory="$(ProjectDir)/testbin">
       <Application binaryName="dynFoodMenu2" dependencies="362164715" id="1005836130" label="dynFoodMenu2">

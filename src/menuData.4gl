@@ -133,6 +133,7 @@ FUNCTION (this menuData) getMenuWS(l_menuName STRING) RETURNS BOOLEAN
 		RETURN FALSE
 	END IF
 	CALL debug.output(SFMT("getMenuWS: %1 Rows: %2", l_menuName, this.menuData.rows),FALSE)
+	IF this.menuList.rows = 0 THEN RETURN FALSE END IF
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------

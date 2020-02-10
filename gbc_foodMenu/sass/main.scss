@@ -1,0 +1,63 @@
+
+BODY {
+	-webkit-font-smoothing: antialiased;
+}
+
+// get rid of ugly empty folder nav butons
+.mt-tab-titles-bar .mt-tab-previous, .mt-tab-titles-bar .mt-tab-next{ 
+	width: 1px; 
+}
+
+// get rid of ugly empty toolbar nav butons
+.gbc_ToolBarWidget .mt-tab-previous, .gbc_ToolBarWidget .mt-tab-next {
+	width: 20px; 
+	&.vanished { 
+		width: 1px; 
+	}
+}
+
+// get rid of bookmarks option
+.gbc_ChromeBarItemBookmarkWidget, .gbc_ApplicationHostMenuBookmarkWidget {
+	display: none !important;
+}
+
+// remove the box shadows from fields.
+.mt-field {
+	box-shadow: none;	
+}
+
+.mt-button {
+	border: 1px solid $njm-button-border-color;
+	box-shadow: 1px 2px 3px 0 rgba(0, 0, 0, 0.14);
+	background-image: radial-gradient($mt-button-primary-emphasis-background-color, $mt-button-primary-background-color);
+}
+
+.gbc_ToolBarItemWidget {
+  padding: $njm-toolbar-padding;
+}
+
+.mt-progress{
+	border: 1px solid $njm-button-border-color;
+	padding: 1px;
+	margin: 2px
+}
+
+
+.zmdi-calendar-blank:before {
+	content: "\F0ED";
+}
+
+.gbc_ListViewRowWidget.currentRow {
+	background-color: $mt-button-primary-emphasis-background-color;
+}
+
+// Fix problem with checkbox text alignment
+.gbc_CheckBoxWidget .label, .gbc_ThreeStateCheckBoxWidget .label {
+	display: contents;
+}
+
+.gbc_style_curvedborder {
+	border: 1px solid $njm-button-border-color;
+	border-radius: 15px;
+	padding: 2px;
+}

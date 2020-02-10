@@ -1,0 +1,50 @@
+{
+	"xaui-mobileUI-default": "true",
+
+	"theme-disable-context-menu": false,
+
+	"theme-font-familyX": "'Ubuntu, \"Droid Sans\", \"Segoe UI\", sans-serif'",
+	"theme-font-family": "'Roboto, Helvetica, sans-serif'",
+	"theme-font-size-ratio": "1",
+	"theme-margin-ratio": "1",
+	"theme-combobox-padding": "0px",
+	"theme-sidebar-always-visible-min-width": "1601px",
+	"theme-host-action-default-height": "36px",
+	"gbc-ChromeBarWidget-height": "36px",
+	"gbc-ChromeBarWidget-item-toggle-margin": "2x",
+	"gbc-ChromeBarWidget-title-margin": "2x",
+
+	"palette-primary": "$mt-green",
+	"palette-secondary": "$mt-grey",
+	"palette-text-secondary": "$mt-black",
+	"theme-primary-background-color": "$palette-primary-800",
+	"theme-primary-emphasis-background-color": "$palette-primary-900",
+	"theme-primary-faded-background-color": "$palette-primary-50",
+	"theme-primary-color": "$palette-secondary-50",
+	"theme-secondary-color": "$palette-text-secondary-100",
+	"theme-header-color": "$palette-secondary-100",
+
+	"theme-currentrow-background-color": "$mt-light-blue-400",
+	"theme-currentrow-color": "$palette-text-secondary",
+
+	"mt-field-default-height": "32px",
+	"mt-field-border-width-top": "1px",
+	"mt-field-border-width-right": "1px",
+	"mt-field-border-width-bottom": "1px",
+	"mt-field-border-width-left": "1px",
+	"mt-field-border-color": "$theme-primary-background-color",
+
+	"gbc-ButtonWidget-color": "$palette-text-secondary",
+	"mt-button-margin-ratio": ".25",
+	"mt-button-primary-emphasis-background-color": "$palette-secondary-50",
+	"mt-button-primary-background-color": "$palette-secondary-300",
+	"mt-button-primary-color": "$palette-text-secondary",
+	"mt-button-disabled-color": "$palette-secondary-500",
+	"njm-button-border-color": "$palette-primary-200",
+
+	"mt-progress-height": "20px",
+	"mt-progress-background-color": "$mt-white",
+	"mt-progress-color": "$mt-light-blue-400",
+
+	"njm-toolbar-padding": "6px"
+}

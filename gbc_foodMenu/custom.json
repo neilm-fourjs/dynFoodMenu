@@ -1,0 +1,22 @@
+{
+  "customizationSuffix": "foodMenu-1.00",
+  "themes": [
+    {
+      "name": "ur_default",
+      "title": "UR Light",
+      "uses": ["colors/ur"],
+      "conditions":["isUR"]
+    },
+    {
+      "name": "mobile",
+      "title": "Mobile Default",
+      "uses": ["colors/mobile"],
+      "conditions":["isMobile"]
+    },
+    {
+      "name": "default",
+      "title": "Food Menu",
+      "conditions":["isBrowser"]
+    }
+  ]
+}

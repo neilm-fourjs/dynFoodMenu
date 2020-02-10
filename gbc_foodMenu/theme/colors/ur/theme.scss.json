@@ -1,14 +1,9 @@
 {
-	"theme-font-family": "'Ubuntu, \"Droid Sans\", \"Segoe UI\", sans-serif'",
 	"theme-font-size-ratio": "1",
 	"theme-margin-ratio": "1",
 	"theme-combobox-padding": "0px",
 	"theme-sidebar-always-visible-min-width": "1601px",
 	"mt-field-default-height": "22px",
-	"mt-field-border-width-top": "1px",
-	"mt-field-border-width-right": "1px",
-	"mt-field-border-width-bottom": "1px",
-	"mt-field-border-width-left": "1px",
 
 	"mt-button-margin-ratio": ".25",
 

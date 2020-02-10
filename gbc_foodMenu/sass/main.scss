@@ -25,6 +25,9 @@ BODY {
 .mt-field {
 	box-shadow: none;	
 }
+.mt-field.gbc_Focus {
+	box-shadow: none;	
+}
 
 .mt-button {
 	border: 1px solid $njm-button-border-color;

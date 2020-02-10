@@ -10,7 +10,7 @@
 	"theme-combobox-padding": "0px",
 	"theme-sidebar-always-visible-min-width": "1601px",
 	"theme-host-action-default-height": "36px",
-	"gbc-ChromeBarWidget-height": "36px",
+	"gbc-ChromeBarWidget-height": "40px",
 	"gbc-ChromeBarWidget-item-toggle-margin": "2x",
 	"gbc-ChromeBarWidget-title-margin": "2x",
 
@@ -28,10 +28,13 @@
 	"theme-currentrow-color": "$palette-text-secondary",
 
 	"mt-field-default-height": "32px",
-	"mt-field-border-width-top": "1px",
-	"mt-field-border-width-right": "1px",
+	"mt-field-border-width-top": "0px",
+	"mt-field-border-width-right": "0px",
+	"mt-field-border-width-left": "0px",
 	"mt-field-border-width-bottom": "1px",
-	"mt-field-border-width-left": "1px",
+	"mt-field-focus-border-width-top": "0px",
+	"mt-field-focus-border-width-right": "0px",
+	"mt-field-focus-border-width-left": "0px",
 	"mt-field-border-color": "$theme-primary-background-color",
 
 	"gbc-ButtonWidget-color": "$palette-text-secondary",

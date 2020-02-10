@@ -30,8 +30,8 @@ DEFINE m_rec RECORD
 END RECORD
 
 MAIN
-	DEFINE l_tim CHAR(10)
-	LET l_tim = TIME
+	DEFINE l_tim CHAR(19)
+	LET l_tim = CURRENT YEAR TO SECOND
 	OPEN FORM f FROM "generated"
 	DISPLAY FORM f
 	DISPLAY utils.apiPaas("NJM", l_tim)

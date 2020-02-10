@@ -8,7 +8,7 @@ IMPORT FGL wsBackEnd
 
 &include "menus.inc"
 
-DEFINE m_server_time CHAR(10)
+DEFINE m_server_time CHAR(19)
 
 FUNCTION (this userRecord) login(l_win BOOLEAN) RETURNS BOOLEAN
 	DEFINE l_stat INT

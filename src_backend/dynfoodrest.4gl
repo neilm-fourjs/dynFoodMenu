@@ -6,7 +6,7 @@ IMPORT FGL utils
 IMPORT FGL debug
 &include "../src/menus.inc"
 DEFINE m_user Users
-DEFINE m_tim CHAR(10)
+DEFINE m_ts CHAR(19)
 --------------------------------------------------------------------------------
 #+ GET <server>/dynFoodRest/getToken/id/pwd
 #+ result: A Record that contains uesr information
@@ -18,8 +18,8 @@ PUBLIC FUNCTION getToken(l_id CHAR(6) ATTRIBUTE(WSParam), l_pwd STRING ATTRIBUTE
 	DEFINE l_rec userRecord = (
     user_id: "ERROR", 
 		user_name: "Invalid User Id!" )
-	IF m_tim IS NULL THEN LET m_tim = TIME END IF
-	IF l_pwd != utils.apiPaas(l_id CLIPPED, m_tim) THEN
+	IF m_ts IS NULL THEN LET m_ts = CURRENT YEAR TO SECOND END IF
+	IF l_pwd != utils.apiPaas(l_id CLIPPED, m_ts) THEN
 		CALL debug.output(SFMT("getToken: User:%1 API:%2 Invalid APIPASS",l_rec.user_id, l_pwd), FALSE)
 		RETURN l_rec.*
 	END IF
@@ -36,12 +36,12 @@ END FUNCTION
 --------------------------------------------------------------------------------
 #+ GET <server>/dynFoodRest/getTime
 #+ result: A menu array by ID
-PUBLIC FUNCTION getTime() ATTRIBUTES( WSPath = "/getTime", 
+PUBLIC FUNCTION getTimeStamp() ATTRIBUTES( WSPath = "/getTime", 
 		WSGet, 
 		WSDescription = "Get the server time")
-	RETURNS (CHAR(10) ATTRIBUTES(WSMedia = 'application/json'))
-	IF m_tim IS NULL THEN LET m_tim = TIME END IF
-	RETURN m_tim
+	RETURNS (CHAR(19) ATTRIBUTES(WSMedia = 'application/json'))
+	IF m_ts IS NULL THEN LET m_ts = CURRENT YEAR TO SECOND END IF
+	RETURN m_ts
 END FUNCTION
 --------------------------------------------------------------------------------
 #+ GET <server>/dynFoodRest/getMenus

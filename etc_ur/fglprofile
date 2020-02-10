@@ -1,8 +1,12 @@
 
 dbi.default.driver = "dbmsqt"
-dbi.database.mydatabase.source = "dynFoodDemo.db"
+dbi.database.dynfooddemo.source = "dynFoodDemo.db"
+my.dbname = "dynFoodDemo.db"
+mobile.environment.DBDATE ="DMY4/"
+
+# Render
 gui.rendering = "universal"
 
+# WS cert
 security.global.ca = "CABundle.pem"
 
-my.dbname = "dynFoodDemo.db"

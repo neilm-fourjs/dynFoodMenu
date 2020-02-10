@@ -5,6 +5,7 @@ IMPORT FGL libCommon
 IMPORT FGL db
 
 CONSTANT C_DBVER = 1
+CONSTANT C_DBDIR = "../dfmd"
 
 &include "menus.inc"
 
@@ -16,6 +17,17 @@ PUBLIC DEFINE m_connected BOOLEAN = FALSE
 FUNCTION connect() RETURNS BOOLEAN
 	IF m_connected THEN RETURN TRUE END IF
 	LET m_dbname = fgl_getResource("my.dbname")
+	IF NOT os.path.exists(C_DBDIR) THEN
+		IF NOT os.path.mkdir(C_DBDIR) THEN
+			CALL debug.output(SFMT("Failed to make %1",C_DBDIR), FALSE)
+			EXIT PROGRAM
+		END IF
+	END IF
+	IF NOT os.path.exists(m_dbname) THEN
+		CREATE DATABASE m_dbname
+		CALL create()
+	END IF
+
 	CALL debug.output(SFMT("Connecting to %1",m_dbname),FALSE)
 	TRY
 		CONNECT TO m_dbname
@@ -54,7 +66,8 @@ END FUNCTION
 FUNCTION create()
 	CALL drop_tabs()
 	CALL create_tabs()
-	RUN "fglrun db_load"
+	CALL debug.output("Attempting to run db_load.42r", FALSE)
+	RUN "fglrun load_data.42r"
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION create_tabs()

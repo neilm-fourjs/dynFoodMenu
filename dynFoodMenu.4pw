@@ -74,7 +74,7 @@
         <File filePath="src_backend/userMaint.4gl"/>
         <File filePath="src_backend/userMaint.per"/>
       </Application>
-      <Application binaryName="mkdb" dependencies="1074706446,-1361191823,362164715,1770744530" id="1321734150" label="mkdb">
+      <Application binaryName="load_data" dependencies="1074706446,-1361191823,362164715,1770744530" id="1321734150" label="load_data">
         <File filePath="src_backend/db_load.4gl"/>
         <File filePath="src_backend/mkdb.4gl"/>
       </Application>
@@ -142,7 +142,7 @@
       </Library>
     </Group>
     <Group id="674884836" label="Packages" language="Genero">
-      <Package binaryName="dynFoodBackEnd" dependencies="-593227916,-1361191823,1074484008,1074706446,1770744530,-541155840,400358049,455109296,91913022,875344568,362164715" description="WS dynFood Server" id="-255363164" label="dynFoodBackEnd" platform="Genero Application Server">
+      <Package binaryName="dynFoodBackEnd" dependencies="-593227916,-1361191823,1074484008,1074706446,1770744530,-541155840,400358049,455109296,91913022,875344568,362164715,1321734150,1638566760" description="WS dynFood Server" id="-255363164" label="dynFoodBackEnd" platform="Genero Application Server">
         <DynamicProperty name="packageId" value="dynFoodRest"/>
         <DynamicProperty name="packageLabel" value="dynFoodRest"/>
         <Directory label="Bin" sourceDirectory="$(ProjectDir)/bin"/>
@@ -150,7 +150,6 @@
         <Directory label="Common" sourceDirectory="$(ProjectDir)/binCommon"/>
         <Directory label="Config" sourceDirectory="$(ProjectDir)/etc"/>
         <Directory label="ConfigBE" sourceDirectory="$(ProjectDir)/etcBackEnd"/>
-        <Directory includedFiles="*.db" label="Database" sourceDirectory="$(ProjectDir)/database"/>
         <Directory label="pics" sourceDirectory="$(ProjectDir)/pics"/>
         <Directory label="xcf" sourceDirectory="$(ProjectDir)/xcf"/>
       </Package>

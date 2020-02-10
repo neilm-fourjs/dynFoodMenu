@@ -12,7 +12,7 @@ MAIN
 	DEFINE m_data menuData
 	DEFINE x SMALLINT
 	CALL libCommon.loadStyles()
-	CALL debug.output("Started", FALSE)
+	CALL debug.output(SFMT("Started FGLPROFILE=%1", fgl_getEnv("FGLPROFILE")), FALSE)
 	OPEN FORM login FROM "login"
 	DISPLAY FORM login
 {

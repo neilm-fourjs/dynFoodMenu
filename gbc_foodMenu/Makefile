@@ -3,7 +3,7 @@ GBCBASE=..
 
 include ../makefile.inc
 
-CUSTOMNAME=$(shell basename $(PWD))
+CUSTOMNAME=gbc-foodMenu
 
 TARGET=$(DISTBIN)/$(CUSTOMNAME).zip
 

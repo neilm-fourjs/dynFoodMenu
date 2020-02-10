@@ -1,7 +1,7 @@
 
 export PACKVER=current
 export GBCPROJECT=gbc-$(PACKVER)
-export DISTBIN=$(PWD)/../distbin
+export DISTBIN=$(PWD)/..
 export CWD=$(PWD)
 
 ifeq (,$(wildcard $(PWD)/custom.json))

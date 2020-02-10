@@ -6,3 +6,5 @@ gui.rendering = "native"
 security.global.ca = "CABundle.pem"
 
 my.dbname = "dynFoodDemo.db"
+
+mobile.environment.DBDATE ="DMY4/"

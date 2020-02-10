@@ -1,4 +1,5 @@
 
+IMPORT FGL utils
 DEFINE m_rec RECORD
 	t1g1sg1ch1 BOOLEAN,
 	t1g1sg1ch2 BOOLEAN,
@@ -29,8 +30,11 @@ DEFINE m_rec RECORD
 END RECORD
 
 MAIN
+	DEFINE l_tim CHAR(10)
+	LET l_tim = TIME
 	OPEN FORM f FROM "generated"
 	DISPLAY FORM f
+	DISPLAY utils.apiPaas("NJM", l_tim)
 	MENU
 		ON ACTION inp CALL inp()
 		ON ACTION dyninp CALL dyninp()

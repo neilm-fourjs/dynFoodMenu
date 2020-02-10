@@ -2,6 +2,7 @@
 <APPLICATION Parent="ws.default" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.4js.com/ns/gas/3.20/cfextws.xsd">
   <EXECUTION>
 		<ENVIRONMENT_VARIABLE Id="FGLPROFILE">fglprofile</ENVIRONMENT_VARIABLE>
+		<ENVIRONMENT_VARIABLE Id="DBDATE">DMY4/</ENVIRONMENT_VARIABLE>
 		<ENVIRONMENT_VARIABLE Id="FGLWSDEBUG">0</ENVIRONMENT_VARIABLE>
     <PATH>$(res.deployment.path)</PATH>
     <MODULE>dynFoodRest</MODULE>

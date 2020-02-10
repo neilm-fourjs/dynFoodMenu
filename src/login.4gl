@@ -2,14 +2,18 @@ IMPORT util
 IMPORT security
 IMPORT FGL debug
 IMPORT FGL about
+IMPORT FGL utils
 IMPORT FGL libMobile
 IMPORT FGL wsBackEnd
 
 &include "menus.inc"
 
+DEFINE m_server_time CHAR(10)
+
 FUNCTION (this userRecord) login(l_win BOOLEAN) RETURNS BOOLEAN
 	DEFINE l_stat INT
 	DEFINE l_pwd STRING
+
 	IF NOT libMobile.gotNetwork() THEN
 		LET this.user_id = "DUMMY"
 		LET this.user_name = "Offline"
@@ -37,11 +41,17 @@ FUNCTION (this userRecord) login(l_win BOOLEAN) RETURNS BOOLEAN
 				CALL debug.output(SFMT("Getting token for: %1 from: %2 ", this.user_id, wsBackEnd.Endpoint.Address.Uri), FALSE)
 				LET l_pwd = this.user_pwd
 				CALL ui.Window.getCurrent().getForm().setFieldStyle("formonly.username","title curvedborder")
-				CALL wsBackEnd.getToken(this.user_id, C_APIPASS) RETURNING l_stat, this.*
+				CALL wsBackEnd.getTime() RETURNING l_stat, m_server_time
+				IF l_stat != 0 THEN
+					DISPLAY "Login error" TO username
+					CALL fgl_winMessage("Error","1) Error logging in, please try again.","exclamation")
+					NEXT FIELD user_id
+				END IF
+				CALL wsBackEnd.getToken(this.user_id, utils.apiPaas(this.user_id, m_server_time) ) RETURNING l_stat, this.*
 				CALL debug.output(SFMT("getToken: %1, reply: %2 : %3(%4)",this.user_id, l_stat, this.user_name, this.user_pwd),FALSE)
 				IF l_stat != 0 OR this.user_id = "ERROR" THEN
 					DISPLAY "Login error" TO username
-					CALL fgl_winMessage("Error","Error logging in, please try again.","exclamation")
+					CALL fgl_winMessage("Error","2) Error logging in, please try again.","exclamation")
 					NEXT FIELD user_id
 				END IF
 				IF NOT security.BCrypt.CheckPassword(l_pwd, this.user_pwd) THEN

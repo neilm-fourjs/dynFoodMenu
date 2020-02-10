@@ -1,5 +1,5 @@
 #+
-#+ Generated from cli
+#+ Generated from wsBackEnd
 #+
 IMPORT com
 IMPORT xml
@@ -24,7 +24,7 @@ TYPE tGlobalEndpointType RECORD # Rest Endpoint
 END RECORD
 
 PUBLIC DEFINE Endpoint tGlobalEndpointType
-		= (Address:(Uri: "http://pi3:8090/dynFoodRest"))
+		= (Address:(Uri: "https://generodemos.dynu.net/z/ws/r/dyn/dynFoodRest"))
 
 # Error codes
 PUBLIC CONSTANT C_SUCCESS = 0
@@ -54,7 +54,7 @@ PUBLIC TYPE getTokenResponseBodyType RECORD
 	user_name STRING,
 	user_pwd STRING,
 	user_token STRING,
-	token_ts DATETIME YEAR TO MINUTE
+	token_ts DATETIME YEAR TO SECOND
 END RECORD
 
 # generated getMenuResponseBodyType
@@ -75,6 +75,8 @@ PUBLIC FUNCTION placeOrder(p_body placeOrderRequestBodyType)
 	DEFINE resp_body placeOrderMultipartResponse
 	DEFINE part com.HttpPart
 	DEFINE ind INTEGER
+	DEFINE xml_body xml.DomDocument
+	DEFINE xml_node xml.DomNode
 	DEFINE json_body STRING
 
 	TRY
@@ -209,6 +211,73 @@ END FUNCTION
 ################################################################################
 
 ################################################################################
+# Operation /getTime
+#
+# VERB: GET
+# DESCRIPTION: Get the server time
+#
+PUBLIC FUNCTION getTime() RETURNS(INTEGER, STRING)
+	DEFINE fullpath base.StringBuffer
+	DEFINE contentType STRING
+	DEFINE req com.HTTPRequest
+	DEFINE resp com.HTTPResponse
+	DEFINE resp_body STRING
+	DEFINE json_body STRING
+
+	TRY
+
+		# Prepare request path
+		LET fullpath = base.StringBuffer.Create()
+		CALL fullpath.append("/getTime")
+
+		# Create request and configure it
+		LET req =
+				com.HTTPRequest.Create(
+						SFMT("%1%2", Endpoint.Address.Uri, fullpath.toString()))
+		IF Endpoint.Binding.Version IS NOT NULL THEN
+			CALL req.setVersion(Endpoint.Binding.Version)
+		END IF
+		IF Endpoint.Binding.ConnectionTimeout <> 0 THEN
+			CALL req.setConnectionTimeout(Endpoint.Binding.ConnectionTimeout)
+		END IF
+		IF Endpoint.Binding.ReadWriteTimeout <> 0 THEN
+			CALL req.setTimeout(Endpoint.Binding.ReadWriteTimeout)
+		END IF
+		IF Endpoint.Binding.CompressRequest IS NOT NULL THEN
+			CALL req.setHeader("Content-Encoding", Endpoint.Binding.CompressRequest)
+		END IF
+
+		# Perform request
+		CALL req.setMethod("GET")
+		CALL req.setHeader("Accept", "application/json")
+		CALL req.DoRequest()
+
+		# Retrieve response
+		LET resp = req.getResponse()
+		# Process response
+		INITIALIZE resp_body TO NULL
+		LET contentType = resp.getHeader("Content-Type")
+		CASE resp.getStatusCode()
+
+			WHEN 200 #Success
+				IF contentType MATCHES "*application/json*" THEN
+					# Parse JSON response
+					LET json_body = resp.getTextResponse()
+					CALL util.JSON.parse(json_body, resp_body)
+					RETURN C_SUCCESS, resp_body
+				END IF
+				RETURN -1, resp_body
+
+			OTHERWISE
+				RETURN resp.getStatusCode(), resp_body
+		END CASE
+	CATCH
+		RETURN -1, resp_body
+	END TRY
+END FUNCTION
+################################################################################
+
+################################################################################
 # Operation /getToken/{l_id}/{l_pwd}
 #
 # VERB: GET
@@ -279,12 +348,13 @@ END FUNCTION
 ################################################################################
 
 ################################################################################
-# Operation /getMenu/{l_id}
+# Operation /getMenu/{l_menuName}
 #
 # VERB: GET
 # DESCRIPTION: Get a Menu
 #
-PUBLIC FUNCTION getMenu(p_l_menuName STRING) RETURNS(INTEGER, getMenuResponseBodyType)
+PUBLIC FUNCTION getMenu(p_l_menuName STRING)
+		RETURNS(INTEGER, getMenuResponseBodyType)
 	DEFINE fullpath base.StringBuffer
 	DEFINE contentType STRING
 	DEFINE req com.HTTPRequest

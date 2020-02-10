@@ -110,6 +110,7 @@
         <File filePath="src/debug.per"/>
         <File filePath="src/libCommon.4gl"/>
         <File filePath="src/processing.per"/>
+        <File filePath="src/utils.4gl"/>
       </Library>
       <Library binaryName="libFoodMenu" dependencies="-541155840,-1361191823" id="1770744530" label="libFoodMenu" targetDirectory="$(ProjectDir)/binCommon">
         <File filePath="src/menuData.4gl"/>
@@ -213,7 +214,7 @@
         <File filePath="etc/data.json"/>
         <File filePath="tests/dynFoodMenu2.4gl"/>
       </Application>
-      <Application binaryName="test" id="-1267941975" label="test" language="Genero">
+      <Application binaryName="test" dependencies="1074706446" id="-1267941975" label="test" language="Genero">
         <File filePath="tests/generated.per"/>
         <File filePath="tests/test.4gl"/>
       </Application>

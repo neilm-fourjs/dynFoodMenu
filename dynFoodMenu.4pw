@@ -163,7 +163,6 @@
         <DynamicProperty name="packageLabel" value="FoodMenu"/>
         <Directory description="Binaries" excludedFiles="Test.42r" includedFiles="*.42?" label="Binaries" sourceDirectory="$(ProjectDir)/bin"/>
         <Directory label="Common" sourceDirectory="$(ProjectDir)/binCommon"/>
-        <Directory description="Database" includedFiles="*.db" label="Database" recursive="false" sourceDirectory="$(ProjectDir)/database"/>
         <Directory description="Configuration Files" label="etc" recursive="false" sourceDirectory="$(ProjectDir)/etc"/>
         <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>
       </Package>
@@ -191,7 +190,6 @@
         <DynamicProperty name="packageLabel" value="FoodMenu UR"/>
         <Directory description="Binaries" excludedFiles="Test.42r" includedFiles="*.42?" label="Binaries" sourceDirectory="$(ProjectDir)/bin"/>
         <Directory label="Common" sourceDirectory="$(ProjectDir)/binCommon"/>
-        <Directory description="Database" includedFiles="*.db" label="Database" recursive="false" sourceDirectory="$(ProjectDir)/database"/>
         <Directory description="Configuration Files" label="etc" recursive="false" sourceDirectory="$(ProjectDir)/etc"/>
         <Directory description="fglprofile" label="etc_ur" recursive="false" sourceDirectory="$(ProjectDir)/etc_ur"/>
         <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>
@@ -202,7 +200,6 @@
         <DynamicProperty name="packageLabel" value="FoodMenu UR"/>
         <Directory description="Binaries" excludedFiles="Test.42r" includedFiles="*.42?" label="Binaries" sourceDirectory="$(ProjectDir)/bin"/>
         <Directory label="Common" sourceDirectory="$(ProjectDir)/binCommon"/>
-        <Directory description="Database" includedFiles="*.db" label="Database" recursive="false" sourceDirectory="$(ProjectDir)/database"/>
         <Directory description="Configuration Files" label="etc" recursive="false" sourceDirectory="$(ProjectDir)/etc"/>
         <Directory description="fglprofile" label="etc_ur" recursive="false" sourceDirectory="$(ProjectDir)/etc_ur"/>
         <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>

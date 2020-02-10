@@ -38,6 +38,7 @@ PUBLIC TYPE menuRecord RECORD
 	END RECORD
 
 PUBLIC TYPE orderItemsRecord RECORD
+			order_id INTEGER,
 			item_id INTEGER,
 			description STRING,
 			qty SMALLINT,

@@ -67,6 +67,31 @@ FUNCTION (this menuData) getMenuDB(l_menuName STRING) RETURNS BOOLEAN
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
+FUNCTION (this menuData) placeOrderDB() RETURNS (INTEGER, STRING)
+	DEFINE l_ord RECORD LIKE orders.*
+	DEFINE x SMALLINT
+	IF NOT db.connect() THEN RETURN 100, "No database connection1" END IF
+-- Store order in DB
+	LET l_ord.menu_id = this.ordered.menu_id
+	LET l_ord.order_id = NULL
+	LET l_ord.placed = this.ordered.placed
+	LET l_ord.user_id = this.ordered.user_id
+	LET l_ord.user_token = this.ordered.user_token
+	INSERT INTO orders VALUES l_ord.*
+	LET l_ord.order_id = SQLCA.sqlerrd[2] -- fetch serial
+	IF STATUS != 0 THEN
+		RETURN 101,"Failed to place order!"
+	END IF
+	FOR x = 1 TO this.ordered.rows
+		LET this.ordered.items[x].order_id = l_ord.order_id
+		INSERT INTO orderitems VALUES this.ordered.items[x].*
+	END FOR
+	IF STATUS != 0 THEN
+		RETURN 102,"Failed to store order items!"
+	END IF
+	RETURN 0, SFMT("Your Order No is %1", l_ord.order_id)
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
 -- JSON Code
 FUNCTION (this menuData) getMenuListJSON() RETURNS BOOLEAN
 	DEFINE l_json TEXT
@@ -149,7 +174,11 @@ FUNCTION (this menuData) save()
 	CALL wsBackEnd.placeOrder(this.ordered.*) RETURNING l_stat, l_resp.*
 	CALL libCommon.processing("Saved Order.",3)
 	CALL debug.output(SFMT("save Stat: %1-%2:%3", l_stat,l_resp.l_stat,l_resp.l_msg),FALSE)
-	CALL fgl_winMessage("Info",SFMT("Order Confirmation: %1 : %2",l_resp.l_stat,l_resp.l_msg),"information")
+	IF l_stat = 0 THEN
+		CALL fgl_winMessage("Order Confirmation",l_resp.l_msg,"information")
+	ELSE
+		CALL fgl_winMessage("Order Confirmation",SFMT("%1 : %2",l_resp.l_stat,l_resp.l_msg),"information")
+	END IF
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- util function

@@ -66,11 +66,12 @@ PUBLIC FUNCTION placeOrder(l_order orderRecord) ATTRIBUTES(
 		WSPath = "/placeOrder", 
 		WSPost, 
 		WSDescription = "Place an Order")
-	RETURNS (INT,STRING ATTRIBUTES(WSMedia = 'application/json'))
+	RETURNS (INT, STRING ATTRIBUTES(WSMedia = 'application/json'))
 	DEFINE l_json TEXT
 	DEFINE l_fileName STRING
-
-	DISPLAY "Order:",l_order.*
+	DEFINE l_stat INTEGER
+	DEFINE l_ret STRING
+	DEFINE l_menu menuData
 	LET l_fileName = "order_"||util.Datetime.format(CURRENT,"%Y%m%d%H%M_")||l_order.user_id||".json"
 	CALL debug.output(SFMT("placeOrder User: %1 Items: %2 Saved: %3",l_order.user_id, l_order.rows, l_fileName), FALSE)
 	LOCATE l_json IN MEMORY
@@ -80,10 +81,9 @@ PUBLIC FUNCTION placeOrder(l_order orderRecord) ATTRIBUTES(
 	IF STATUS != 0 THEN
 		RETURN 100,"Invalid Token!"
 	END IF
---TODO: store order in DB
-	IF STATUS != 0 THEN
-		RETURN 101,"Failed to place order!"
-	END IF
-	RETURN 0,"Okay"
+-- Store order in DB
+	LET l_menu.ordered = l_order
+	CALL l_menu.placeOrderDB() RETURNING l_stat, l_ret
+	RETURN l_stat, l_ret
 END FUNCTION
 --------------------------------------------------------------------------------

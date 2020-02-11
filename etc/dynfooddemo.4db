@@ -52,6 +52,17 @@
     <Column fglLength="3594" fglType="10" name="placed" notNull="false" order="5" status="U" uuid="db/column56"/>
     <Index indexColumns="order_id" indexConstraint="primaryKey" name="primary_key_orders" status="U" uuid="db/index2"/>
   </Table>
+  <Table active="true" name="userdetails" status="U" uuid="db/table7">
+    <Column fglLength="6" fglType="201" name="user_id" notNull="false" order="1" status="U" uuid="db/column35"/>
+    <Column fglLength="30" fglType="201" name="salutation" notNull="false" order="2" status="U" uuid="db/column51"/>
+    <Column fglLength="30" fglType="201" name="firstnames" notNull="false" order="3" status="U" uuid="db/column53"/>
+    <Column fglLength="30" fglType="201" name="surname" notNull="false" order="4" status="U" uuid="db/column55"/>
+    <Column fglLength="50" fglType="201" name="email" notNull="false" order="5" status="U" uuid="db/column41"/>
+    <Column fglLength="4" fglType="7" name="dob" notNull="false" order="6" status="U" uuid="db/column43"/>
+    <Column fglLength="1" fglType="0" name="gender_preference" notNull="false" order="7" status="U" uuid="db/column45"/>
+    <Column fglLength="60" fglType="201" name="password_hash" notNull="false" order="8" status="U" uuid="db/column57"/>
+    <Column fglLength="3080" fglType="10" name="registered" notNull="false" order="9" status="U" uuid="db/column49"/>
+  </Table>
   <Table active="true" name="users" status="U" uuid="db/table12">
     <Column fglLength="6" fglType="201" name="user_id" notNull="false" order="1" status="U" uuid="db/column58"/>
     <Column fglLength="30" fglType="201" name="user_name" notNull="false" order="2" status="U" uuid="db/column60"/>
@@ -62,7 +73,7 @@
   <Views ActiveView="View-1" showLabels="true">
     <View Name="View-1">
       <Layout>
-        <![CDATA[AAAAAgAAABIAZABiAC8AdABhAGIAbABlADRAUpaWl8AAAEA3h4eJAAAAP6DlYEGJN08BAAAAEgBkAGIALwB0AGEAYgBsAGUANsBp4eHjgAAAQGBaWltgAAA/n752yLQ5XgEAAAAUAGQAYgAvAHQAYQBiAGwAZQAxADJAdsPDxTAAAEA3h4eJAAAAP6P3ztkWhy8BAAAAEgBkAGIALwB0AGEAYgBsAGUAMsBqWlpcAAAAQDaWlpgAAAA/nbItDlYEHgEAAAASAGQAYgAvAHQAYQBiAGwAZQA4QGiWlpggAABAeUtLTOAAAD+i8an752yPAQAAABQAZABiAC8AdABhAGIAbABlADEAMMBrh4eJQAAAQHkeHh+wAAA/oeuFHrhR7wE=]]>
+        <![CDATA[AAAAAgAAABIAZABiAC8AdABhAGIAbABlADZAfjw8PVDw8UB5WlpcctLTP6kWhysCDE8BAAAAFABkAGIALwB0AGEAYgBsAGUAMQAwwGuHh4r4eHlAeR4eIUHh4j+h64UeuFHvAQAAABIAZABiAC8AdABhAGIAbABlADdAUHh4eYAAAMAWlpaYAAAAP6cKPXCj1w8BAAAAFABkAGIALwB0AGEAYgBsAGUAMQAyQFB4eH8w8PFAbDw8Pi8PDz+qHKwIMSbvAQAAABIAZABiAC8AdABhAGIAbABlADRAf0tLTYpaWkA2lpaZeHh5P6gQYk3S8a8BAAAAEgBkAGIALwB0AGEAYgBsAGUAMsBqWlpdpaWmQDaWlplpaWo/nbItDlYEHgEAAAASAGQAYgAvAHQAYQBiAGwAZQA4QGiWlpmpaWpAeUtLTnS0tT+i8an752yPAQ==]]>
       </Layout>
     </View>
   </Views>

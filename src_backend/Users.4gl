@@ -5,6 +5,7 @@ IMPORT FGL db
 PUBLIC TYPE Users RECORD
   list DYNAMIC ARRAY OF userRecord,
 	currentUser UserRecord,
+	currentUserDetails userDetailsRecord,
 	errorMessage STRING
 END RECORD
 
@@ -15,6 +16,7 @@ FUNCTION (this Users) get(l_userId LIKE users.user_id) RETURNS BOOLEAN
 		IF this.list[x].user_id = l_userId THEN
 			LET this.currentUser.* = this.list[x].*
 			DISPLAY "Found User:",l_userId
+			SELECT * FROM userdetails WHERE user_id = l_userId
 			RETURN TRUE
 		END IF
 	END FOR
@@ -29,27 +31,48 @@ FUNCTION (this Users) add() RETURNS BOOLEAN
 	END IF
 	LET this.errorMessage = "User Added Okay."
 	INSERT INTO users VALUES(this.currentUser.*)
-	IF STATUS = 0 THEN RETURN TRUE END IF
-	LET this.errorMessage = SQLERRMESSAGE
-	RETURN FALSE
+	IF STATUS != 0 THEN
+		LET this.errorMessage = "1)"||SQLERRMESSAGE
+		RETURN FALSE
+	END IF
+	INSERT INTO userdetails VALUES(this.currentUserDetails.*)
+	IF STATUS != 0 THEN
+		LET this.errorMessage = "2)"||SQLERRMESSAGE
+		RETURN FALSE
+	END IF
+	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------
 FUNCTION (this Users) update() RETURNS BOOLEAN
 	IF NOT db.connect() THEN EXIT PROGRAM END IF
 	LET this.errorMessage = "User Update Okay."
 	UPDATE users SET users.* = this.currentUser.* WHERE users.user_id = this.currentUser.user_id
-	IF STATUS = 0 THEN RETURN TRUE END IF
-	LET this.errorMessage = SQLERRMESSAGE
-	RETURN FALSE
+	IF STATUS != 0 THEN
+		LET this.errorMessage = "1)"||SQLERRMESSAGE
+		RETURN FALSE
+	END IF
+	UPDATE userdetails SET userdetails.* = this.currentUserDetails.* WHERE userdetails.user_id = this.currentUser.user_id
+	IF STATUS != 0 THEN
+		LET this.errorMessage = "2)"||SQLERRMESSAGE
+		RETURN FALSE
+	END IF
+	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------
 FUNCTION (this Users) delete(l_userId LIKE users.user_id) RETURNS BOOLEAN
 	IF NOT db.connect() THEN EXIT PROGRAM END IF
 	LET this.errorMessage = "User Deleted Okay."
 	DELETE FROM users WHERE users.user_id = l_userId
-	IF STATUS = 0 THEN RETURN TRUE END IF
-	LET this.errorMessage = SQLERRMESSAGE
-	RETURN FALSE
+	IF STATUS != 0 THEN
+		LET this.errorMessage = "1)"||SQLERRMESSAGE
+		RETURN FALSE
+	END IF
+	DELETE FROM userdetails WHERE userdetails.user_id = l_userId
+	IF STATUS != 0 THEN
+		LET this.errorMessage = "2)"||SQLERRMESSAGE
+		RETURN FALSE
+	END IF
+	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------
 FUNCTION (this Users) loadFromDB()
@@ -60,17 +83,3 @@ FUNCTION (this Users) loadFromDB()
 		LET this.list[ this.list.getLength() + 1 ].* = l_user.*
 	END FOREACH
 END FUNCTION
---------------------------------------------------------------------------------
-FUNCTION (this Users) loadFromJSON()
-	DEFINE l_userJSON TEXT
-	LOCATE l_userJSON IN MEMORY
-	CALL l_userJSON.readFile("users.json")
-	CALL util.JSON.parse(l_userJSON, this.list)
-END FUNCTION
---------------------------------------------------------------------------------
-FUNCTION (this Users) saveToJSON()
-	DEFINE l_userJSON TEXT
-	LET l_userJSON = util.JSON.stringify(this.list)
-	CALL l_userJSON.writeFile("users.json")
-END FUNCTION
---------------------------------------------------------------------------------

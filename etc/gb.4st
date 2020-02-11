@@ -19,6 +19,9 @@ Property of Four Js*
   <Style name=".big">
      <StyleAttribute name="fontSize" value="1.2em" />
   </Style>
+  <Style name=".small">
+     <StyleAttribute name="fontSize" value="0.8em" />
+  </Style>
   <Style name=".title">
      <StyleAttribute name="fontSize" value="1.2em" />
      <StyleAttribute name="textColor" value="#225a1e" />

@@ -59,6 +59,8 @@ FUNCTION (this userRecord) login(l_win BOOLEAN) RETURNS BOOLEAN
 					NEXT FIELD user_id
 				END IF
 			END IF
+		ON ACTION register
+			CALL register()
 	END INPUT
 	DISPLAY SFMT("Welcome %1",this.user_name) TO username
 	IF NOT l_win THEN
@@ -69,4 +71,44 @@ FUNCTION (this userRecord) login(l_win BOOLEAN) RETURNS BOOLEAN
 	IF int_flag THEN LET int_flag = FALSE RETURN FALSE END IF
 	CALL debug.output(SFMT("getToken: %1 %2 Okay",this.user_id, this.user_token),FALSE )
 	RETURN TRUE
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION register()
+	DEFINE l_userd userDetailsRecord
+	DEFINE l_pwd2 VARCHAR(60)
+	DEFINE x SMALLINT
+	DEFINE l_passokay BOOLEAN
+	DEFINE l_gotNum BOOLEAN
+	DEFINE l_gotAlpha BOOLEAN
+	OPEN WINDOW register WITH FORM "register"
+	LET l_userd.registered = CURRENT
+	LET l_userd.dob = "01/01/1970"
+	INPUT BY NAME l_userd.*, l_pwd2 WITHOUT DEFAULTS
+		AFTER FIELD password_hash
+			LET l_passokay = (LENGTH( l_userd.password_hash ) > 5)
+			LET l_gotAlpha = FALSE
+			LET l_gotNum = FALSE
+			FOR x = 1 TO LENGTH( l_userd.password_hash )
+				IF l_userd.password_hash[x] >= "a" AND l_userd.password_hash[x] <= "z" THEN
+					LET l_gotAlpha = TRUE
+				END IF
+				IF l_userd.password_hash[x] >= "A" AND l_userd.password_hash[x] <= "Z" THEN
+					LET l_gotAlpha = TRUE
+				END IF
+				IF l_userd.password_hash[x] >= "0" AND l_userd.password_hash[x] <= "9" THEN
+					LET l_gotNum = TRUE
+				END IF
+			END FOR
+			IF NOT l_passokay OR NOT l_gotAlpha OR NOT l_gotNum THEN
+				ERROR "Password must be at least 6 character and contain both numbers and letters"
+				NEXT FIELD password_hash
+			END IF
+
+		AFTER FIELD l_pwd2
+			IF l_userd.password_hash != l_pwd2 THEN
+				ERROR "Passwords don't match"
+				NEXT FIELD user_pwd
+			END IF
+	END INPUT
+	CLOSE WINDOW register
 END FUNCTION

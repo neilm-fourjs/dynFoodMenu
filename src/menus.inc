@@ -62,3 +62,15 @@ PUBLIC TYPE userRecord RECORD
 		user_token STRING,
 		token_ts DATETIME YEAR TO MINUTE
 	END RECORD
+
+PUBLIC TYPE userDetailsRecord RECORD
+		user_id VARCHAR(6),
+		salutation VARCHAR(30),
+		firstnames VARCHAR(30),
+		surname VARCHAR(30),
+		email VARCHAR(50),
+		dob DATE,
+		gender_preference CHAR(1),
+		password_hash VARCHAR(60),
+		registered DATETIME YEAR TO MINUTE
+	END RECORD

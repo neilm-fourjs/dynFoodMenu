@@ -1,0 +1,49 @@
+
+LAYOUT (TEXT="New User", STYLE="main")
+GRID
+{
+[l001              ]
+[f001  ]
+[l002              ]
+[f002              ]
+[l003              ]
+[f003                             ]
+[l004              ]
+[f004                             ]
+[l005              ]
+[f005                             ]
+[l006              ]
+[f006       ]
+[l007              ]
+[f007              ]
+[l008              ]
+[f008              ]
+[l009              ]
+[f009              ]
+[l010              ]
+[f010              ]
+}
+END -- GRID
+
+ATTRIBUTES
+LABEL l001 : lab1, TEXT=%"User ID:";
+LABEL l002 : lab2, TEXT=%"Salutation:";
+LABEL l003 : lab3, TEXT=%"First Names:";
+LABEL l004 : lab4, TEXT=%"Surname:";
+LABEL l005 : lab5, TEXT=%"Email:";
+LABEL l006 : lab6, TEXT=%"Date of Birth:";
+LABEL l007 : lab7, TEXT=%"Gender preference:";
+LABEL l008 : lab8, TEXT=%"Password:";
+LABEL l009 : lab9, TEXT=%"Password Confirm:";
+LABEL l010 : lab10, TEXT=%"Registered:";
+
+f001 = FORMONLY.user_id, REQUIRED, NOT NULL, UPSHIFT;
+f002 = FORMONLY.salutation, REQUIRED, NOT NULL;
+f003 = FORMONLY.firstnames, REQUIRED, NOT NULL;
+f004 = FORMONLY.surname, REQUIRED, NOT NULL;
+f005 = FORMONLY.email, REQUIRED, NOT NULL, KEYBOARDHINT=EMAIL;
+DATEEDIT f006 = FORMONLY.dob, REQUIRED, NOT NULL;
+RADIOGROUP f007 = FORMONLY.gender_preference, REQUIRED, NOT NULL, ORIENTATION=HORIZONTAL, ITEMS=(("M","Male"),("F","Female"),("O","Other"));
+f008 = FORMONLY.password_hash, REQUIRED, NOT NULL, INVISIBLE;
+f009 = FORMONLY.l_pwd2, REQUIRED, NOT NULL, INVISIBLE;
+f010 = FORMONLY.registered, NOENTRY;

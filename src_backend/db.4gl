@@ -84,6 +84,18 @@ FUNCTION create_tabs()
 		token_ts DATETIME YEAR TO MINUTE
 	)
 
+	CREATE TABLE userDetails (
+		user_id VARCHAR(6),
+		salutation VARCHAR(30),
+		firstnames VARCHAR(30),
+		surname VARCHAR(30),
+		email VARCHAR(50),
+		dob DATE,
+		gender_preference CHAR(1),
+		password_hash VARCHAR(60),
+		registered DATETIME YEAR TO MINUTE
+	)
+
 	CREATE TABLE menus (
 		menuName VARCHAR(6),
 		menuDesc VARCHAR(30),

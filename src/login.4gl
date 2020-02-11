@@ -135,7 +135,7 @@ FUNCTION register()
 		AFTER FIELD l_pwd2
 			IF m_users.currentUserDetails.password_hash != l_pwd2 THEN
 				ERROR "Passwords don't match"
-				NEXT FIELD user_pwd
+				NEXT FIELD password_hash
 			END IF
 	END INPUT
 	IF int_flag THEN

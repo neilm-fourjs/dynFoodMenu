@@ -13,6 +13,9 @@ Property of Four Js*
   <Style name=".underline">
      <StyleAttribute name="textDecoration" value="underline" />
   </Style>
+  <Style name=".flat">
+     <StyleAttribute name="alignment" value="left" />
+  </Style>
   <Style name=".bold">
      <StyleAttribute name="fontWeight" value="bold" />
   </Style>

@@ -9,9 +9,9 @@ PUBLIC TYPE Users RECORD
 	errorMessage STRING
 END RECORD
 
-FUNCTION (this Users) get(l_userId LIKE users.user_id) RETURNS BOOLEAN
+PUBLIC FUNCTION (this Users) get(l_userId LIKE users.user_id) RETURNS BOOLEAN
 	DEFINE x SMALLINT
-	IF this.list.getLength() = 0 THEN CALL this.loadFromDB () END IF
+	IF this.list.getLength() = 0 THEN CALL this.loadFromDB() END IF
 	FOR x = 1 TO this.list.getLength()
 		IF this.list[x].user_id = l_userId THEN
 			LET this.currentUser.* = this.list[x].*
@@ -23,12 +23,16 @@ FUNCTION (this Users) get(l_userId LIKE users.user_id) RETURNS BOOLEAN
 	RETURN FALSE
 END FUNCTION
 --------------------------------------------------------------------------------
-FUNCTION (this Users) add() RETURNS BOOLEAN
-	IF NOT db.connect() THEN EXIT PROGRAM END IF
+PUBLIC FUNCTION (this Users) add() RETURNS BOOLEAN
 	IF this.currentUser.user_id IS NULL OR this.currentUser.user_id = " " THEN
 		LET this.errorMessage = "User Id invalid!"
 		RETURN FALSE
 	END IF
+	IF this.get(this.currentUser.user_id) THEN
+		LET this.errorMessage = "User Id already used!"
+		RETURN FALSE
+	END IF
+	IF NOT db.connect() THEN EXIT PROGRAM END IF
 	LET this.errorMessage = "User Added Okay."
 	INSERT INTO users VALUES(this.currentUser.*)
 	IF STATUS != 0 THEN
@@ -40,10 +44,11 @@ FUNCTION (this Users) add() RETURNS BOOLEAN
 		LET this.errorMessage = "2)"||SQLERRMESSAGE
 		RETURN FALSE
 	END IF
+	CALL this.loadFromDB()
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------
-FUNCTION (this Users) update() RETURNS BOOLEAN
+PUBLIC FUNCTION (this Users) update() RETURNS BOOLEAN
 	IF NOT db.connect() THEN EXIT PROGRAM END IF
 	LET this.errorMessage = "User Update Okay."
 	UPDATE users SET users.* = this.currentUser.* WHERE users.user_id = this.currentUser.user_id
@@ -59,7 +64,7 @@ FUNCTION (this Users) update() RETURNS BOOLEAN
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------
-FUNCTION (this Users) delete(l_userId LIKE users.user_id) RETURNS BOOLEAN
+PUBLIC FUNCTION (this Users) delete(l_userId LIKE users.user_id) RETURNS BOOLEAN
 	IF NOT db.connect() THEN EXIT PROGRAM END IF
 	LET this.errorMessage = "User Deleted Okay."
 	DELETE FROM users WHERE users.user_id = l_userId
@@ -75,9 +80,45 @@ FUNCTION (this Users) delete(l_userId LIKE users.user_id) RETURNS BOOLEAN
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------
+-- See if user_id already exists.
+-- result is boolean:false=okay to use true=exists plus a suggestion.
+PUBLIC FUNCTION (this Users) checkUserID(l_id  LIKE users.user_id) RETURNS (BOOLEAN, CHAR(6))
+	DEFINE l_exists BOOLEAN = TRUE
+	DEFINE l_suggestion CHAR(6) = "EXISTS"
+	DEFINE l_cnt, l_len, x SMALLINT
+	IF NOT db.connect() THEN EXIT PROGRAM END IF
+	SELECT COUNT(*) INTO l_cnt FROM users WHERE user_id = l_id
+	IF l_cnt = 0 THEN RETURN FALSE, "Okay" END IF
+	LET l_len = LENGTH( l_id )
+	FOR x = l_len TO 2 STEP -1
+		IF l_id[x] >= "A" AND l_id[x] <= "Z" THEN
+			EXIT FOR
+		END IF
+	END FOR
+	LET l_len = x
+	IF l_len < 6 THEN
+		LET l_id[ l_len + 1, 6 ] = "%      "
+		SELECT COUNT(*) INTO l_cnt FROM users WHERE user_id LIKE l_id
+		LET l_suggestion = l_id[1, l_len]||l_cnt+1
+	END IF
+	RETURN l_exists, l_suggestion
+END FUNCTION
+--------------------------------------------------------------------------------
+-- See if user_id already exists.
+PUBLIC FUNCTION (this Users) register( l_userDets userDetailsRecord ) RETURNS (INT, STRING)
+	DEFINE l_stat SMALLINT
+	LET this.currentUserDetails.* = l_userDets.*
+	LET this.currentUser.user_id = l_userDets.user_id
+	LET this.currentUser.user_name = l_userDets.firstnames CLIPPED||" "||l_userDets.surname
+	LET this.currentUser.user_pwd = l_userDets.password_hash
+	LET l_stat = this.add()
+	RETURN l_stat, this.errorMessage
+END FUNCTION
+--------------------------------------------------------------------------------
 FUNCTION (this Users) loadFromDB()
 	DEFINE l_user userRecord
 	IF NOT db.connect() THEN EXIT PROGRAM END IF
+	CALL this.list.clear()
 	DECLARE load_cur CURSOR FOR SELECT * FROM users
 	FOREACH load_cur INTO l_user.*
 		LET this.list[ this.list.getLength() + 1 ].* = l_user.*

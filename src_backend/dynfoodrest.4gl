@@ -34,6 +34,19 @@ PUBLIC FUNCTION getToken(l_id CHAR(6) ATTRIBUTE(WSParam), l_pwd STRING ATTRIBUTE
 	RETURN l_rec.*
 END FUNCTION
 --------------------------------------------------------------------------------
+#+ GET <server>/dynFoodRest/checkUserID/id
+#+ result is boolean:false=okay to use true=exists plus a suggestion.
+PUBLIC FUNCTION checkUserID(l_id CHAR(6) ATTRIBUTE(WSParam)) ATTRIBUTES( 
+		WSPath = "/checkUserID/{l_id}", 
+		WSGet,
+		WSDescription = "Check UserID")
+	RETURNS (BOOLEAN, CHAR(6) ATTRIBUTES(WSMedia = 'application/json'))
+	DEFINE l_exists BOOLEAN
+	DEFINE l_suggestion CHAR(6)
+	CALL m_user.checkUserID( l_id ) RETURNING l_exists, l_suggestion
+	RETURN l_exists, l_suggestion
+END FUNCTION
+--------------------------------------------------------------------------------
 #+ GET <server>/dynFoodRest/getTime
 #+ result: A menu array by ID
 PUBLIC FUNCTION getTimeStamp() ATTRIBUTES( WSPath = "/getTime", 
@@ -70,6 +83,19 @@ PUBLIC FUNCTION getMenu(l_menuName VARCHAR(6) ATTRIBUTE(WSParam)) ATTRIBUTES(
 		LET l_menu.menuData.rows = 0
 	END IF
 	RETURN l_menu.menuData.*
+END FUNCTION
+--------------------------------------------------------------------------------
+#+ POST <server>/dynFoodRest/placeOrder
+#+ result: String
+PUBLIC FUNCTION registerUser(l_userDets userDetailsRecord) ATTRIBUTES( 
+		WSPath = "/registerUser", 
+		WSPost, 
+		WSDescription = "Register a user")
+	RETURNS (INT, STRING ATTRIBUTES(WSMedia = 'application/json'))
+	DEFINE l_stat INTEGER
+	DEFINE l_ret STRING
+	CALL m_user.register( l_userDets ) RETURNING l_stat, l_ret
+	RETURN l_stat, l_ret
 END FUNCTION
 --------------------------------------------------------------------------------
 #+ POST <server>/dynFoodRest/placeOrder

@@ -2,14 +2,20 @@
 IMPORT security
 IMPORT util
 IMPORT FGL db
-
+IMPORT FGL Users
 &include "menus.inc"
-
+DEFINE m_users Users
 DEFINE l_users DYNAMIC ARRAY OF userRecord
 DEFINE l_userDetails DYNAMIC ARRAY OF userDetailsRecord
 MAIN
 	DEFINE x SMALLINT = 1
 	DEFINE l_json TEXT
+
+	CALL testCheck("NJM")
+	CALL testCheck("NJM1")
+	CALL testCheck("NJM01")
+	CALL testCheck("NJM001")
+	CALL testCheck("NJM007")
 
 	LET l_users[x].user_id = "NJM"
 	LET l_users[x].user_name = "Neil Martin"
@@ -45,4 +51,11 @@ FUNCTION doPassword( l_pwd STRING )
 	DEFINE l_salt STRING
 	LET l_salt = security.BCrypt.GenerateSalt(10)
 	RETURN Security.BCrypt.HashPassword(l_pwd, l_salt)
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION testCheck(l_id CHAR(6))
+	DEFINE l_exists BOOLEAN
+	DEFINE l_suggestion CHAR(6)
+	CALL m_users.checkUserID(l_id) RETURNING l_exists, l_suggestion
+	DISPLAY l_id, " Exists:",l_exists, " Suggestion:",l_suggestion
 END FUNCTION

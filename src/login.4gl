@@ -101,6 +101,8 @@ FUNCTION register()
 			END FOR
 			IF NOT l_passokay OR NOT l_gotAlpha OR NOT l_gotNum THEN
 				ERROR "Password must be at least 6 character and contain both numbers and letters"
+				LET l_userd.password_hash = NULL
+				LET l_pwd2 = NULL
 				NEXT FIELD password_hash
 			END IF
 

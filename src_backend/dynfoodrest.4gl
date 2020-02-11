@@ -49,7 +49,7 @@ END FUNCTION
 --------------------------------------------------------------------------------
 #+ GET <server>/dynFoodRest/getTime
 #+ result: A menu array by ID
-PUBLIC FUNCTION getTimeStamp() ATTRIBUTES( WSPath = "/getTime", 
+PUBLIC FUNCTION getTimeStamp() ATTRIBUTES( WSPath = "/getTimestamp", 
 		WSGet, 
 		WSDescription = "Get the server time")
 	RETURNS (CHAR(19) ATTRIBUTES(WSMedia = 'application/json'))
@@ -94,7 +94,8 @@ PUBLIC FUNCTION registerUser(l_userDets userDetailsRecord) ATTRIBUTES(
 	RETURNS (INT, STRING ATTRIBUTES(WSMedia = 'application/json'))
 	DEFINE l_stat INTEGER
 	DEFINE l_ret STRING
-	CALL m_user.register( l_userDets ) RETURNING l_stat, l_ret
+	LET m_user.currentUserDetails.* = l_userDets.*
+	CALL m_user.register() RETURNING l_stat, l_ret
 	RETURN l_stat, l_ret
 END FUNCTION
 --------------------------------------------------------------------------------

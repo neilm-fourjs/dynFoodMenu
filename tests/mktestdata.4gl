@@ -3,7 +3,9 @@ IMPORT security
 IMPORT util
 IMPORT FGL db
 IMPORT FGL Users
+
 &include "menus.inc"
+
 DEFINE m_users Users
 DEFINE l_users DYNAMIC ARRAY OF userRecord
 DEFINE l_userDetails DYNAMIC ARRAY OF userDetailsRecord

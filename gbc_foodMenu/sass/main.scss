@@ -39,7 +39,7 @@ BODY {
   padding: $njm-toolbar-padding;
 }
 
-.mt-progress{
+.mt-progress {
 	border: 1px solid $njm-button-border-color;
 	padding: 1px;
 	margin: 2px
@@ -69,4 +69,17 @@ BODY {
 	margin-left: auto;
 	margin-right: auto;
 	width: fit-content;
+}
+
+.gbc_style_noborder {
+	border: none;
+}
+
+.mt-button, .gbc_style_noborder {
+	border: none !important;
+}
+
+.mt-button, .gbc_style_flat {
+	background-color: transparent !important;
+	background-image: none !important;
 }

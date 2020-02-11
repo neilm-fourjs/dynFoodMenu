@@ -105,12 +105,11 @@ PUBLIC FUNCTION (this Users) checkUserID(l_id  LIKE users.user_id) RETURNS (BOOL
 END FUNCTION
 --------------------------------------------------------------------------------
 -- See if user_id already exists.
-PUBLIC FUNCTION (this Users) register( l_userDets userDetailsRecord ) RETURNS (INT, STRING)
+PUBLIC FUNCTION (this Users) register() RETURNS (INT, STRING)
 	DEFINE l_stat SMALLINT
-	LET this.currentUserDetails.* = l_userDets.*
-	LET this.currentUser.user_id = l_userDets.user_id
-	LET this.currentUser.user_name = l_userDets.firstnames CLIPPED||" "||l_userDets.surname
-	LET this.currentUser.user_pwd = l_userDets.password_hash
+	LET this.currentUser.user_id = this.currentUserDetails.user_id
+	LET this.currentUser.user_name = this.currentUserDetails.firstnames CLIPPED||" "||this.currentUserDetails.surname
+	LET this.currentUser.user_pwd = this.currentUserDetails.password_hash
 	LET l_stat = this.add()
 	RETURN l_stat, this.errorMessage
 END FUNCTION

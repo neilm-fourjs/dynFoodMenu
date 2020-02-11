@@ -23,9 +23,7 @@ MAIN
 						NEXT FIELD user_id
 					END IF
 				AFTER INPUT
-					LET l_salt = security.BCrypt.GenerateSalt(10)
-					LET l_user.currentUser.* = l_tmpUser.*
-					LET l_user.currentUser.user_pwd = Security.BCrypt.HashPassword(l_user.currentUser.user_pwd, l_salt)
+					CALL l_user.setPasswordHash( l_tmpUser.user_pwd )
 					LET l_user.list[ arr_curr() ].* = l_user.currentUser.*
 					IF NOT l_user.add() THEN
 						ERROR l_user.errorMessage
@@ -56,6 +54,8 @@ MAIN
 						MESSAGE l_user.errorMessage
 					END IF
 			END INPUT
+		ON ACTION refresh
+			CALL l_user.loadFromDB()
 		ON ACTION about CALL about.show()
 		ON ACTION close EXIT DISPLAY
 		ON ACTION quit EXIT DISPLAY

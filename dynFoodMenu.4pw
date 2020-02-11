@@ -74,7 +74,7 @@
         <File filePath="src_backend/userMaint.4gl"/>
         <File filePath="src_backend/userMaint.per"/>
       </Application>
-      <Application binaryName="load_data" dependencies="1074706446,-1361191823,362164715,1770744530" id="1321734150" label="load_data">
+      <Application binaryName="load_data" commandLineArguments="DROP" dependencies="1074706446,-1361191823,362164715,1770744530" id="1321734150" label="load_data">
         <File filePath="src_backend/db_load.4gl"/>
         <File filePath="src_backend/mkdb.4gl"/>
       </Application>

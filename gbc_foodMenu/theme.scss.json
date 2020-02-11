@@ -24,7 +24,7 @@
 	"theme-secondary-color": "$palette-text-secondary-100",
 	"theme-header-color": "$palette-secondary-100",
 	"theme-message-color": "$mt-white",
-	"theme-message-background-color": "$palette-secondary-600",
+	"theme-message-background-color": "$palette-primary-600",
 
 	"theme-currentrow-background-color": "$mt-light-blue-400",
 	"theme-currentrow-color": "$palette-text-secondary",

@@ -58,6 +58,10 @@ FUNCTION (this userRecord) login(l_win BOOLEAN) RETURNS BOOLEAN
 					CALL fgl_winMessage("Error","2) Error logging in, please try again.","exclamation")
 					NEXT FIELD user_id
 				END IF
+				IF LENGTH(this.user_pwd) < 2 THEN
+					DISPLAY "Invalid login. please report this problem!" TO username
+					NEXT FIELD user_id
+				END IF
 				IF NOT security.BCrypt.CheckPassword(l_pwd, this.user_pwd) THEN
 					DISPLAY "Invalid login details, please try again." TO username
 					NEXT FIELD user_id
@@ -72,7 +76,11 @@ FUNCTION (this userRecord) login(l_win BOOLEAN) RETURNS BOOLEAN
 	ELSE
 		CLOSE WINDOW login
 	END IF
-	IF int_flag THEN LET int_flag = FALSE RETURN FALSE END IF
+	IF int_flag THEN
+		CALL debug.output("Login Cancelled", FALSE)
+		LET int_flag = FALSE
+		RETURN FALSE
+	END IF
 	CALL debug.output(SFMT("getToken: %1 %2 Okay",this.user_id, this.user_token),FALSE )
 	RETURN TRUE
 END FUNCTION
@@ -133,10 +141,14 @@ FUNCTION register()
 	IF int_flag THEN
 		LET int_flag = FALSE
 	ELSE
+		CALL m_users.setPasswordHash( l_pwd2 )
 		CALL wsBackEnd.registerUser(m_users.currentUserDetails.*) RETURNING l_stat, l_ret, l_suggestion
 		CALL debug.output(SFMT("registerUser: %1, reply: %2:%3",l_stat, l_ret, l_suggestion ),FALSE)
 		IF l_stat = 0 AND l_ret = 0 THEN
 			CALL m_users.register() RETURNING l_ret, l_suggestion
+		END IF
+		IF l_ret = 0 THEN
+			CALL fgl_winMessage("Confirmation","Registation Completed Okay\nYou can now login.","information")
 		END IF
 	END IF
 	CLOSE WINDOW register

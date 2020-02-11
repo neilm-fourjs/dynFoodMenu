@@ -1,4 +1,5 @@
 IMPORT util
+IMPORT security
 IMPORT FGL db
 &include "../src/menus.inc"
 
@@ -106,12 +107,22 @@ END FUNCTION
 --------------------------------------------------------------------------------
 -- See if user_id already exists.
 PUBLIC FUNCTION (this Users) register() RETURNS (INT, STRING)
-	DEFINE l_stat SMALLINT
+	DEFINE l_stat SMALLINT = 0
 	LET this.currentUser.user_id = this.currentUserDetails.user_id
 	LET this.currentUser.user_name = this.currentUserDetails.firstnames CLIPPED||" "||this.currentUserDetails.surname
 	LET this.currentUser.user_pwd = this.currentUserDetails.password_hash
-	LET l_stat = this.add()
+	IF NOT this.add() THEN
+		LET l_stat = 1
+	END IF
 	RETURN l_stat, this.errorMessage
+END FUNCTION
+--------------------------------------------------------------------------------
+-- 
+PUBLIC FUNCTION (this Users) setPasswordHash(l_pwd STRING)
+	DEFINE l_salt STRING
+	LET l_salt = security.BCrypt.GenerateSalt(10)
+	LET this.currentUser.user_pwd = Security.BCrypt.HashPassword(l_pwd, l_salt)
+	LET this.currentUserDetails.password_hash = this.currentUser.user_pwd
 END FUNCTION
 --------------------------------------------------------------------------------
 FUNCTION (this Users) loadFromDB()

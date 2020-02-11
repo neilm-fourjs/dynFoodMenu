@@ -139,7 +139,9 @@ FUNCTION create_tabs()
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION drop_tabs()
+	CALL dropTab("dbver")
 	CALL dropTab("users")
+	CALL dropTab("userDetails")
 	CALL dropTab("menus")
 	CALL dropTab("menuItems")
 	CALL dropTab("orders")

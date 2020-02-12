@@ -6,7 +6,7 @@ There are two versions of the program:
 * dynFoodMenu - main code stripped out into library functions and a WC menu added
 * dynFoodMenu2 - a single .4gl example of just the form generation and input
 
-## Running on the Android: Native Rendering vs Universal Rendering
+## Running on Android: Native Rendering vs Universal Rendering
 ![ss1n](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss1nat.png "SS1NAT")
 ![ss1u](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss1ur.png "SS1UR")
 ![ss2n](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss2nat.png "SS2NAT")

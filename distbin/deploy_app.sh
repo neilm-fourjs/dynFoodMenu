@@ -1,9 +1,9 @@
 #!/bin/bash
 # If the user doesn't have permissions to deploy apps then use sudo
 # Args:
-#  Server No
-#  Gar name
-#  GenVer
+#  Server No : defaults to 1
+#  Gar name : defaults to dynFoodBackEnd
+#  GenVer : defaults to 320
 
 function localDeploy() {
 	GAR=$1
@@ -98,11 +98,6 @@ esac
 GAR=${APP}
 
 echo "Srv: $SRV Host: $HOST Gar: $GAR Ver: $VER"
-
-if [ ! -e ${GAR}.gar ]; then
-	echo "${GAR}.gar missing!"
-	exit 1
-fi
 
 if [ ! -e ${GAR}.gar ]; then
 	echo "${GAR}.gar missing!"

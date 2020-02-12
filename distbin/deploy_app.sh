@@ -80,14 +80,14 @@ case $SRV in
 ;;
 1)
 	HOST=pi@generodemos.dynu.net
-	PORT=666
+	PORT=999
 ;;
 2)
 	HOST=ryan-4js.com
-	PORT=666
+	PORT=999
 ;;
 3)
-	HOST=neilm@demos.4js-emea.com
+	HOST=demos.4js-emea.com
 	USER=fourjs
 ;;
 4)

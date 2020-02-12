@@ -1,10 +1,18 @@
 # A Dynamic Food Menu Mobile App
+This demo requires Genero 3.20 or above.
 
-The goal was to generate the screen and the dialog dynamically based on the data provided.
+The goal was to generate the screen and the dialog dynamically based on the data provided from the server.
 
-There are two versions of the program:
-* dynFoodMenu - main code stripped out into library functions and a WC menu added
-* dynFoodMenu2 - a single .4gl example of just the form generation and input
+The demo includes the backend web REST service.
+
+The front user menu is also dynamic with the items coming from the back end service.
+Then when you select an item from that menu the app requests the 'food menu' from the server and generates the form and input.
+Once you've made you selections the order is sent to the back server.
+
+There are a few programs provided:
+* dynFoodMenu - The main application
+* dynFoodRest - RESTful web service for providing the menus.
+* dynFoodMenu2 - (see tests in the project) a single .4gl example of just the form generation and input based on a JSON data set.
 
 ## Running on Android: Native Rendering vs Universal Rendering
 ![ss1n](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss1nat.png "SS1NAT")

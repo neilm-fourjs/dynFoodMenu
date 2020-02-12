@@ -5,6 +5,8 @@ The goal was to generate the screen and the dialog dynamically based on the data
 
 The demo includes the backend web REST service.
 
+The demo is also using a simple custom GBC for running the appliction in a browser and using Universal Rendering in the GDC/Mobile.
+
 The front user menu is also dynamic with the items coming from the back end service.
 Then when you select an item from that menu the app requests the 'food menu' from the server and generates the form and input.
 Once you've made you selections the order is sent to the back server.

@@ -70,6 +70,7 @@ function remoteDeploy() {
 PORT=22
 SRV=${1:-1}
 APP=${2:-dynFoodBackEnd}
+VER=${3:-320}
 USER=${4}
 
 case $SRV in
@@ -88,6 +89,7 @@ case $SRV in
 3)
 	HOST=neilm@demos.4js-emea.com
 	USER=fourjs
+;;
 4)
 	HOST=$5
 ;;

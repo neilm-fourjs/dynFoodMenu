@@ -13,6 +13,7 @@ MAIN
 	DEFINE l_data menuData
 	DEFINE l_patients Patients
 	DEFINE x SMALLINT
+	WHENEVER ERROR CALL libCommon.abort
 	CALL libCommon.loadStyles()
 	CALL debug.output(SFMT("Started FGLPROFILE=%1", fgl_getEnv("FGLPROFILE")), FALSE)
 	OPEN FORM login FROM "login"
@@ -20,12 +21,12 @@ MAIN
 
 	IF NOT m_user.login(FALSE) THEN
 		CALL debug.output(SFMT("Invalid login %1 %2",m_user.user_id, m_user.user_name),FALSE)
-		EXIT PROGRAM
+		CALL libCommon.exit_program()
 	END IF
 	CALL ui.Window.getCurrent().getForm().setFieldHidden("formonly.l_iconmenu",FALSE)
 	IF NOT l_data.getMenuList() THEN
 		CALL debug.output("Failed to get Menu list.",FALSE)
-		EXIT PROGRAM
+		CALL libCommon.exit_program()
 	END IF
 	CALL ui.Window.getCurrent().getForm().setFieldHidden("formonly.l_iconmenu",FALSE)
 -- set the 4gl array for the menu data.
@@ -36,12 +37,13 @@ MAIN
 	CALL myMenu.addMenuItem("Close", "poweroff.png", "close")
 
 	IF NOT myMenu.init(NULL) THEN -- something wrong?
-		EXIT PROGRAM
+		CALL libCommon.exit_program()
 	END IF
 	LET dynFoodMenu.m_user_token =  m_user.user_token
 	LET dynFoodMenu.m_user_id = m_user.user_id
 	WHILE TRUE
 		IF NOT l_patients.select() THEN EXIT WHILE END IF
+		DISPLAY SFMT("Ward: %1 Bed #%2 - %3", l_patients.wards.current.ward_name ,l_patients.patients.current.bed_no, l_patients.patients.current.name) TO username
 		LET dynFoodMenu.m_patients = l_patients
 		WHILE l_menuItem != "back"
 			LET l_menuItem = myMenu.ui() -- show icon menu and wait for selection.
@@ -59,5 +61,5 @@ MAIN
 		END WHILE
 	END WHILE
 
-	CALL debug.output("Finished", debug.m_showDebug)
+	CALL libCommon.exit_program()
 END MAIN

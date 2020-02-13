@@ -15,15 +15,19 @@ PUBLIC DEFINE m_dbtype STRING
 PUBLIC DEFINE m_connected BOOLEAN = FALSE
 --------------------------------------------------------------------------------------------------------------
 FUNCTION connect() RETURNS BOOLEAN
+	WHENEVER ERROR CALL libCommon.abort
 	IF m_connected THEN RETURN TRUE END IF
 	LET m_dbname = fgl_getResource("my.dbname")
-	IF NOT os.path.exists(C_DBDIR) THEN
-		IF NOT os.path.mkdir(C_DBDIR) THEN
-			CALL debug.output(SFMT("Failed to make %1",C_DBDIR), FALSE)
-			EXIT PROGRAM
+	IF NOT base.Application.isMobile() THEN -- if not mobile use C_DBDIR
+		IF NOT os.path.exists(C_DBDIR) THEN
+			IF NOT os.path.mkdir(C_DBDIR) THEN
+				CALL debug.output(SFMT("Failed to make %1",C_DBDIR), FALSE)
+				EXIT PROGRAM
+			END IF
 		END IF
 	END IF
 	IF NOT os.path.exists(m_dbname) THEN
+		CALL debug.output(SFMT("Creating %1",m_dbname),FALSE)
 		CREATE DATABASE m_dbname
 		CALL create()
 	END IF
@@ -73,11 +77,13 @@ FUNCTION create()
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION create_tabs()
+	CALL debug.output("Create table: dbver", FALSE)
 	CREATE TABLE dbver (
 		dbver INTEGER
 	)
 	INSERT INTO dbver VALUES(1)
 
+	CALL debug.output("Create table: users", FALSE)
 	CREATE TABLE users (
 		user_id VARCHAR(6),
 		user_name VARCHAR(30),
@@ -86,6 +92,7 @@ FUNCTION create_tabs()
 		token_ts DATETIME YEAR TO MINUTE
 	)
 
+	CALL debug.output("Create table: userDetails", FALSE)
 	CREATE TABLE userDetails (
 		user_id VARCHAR(6),
 		salutation VARCHAR(30),
@@ -98,12 +105,14 @@ FUNCTION create_tabs()
 		registered DATETIME YEAR TO MINUTE
 	)
 
+	CALL debug.output("Create table: menus", FALSE)
 	CREATE TABLE menus (
 		menuName VARCHAR(6),
 		menuDesc VARCHAR(30),
 		menuImage VARCHAR(20)
 	)
 
+	CALL debug.output("Create table: menuItems", FALSE)
 	CREATE TABLE menuItems (
 		menuName VARCHAR(6),
 		t_id INTEGER,
@@ -121,6 +130,7 @@ FUNCTION create_tabs()
 		level SMALLINT
 	)
 
+	CALL debug.output("Create table: orders", FALSE)
 	CREATE TABLE orders (
 		order_id SERIAL,
 		user_token VARCHAR(60),
@@ -132,6 +142,7 @@ FUNCTION create_tabs()
 		placed DATETIME YEAR TO SECOND
 	)
 
+	CALL debug.output("Create table: orderItems", FALSE)
 	CREATE TABLE orderItems (
 			order_id INTEGER,
 			item_id INTEGER,
@@ -140,11 +151,13 @@ FUNCTION create_tabs()
 			optional BOOLEAN
 	)
 
+	CALL debug.output("Create table: wards", FALSE)
 	CREATE TABLE wards (
 		ward_id INTEGER,
 		ward_name VARCHAR(30)
 	)
 
+	CALL debug.output("Create table: patients", FALSE)
 	CREATE TABLE patients (
 		id SERIAL,
 		name VARCHAR(40),
@@ -175,10 +188,9 @@ END FUNCTION
 FUNCTION dropTab(l_tab STRING)
 	TRY
 		EXECUTE IMMEDIATE "drop table " || l_tab
-		DISPLAY "Dropped " || l_tab
+		CALL debug.output(SFMT("Dropped %1",l_tab), FALSE)
 	CATCH
-		CALL libCommon.error(
-				SFMT("Failed to drop %1: %2 %3", l_tab, STATUS, SQLERRMESSAGE))
+		CALL libCommon.error(SFMT("Failed to drop %1: %2 %3", l_tab, STATUS, SQLERRMESSAGE))
 	END TRY
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
@@ -195,7 +207,7 @@ FUNCTION fix_serials(l_tab STRING, l_col STRING)
 				LET l_id = 0
 			END IF
 			LET l_id = l_id + 1
-			DISPLAY "Fixing serial for ",l_tab,":", l_id
+			CALL debug.output(SFMT("Fixing serial for %1 : %2",l_tab, l_id), FALSE)
 			LET l_sql = SFMT("SELECT setval('%1_%2_seq', %3)", l_tab, l_col, l_id)
 			EXECUTE IMMEDIATE l_sql
 		CATCH

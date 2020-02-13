@@ -37,3 +37,13 @@ FUNCTION confirm(l_str STRING) RETURNS BOOLEAN
 		RETURN FALSE
 	END IF
 END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION abort()
+	LET debug.m_showDebug = TRUE
+	CALL debug.output(SFMT("Abort Status:%1\n%2", STATUS, SQLERRMESSAGE), TRUE)
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION exit_program()
+	CALL debug.output("Finished", debug.m_showDebug)
+	EXIT PROGRAM
+END FUNCTION

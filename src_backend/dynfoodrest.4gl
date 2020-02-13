@@ -2,10 +2,12 @@ IMPORT security
 IMPORT util
 IMPORT FGL menuData
 IMPORT FGL Users
+IMPORT FGL Patients
 IMPORT FGL utils
 IMPORT FGL debug
 &include "../src/menus.inc"
 DEFINE m_user Users
+DEFINE m_patients Patients
 DEFINE m_ts CHAR(19)
 --------------------------------------------------------------------------------
 #+ GET <server>/dynFoodRest/getToken/id/pwd
@@ -83,6 +85,30 @@ PUBLIC FUNCTION getMenu(l_menuName VARCHAR(6) ATTRIBUTE(WSParam)) ATTRIBUTES(
 		LET l_menu.menuData.rows = 0
 	END IF
 	RETURN l_menu.menuData.*
+END FUNCTION
+--------------------------------------------------------------------------------
+#+ GET <server>/dynFoodRest/getWards
+#+ result: An array of wards
+PUBLIC FUNCTION getWards() ATTRIBUTES( 
+		WSPath = "/getWards",
+		WSGet, 
+		WSDescription = "Get wards")
+	RETURNS (wardList ATTRIBUTES(WSMedia = 'application/json'))
+	LET m_patients.wards.messsage = "getting wards from db ..."
+	CALL m_patients.getWardsDB()
+	RETURN m_patients.wards.*
+END FUNCTION
+--------------------------------------------------------------------------------
+#+ GET <server>/dynFoodRest/getPatients/<id>
+#+ result: A menu array by ID
+PUBLIC FUNCTION getPatients(l_ward SMALLINT ATTRIBUTE(WSParam)) ATTRIBUTES( 
+		WSPath = "/getPatients/{l_ward}", 
+		WSGet, 
+		WSDescription = "Get patients for ward")
+	RETURNS (patientList ATTRIBUTES(WSMedia = 'application/json'))
+	LET m_patients.wards.messsage = SFMT("getting patients for ward %1 from db ...", l_ward)
+	CALL m_patients.getPatientsDB(l_ward)
+	RETURN m_patients.patients.*
 END FUNCTION
 --------------------------------------------------------------------------------
 #+ POST <server>/dynFoodRest/placeOrder

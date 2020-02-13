@@ -7,6 +7,8 @@ MAIN
 	IF ARG_VAL(1) = "DROP" THEN
 		CALL db.drop_tabs()
 		CALL db.create_tabs()
+	ELSE
+		CALL db_load.load_data()
 	END IF
-	CALL db_load.load_data()
+
 END MAIN

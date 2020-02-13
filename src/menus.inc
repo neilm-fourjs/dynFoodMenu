@@ -83,6 +83,12 @@ PUBLIC TYPE wardRecord RECORD
 		ward_name VARCHAR(30)
 	END RECORD
 
+PUBLIC TYPE wardList RECORD
+		list DYNAMIC ARRAY OF wardRecord,
+		current wardRecord,
+		messsage STRING
+	END RECORD
+
 PUBLIC TYPE patientRecord RECORD
 		id INTEGER,
 		name VARCHAR(40),
@@ -93,4 +99,10 @@ PUBLIC TYPE patientRecord RECORD
 		nilbymouth BOOLEAN,
 		diabetic BOOLEAN,
 		allergies VARCHAR(100)
+	END RECORD
+
+PUBLIC TYPE patientList RECORD
+		list DYNAMIC ARRAY OF patientRecord,
+		current patientRecord,
+		messsage STRING
 	END RECORD

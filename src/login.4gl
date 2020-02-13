@@ -4,6 +4,7 @@ IMPORT FGL debug
 IMPORT FGL about
 IMPORT FGL utils
 IMPORT FGL libMobile
+IMPORT FGL libCommon
 IMPORT FGL wsBackEnd
 IMPORT FGL Users
 
@@ -15,7 +16,7 @@ DEFINE m_server_time CHAR(19)
 FUNCTION (this userRecord) login(l_win BOOLEAN) RETURNS BOOLEAN
 	DEFINE l_stat INT
 	DEFINE l_pwd STRING
-
+	WHENEVER ERROR CALL libCommon.abort
 	IF NOT libMobile.gotNetwork() THEN
 		LET this.user_id = "DUMMY"
 		LET this.user_name = "Offline"
@@ -66,8 +67,8 @@ FUNCTION (this userRecord) login(l_win BOOLEAN) RETURNS BOOLEAN
 					NEXT FIELD user_id
 				END IF
 			END IF
-		ON ACTION register
-			CALL register()
+		ON ACTION register CALL register()
+		ON ACTION debug LET debug.m_showDebug = TRUE
 	END INPUT
 	DISPLAY SFMT("Welcome %1",this.user_name) TO username
 	IF NOT l_win THEN

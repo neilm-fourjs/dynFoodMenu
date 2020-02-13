@@ -1,6 +1,7 @@
 IMPORT util
 IMPORT security
 IMPORT FGL db
+IMPORT FGL libCommon
 &include "../src/menus.inc"
 
 PUBLIC TYPE Users RECORD
@@ -13,6 +14,7 @@ END RECORD
 --
 PUBLIC FUNCTION (this Users) get(l_userId LIKE users.user_id) RETURNS BOOLEAN
 	DEFINE x SMALLINT
+	WHENEVER ERROR CALL libCommon.abort
 	IF this.list.getLength() = 0 THEN CALL this.loadFromDB() END IF
 	FOR x = 1 TO this.list.getLength()
 		IF this.list[x].user_id = l_userId THEN

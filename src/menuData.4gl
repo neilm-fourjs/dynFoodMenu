@@ -18,6 +18,7 @@ PUBLIC TYPE menuData RECORD
 END RECORD
 --------------------------------------------------------------------------------------------------------------
 FUNCTION (this menuData) getMenu(l_menuName STRING) RETURNS BOOLEAN
+	WHENEVER ERROR CALL libCommon.abort
 	CALL debug.output(SFMT("Load %1",l_menuName), FALSE)
 	LET this.menuData.menuName = l_menuName
 	IF libMobile.gotNetwork() THEN

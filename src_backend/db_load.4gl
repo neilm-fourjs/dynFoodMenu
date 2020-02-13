@@ -14,7 +14,6 @@ FUNCTION load_data()
 	DEFINE l_patients DYNAMIC ARRAY OF patientRecord
 	DEFINE x,y SMALLINT
 
-
 	IF loadJSON( "users.json" ) THEN
 		CALL util.JSON.parse(m_JSONfile, l_users)
 		FOR x = 1 TO l_users.getLength()
@@ -28,18 +27,6 @@ FUNCTION load_data()
 		FOR x = 1 TO l_userDetails.getLength()
 			DISPLAY "Insert UserDetails:",l_userDetails[x].user_id
 			INSERT INTO userDetails VALUES( l_userDetails[x].* )
-		END FOR
-	END IF
-
-	IF l_data.getMenuListJSON() THEN
-		FOR x = 1 TO l_data.menuList.rows
-			DISPLAY "Menu:",l_data.menuList.list[x].menuName,":",l_data.menuList.list[x].menuDesc
-			INSERT INTO menus VALUES( l_data.menuList.list[x].* )
-			IF l_data.getMenuJSON(l_data.menuList.list[x].menuName) THEN
-				FOR y = 1 TO l_data.menuData.rows
-					INSERT INTO menuItems VALUES( l_data.menuData.items[y].* )
-				END FOR
-			END IF
 		END FOR
 	END IF
 
@@ -58,6 +45,19 @@ FUNCTION load_data()
 			INSERT INTO patients VALUES( l_patients[x].* )
 		END FOR
 	END IF
+
+	IF l_data.getMenuListJSON() THEN
+		FOR x = 1 TO l_data.menuList.rows
+			DISPLAY "Menu:",l_data.menuList.list[x].menuName,":",l_data.menuList.list[x].menuDesc
+			INSERT INTO menus VALUES( l_data.menuList.list[x].* )
+			IF l_data.getMenuJSON(l_data.menuList.list[x].menuName) THEN
+				FOR y = 1 TO l_data.menuData.rows
+					INSERT INTO menuItems VALUES( l_data.menuData.items[y].* )
+				END FOR
+			END IF
+		END FOR
+	END IF
+
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION loadJSON(l_file STRING) RETURNS BOOLEAN

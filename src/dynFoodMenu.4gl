@@ -4,6 +4,7 @@ IMPORT FGL debug
 IMPORT FGL about
 IMPORT FGL login
 IMPORT FGL libMobile
+IMPORT FGL libCommon
 IMPORT FGL Patients
 
 DEFINE m_data menuData
@@ -15,6 +16,7 @@ PUBLIC DEFINE m_user_id STRING
 PUBLIC DEFINE m_patients Patients
 --------------------------------------------------------------------------------------------------------------
 FUNCTION showMenu(l_menuName STRING)
+	WHENEVER ERROR CALL libCommon.abort
 	IF NOT m_data.getMenu(l_menuName) THEN RETURN END IF-- Load the menu data
 	LET m_form.menuData = m_data.menuData -- give the ui library the menu data
 	LET m_form.toolbar[1] = "submit"
@@ -73,7 +75,7 @@ END FUNCTION
 FUNCTION input_okay() RETURNS BOOLEAN
 	DEFINE x, order_lines SMALLINT
 	DEFINE l_val, l_opt SMALLINT
-	DEFINE l_order STRING = "Your Order is:\n"
+	DEFINE l_order STRING
 	DEFINE l_desc STRING
 	CALL debug.output("input_okay: Started", FALSE)
 	IF NOT libMobile.gotNetwork() THEN
@@ -93,6 +95,10 @@ FUNCTION input_okay() RETURNS BOOLEAN
 	LET m_data.ordered.placed = CURRENT
 	LET m_data.ordered.user_id = m_user_id
 	LET m_data.ordered.user_token = m_user_token
+	LET m_data.ordered.bed_no = m_patients.patients.current.bed_no
+	LET m_data.ordered.ward_id = m_patients.patients.current.ward_id
+	LET m_data.ordered.patients_id = m_patients.patients.current.id
+	LET l_order = SFMT("Ward: %1\nBed: %2\n Patient: %3\n\n", m_patients.wards.current.ward_name, m_data.ordered.bed_no,m_patients.patients.current.name) 
 	LET order_lines = 0
 	FOR x = 1 TO m_data.menuData.rows
 		IF m_data.menuData.items[x].field.getLength() > 2 THEN
@@ -118,7 +124,7 @@ FUNCTION input_okay() RETURNS BOOLEAN
 	LET m_data.ordered.rows = order_lines
 	IF order_lines > 0 THEN
 		CALL debug.output("input_okay: Do confirm", FALSE)
-		IF fgl_winQuestion("Confirm",l_order,"Yes","Yes|No","question",0) = "No" THEN
+		IF fgl_winQuestion("Confirm Order For",l_order,"Yes","Yes|No","question",0) = "No" THEN
 			CALL debug.output("input_okay: Confirmed - No", FALSE)
 			RETURN FALSE
 		END IF

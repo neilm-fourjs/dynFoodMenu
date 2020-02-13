@@ -6,7 +6,7 @@ IMPORT xml
 IMPORT util
 IMPORT os
 
-&include "menus.inc"
+&include "../src/menus.inc"
 
 #+
 #+ Global Endpoint user-defined type definition
@@ -47,11 +47,17 @@ PUBLIC TYPE registerUserMultipartResponse RECORD
 	rv1 STRING
 END RECORD
 
+# generated getWardsResponseBodyType
+PUBLIC TYPE getWardsResponseBodyType wardList
+
 # generated getMenusResponseBodyType
 PUBLIC TYPE getMenusResponseBodyType menuList
 
 # generated getTokenResponseBodyType
 PUBLIC TYPE getTokenResponseBodyType userRecord
+
+# generated getPatientsResponseBodyType
+PUBLIC TYPE getPatientsResponseBodyType patientList
 
 # generated getMenuResponseBodyType
 PUBLIC TYPE getMenuResponseBodyType menuRecord
@@ -229,6 +235,73 @@ END FUNCTION
 ################################################################################
 
 ################################################################################
+# Operation /getWards
+#
+# VERB: GET
+# DESCRIPTION: Get wards
+#
+PUBLIC FUNCTION getWards() RETURNS(INTEGER, getWardsResponseBodyType)
+	DEFINE fullpath base.StringBuffer
+	DEFINE contentType STRING
+	DEFINE req com.HTTPRequest
+	DEFINE resp com.HTTPResponse
+	DEFINE resp_body getWardsResponseBodyType
+	DEFINE json_body STRING
+
+	TRY
+
+		# Prepare request path
+		LET fullpath = base.StringBuffer.Create()
+		CALL fullpath.append("/getWards")
+
+		# Create request and configure it
+		LET req =
+				com.HTTPRequest.Create(
+						SFMT("%1%2", Endpoint.Address.Uri, fullpath.toString()))
+		IF Endpoint.Binding.Version IS NOT NULL THEN
+			CALL req.setVersion(Endpoint.Binding.Version)
+		END IF
+		IF Endpoint.Binding.ConnectionTimeout <> 0 THEN
+			CALL req.setConnectionTimeout(Endpoint.Binding.ConnectionTimeout)
+		END IF
+		IF Endpoint.Binding.ReadWriteTimeout <> 0 THEN
+			CALL req.setTimeout(Endpoint.Binding.ReadWriteTimeout)
+		END IF
+		IF Endpoint.Binding.CompressRequest IS NOT NULL THEN
+			CALL req.setHeader("Content-Encoding", Endpoint.Binding.CompressRequest)
+		END IF
+
+		# Perform request
+		CALL req.setMethod("GET")
+		CALL req.setHeader("Accept", "application/json")
+		CALL req.DoRequest()
+
+		# Retrieve response
+		LET resp = req.getResponse()
+		# Process response
+		INITIALIZE resp_body TO NULL
+		LET contentType = resp.getHeader("Content-Type")
+		CASE resp.getStatusCode()
+
+			WHEN 200 #Success
+				IF contentType MATCHES "*application/json*" THEN
+					# Parse JSON response
+					LET json_body = resp.getTextResponse()
+					CALL util.JSON.parse(json_body, resp_body)
+					RETURN C_SUCCESS, resp_body.*
+				END IF
+				RETURN -1, resp_body.*
+
+			OTHERWISE
+				RETURN resp.getStatusCode(), resp_body.*
+		END CASE
+	CATCH
+		RETURN -1, resp_body.*
+	END TRY
+END FUNCTION
+################################################################################
+
+################################################################################
 # Operation /getMenus
 #
 # VERB: GET
@@ -296,7 +369,7 @@ END FUNCTION
 ################################################################################
 
 ################################################################################
-# Operation /getTime
+# Operation /getTimestamp
 #
 # VERB: GET
 # DESCRIPTION: Get the server time
@@ -384,6 +457,75 @@ PUBLIC FUNCTION getToken(p_l_id STRING, p_l_pwd STRING)
 		CALL fullpath.append("/getToken/{l_id}/{l_pwd}")
 		CALL fullpath.replace("{l_id}", p_l_id, 1)
 		CALL fullpath.replace("{l_pwd}", p_l_pwd, 1)
+
+		# Create request and configure it
+		LET req =
+				com.HTTPRequest.Create(
+						SFMT("%1%2", Endpoint.Address.Uri, fullpath.toString()))
+		IF Endpoint.Binding.Version IS NOT NULL THEN
+			CALL req.setVersion(Endpoint.Binding.Version)
+		END IF
+		IF Endpoint.Binding.ConnectionTimeout <> 0 THEN
+			CALL req.setConnectionTimeout(Endpoint.Binding.ConnectionTimeout)
+		END IF
+		IF Endpoint.Binding.ReadWriteTimeout <> 0 THEN
+			CALL req.setTimeout(Endpoint.Binding.ReadWriteTimeout)
+		END IF
+		IF Endpoint.Binding.CompressRequest IS NOT NULL THEN
+			CALL req.setHeader("Content-Encoding", Endpoint.Binding.CompressRequest)
+		END IF
+
+		# Perform request
+		CALL req.setMethod("GET")
+		CALL req.setHeader("Accept", "application/json")
+		CALL req.DoRequest()
+
+		# Retrieve response
+		LET resp = req.getResponse()
+		# Process response
+		INITIALIZE resp_body TO NULL
+		LET contentType = resp.getHeader("Content-Type")
+		CASE resp.getStatusCode()
+
+			WHEN 200 #Success
+				IF contentType MATCHES "*application/json*" THEN
+					# Parse JSON response
+					LET json_body = resp.getTextResponse()
+					CALL util.JSON.parse(json_body, resp_body)
+					RETURN C_SUCCESS, resp_body.*
+				END IF
+				RETURN -1, resp_body.*
+
+			OTHERWISE
+				RETURN resp.getStatusCode(), resp_body.*
+		END CASE
+	CATCH
+		RETURN -1, resp_body.*
+	END TRY
+END FUNCTION
+################################################################################
+
+################################################################################
+# Operation /getPatients/{l_ward}
+#
+# VERB: GET
+# DESCRIPTION: Get patients for ward
+#
+PUBLIC FUNCTION getPatients(p_l_ward INTEGER)
+		RETURNS(INTEGER, getPatientsResponseBodyType)
+	DEFINE fullpath base.StringBuffer
+	DEFINE contentType STRING
+	DEFINE req com.HTTPRequest
+	DEFINE resp com.HTTPResponse
+	DEFINE resp_body getPatientsResponseBodyType
+	DEFINE json_body STRING
+
+	TRY
+
+		# Prepare request path
+		LET fullpath = base.StringBuffer.Create()
+		CALL fullpath.append("/getPatients/{l_ward}")
+		CALL fullpath.replace("{l_ward}", p_l_ward, 1)
 
 		# Create request and configure it
 		LET req =

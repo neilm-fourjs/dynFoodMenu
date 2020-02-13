@@ -20,7 +20,7 @@ Property of Four Js*
      <StyleAttribute name="fontWeight" value="bold" />
   </Style>
   <Style name="SpinEdit">
-     <StyleAttribute name="fontSize" value="1.2em" />
+     <StyleAttribute name="fontSize" value="1.4em" />
   </Style>
   <Style name=".big">
      <StyleAttribute name="fontSize" value="1.2em" />

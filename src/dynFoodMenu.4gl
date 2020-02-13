@@ -4,6 +4,7 @@ IMPORT FGL debug
 IMPORT FGL about
 IMPORT FGL login
 IMPORT FGL libMobile
+IMPORT FGL Patients
 
 DEFINE m_data menuData
 DEFINE m_form dynForm
@@ -11,6 +12,7 @@ DEFINE m_dialog ui.Dialog
 DEFINE m_user login.userRecord
 PUBLIC DEFINE m_user_token STRING
 PUBLIC DEFINE m_user_id STRING
+PUBLIC DEFINE m_patients Patients
 --------------------------------------------------------------------------------------------------------------
 FUNCTION showMenu(l_menuName STRING)
 	IF NOT m_data.getMenu(l_menuName) THEN RETURN END IF-- Load the menu data

@@ -49,8 +49,11 @@ PUBLIC TYPE orderRecord RECORD
 		order_id INTEGER,
 		user_token STRING,
 		user_id STRING,
-		placed DATETIME YEAR TO SECOND,
+		patients_id INTEGER,
+		ward_id INTEGER,
+		bed_no SMALLINT,
 		menu_id STRING,
+		placed DATETIME YEAR TO SECOND,
 		items DYNAMIC ARRAY OF orderItemsRecord,
 		rows SMALLINT
 	END RECORD
@@ -73,4 +76,21 @@ PUBLIC TYPE userDetailsRecord RECORD
 		gender_preference CHAR(1),
 		password_hash VARCHAR(60),
 		registered DATETIME YEAR TO MINUTE
+	END RECORD
+
+PUBLIC TYPE wardRecord RECORD
+		ward_id INTEGER,
+		ward_name VARCHAR(30)
+	END RECORD
+
+PUBLIC TYPE patientRecord RECORD
+		id INTEGER,
+		name VARCHAR(40),
+		dob DATE,
+		gender_preference CHAR(1),
+		ward_id INTEGER,
+		bed_no SMALLINT,
+		nilbymouth BOOLEAN,
+		diabetic BOOLEAN,
+		allergies VARCHAR(100)
 	END RECORD

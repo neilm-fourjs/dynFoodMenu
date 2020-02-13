@@ -48,9 +48,24 @@
     <Column fglLength="4" fglType="6" name="order_id" notNull="false" order="1" status="U" uuid="db/column48"/>
     <Column fglLength="60" fglType="201" name="user_token" notNull="false" order="2" status="U" uuid="db/column50"/>
     <Column fglLength="6" fglType="201" name="user_id" notNull="false" order="3" status="U" uuid="db/column52"/>
-    <Column fglLength="6" fglType="201" name="menu_id" notNull="false" order="4" status="U" uuid="db/column54"/>
-    <Column fglLength="3594" fglType="10" name="placed" notNull="false" order="5" status="U" uuid="db/column56"/>
+    <Column fglLength="4" fglType="2" name="patients_id" notNull="false" order="4" status="U" uuid="db/column47"/>
+    <Column fglLength="4" fglType="2" name="ward_id" notNull="false" order="5" status="U" uuid="db/column59"/>
+    <Column fglLength="2" fglType="1" name="bed_no" notNull="false" order="6" status="U" uuid="db/column61"/>
+    <Column fglLength="6" fglType="201" name="menu_id" notNull="false" order="7" status="U" uuid="db/column54"/>
+    <Column fglLength="3594" fglType="10" name="placed" notNull="false" order="8" status="U" uuid="db/column56"/>
     <Index indexColumns="order_id" indexConstraint="primaryKey" name="primary_key_orders" status="U" uuid="db/index2"/>
+  </Table>
+  <Table active="true" name="patients" status="U" uuid="db/table9">
+    <Column fglLength="4" fglType="6" name="id" notNull="false" order="1" status="U" uuid="db/column63"/>
+    <Column fglLength="40" fglType="201" name="name" notNull="false" order="2" status="U" uuid="db/column65"/>
+    <Column fglLength="4" fglType="7" name="dob" notNull="false" order="3" status="U" uuid="db/column67"/>
+    <Column fglLength="1" fglType="0" name="gender_preference" notNull="false" order="4" status="U" uuid="db/column68"/>
+    <Column fglLength="4" fglType="2" name="ward_id" notNull="false" order="5" status="U" uuid="db/column69"/>
+    <Column fglLength="2" fglType="1" name="bed_no" notNull="false" order="6" status="U" uuid="db/column70"/>
+    <Column fglLength="1" fglType="45" name="nilbymouth" notNull="false" order="7" status="U" uuid="db/column71"/>
+    <Column fglLength="1" fglType="45" name="diabetic" notNull="false" order="8" status="U" uuid="db/column72"/>
+    <Column fglLength="100" fglType="201" name="allergies" notNull="false" order="9" status="U" uuid="db/column73"/>
+    <Index indexColumns="id" indexConstraint="primaryKey" name="primary_key_patients" status="U" uuid="db/index3"/>
   </Table>
   <Table active="true" name="userdetails" status="U" uuid="db/table7">
     <Column fglLength="6" fglType="201" name="user_id" notNull="false" order="1" status="U" uuid="db/column35"/>
@@ -70,10 +85,14 @@
     <Column fglLength="60" fglType="201" name="user_token" notNull="false" order="4" status="U" uuid="db/column64"/>
     <Column fglLength="3080" fglType="10" name="token_ts" notNull="false" order="5" status="U" uuid="db/column66"/>
   </Table>
+  <Table active="true" name="wards" status="U" uuid="db/table11">
+    <Column fglLength="4" fglType="2" name="ward_id" notNull="false" order="1" status="U" uuid="db/column74"/>
+    <Column fglLength="30" fglType="201" name="ward_name" notNull="false" order="2" status="U" uuid="db/column75"/>
+  </Table>
   <Views ActiveView="View-1" showLabels="true">
     <View Name="View-1">
       <Layout>
-        <![CDATA[AAAAAgAAABIAZABiAC8AdABhAGIAbABlADZAfjw8PzS0tUB5WlpeCHh5P6kWhysCDE8BAAAAFABkAGIALwB0AGEAYgBsAGUAMQAwwGuHh4yw8PJAeR4eItPDxD+h64UeuFHvAQAAABIAZABiAC8AdABhAGIAbABlADdAUHh4eoeHiMAWlpaZaWlqP6cKPXCj1w8BAAAAFABkAGIALwB0AGEAYgBsAGUAMQAyQFAAAAe4eHlAcAAAAflpaT+rpeNT987fAQAAABIAZABiAC8AdABhAGIAbABlADRAf0tLT38PD0A2lpaa4eHjP6gQYk3S8a8BAAAAEgBkAGIALwB0AGEAYgBsAGUAMsBqWlpfS0tMQDaWlprS0tQ/nbItDlYEHgEAAAASAGQAYgAvAHQAYQBiAGwAZQA4QGiWlpsy0tRAeUtLUAlpaj+i8an752yPAQ==]]>
+        <![CDATA[AAAAAgAAABIAZABiAC8AdABhAGIAbABlADfAZAAAADh4ekB69T5kmUcBP7O2RaHKwIcBAAAAFABkAGIALwB0AGEAYgBsAGUAMQAwwGQia5aN+7RAGlpbiWloyD+yLQ5WBBiXAQAAABIAZABiAC8AdABhAGIAbABlADLAge7KOknzGkAUb92mp8xiP687ZFocrA8BAAAAFABkAGIALwB0AGEAYgBsAGUAMQAywIHMXqfyFYZAW37srRyBED+wIMSbpeNXAQAAABIAZABiAC8AdABhAGIAbABlADZAceHh5fh4d0B52228J0KxP7Q5WBBiTdcBAAAAEgBkAGIALwB0AGEAYgBsAGUAOcCCETXJMkkkQHjfuypttt8/san752yLRwEAAAASAGQAYgAvAHQAYQBiAGwAZQA4wGRJJI7xeqhAb2225uDOhT+ysCDEm6XnAQAAABIAZABiAC8AdABhAGIAbABlADRAbdCsJBU+Yr/50KvWuQJUP7MzMzMzMzcBAAAAFABkAGIALwB0AGEAYgBsAGUAMQAxwIHmL1UEkktAcXqfMpJJJz+xJul41P33AQ==]]>
       </Layout>
     </View>
   </Views>

@@ -39,6 +39,8 @@ FUNCTION connect() RETURNS BOOLEAN
 	LET m_dbtype = fgl_getResource("dbi.default.driver")
 	CALL check()
 	CALL fix_serials("orders","order_id")
+	CALL fix_serials("wards","ward_id")
+	CALL fix_serials("patients","patient_id")
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
@@ -123,6 +125,9 @@ FUNCTION create_tabs()
 		order_id SERIAL,
 		user_token VARCHAR(60),
 		user_id VARCHAR(6),
+		patients_id INTEGER,
+		ward_id INTEGER,
+		bed_no SMALLINT,
 		menu_id VARCHAR(6),
 		placed DATETIME YEAR TO SECOND
 	)
@@ -133,6 +138,23 @@ FUNCTION create_tabs()
 			description VARCHAR(30),
 			qty SMALLINT,
 			optional BOOLEAN
+	)
+
+	CREATE TABLE wards (
+		ward_id INTEGER,
+		ward_name VARCHAR(30)
+	)
+
+	CREATE TABLE patients (
+		id SERIAL,
+		name VARCHAR(40),
+		dob DATE,
+		gender_preference CHAR(1),
+		ward_id INTEGER,
+		bed_no SMALLINT,
+		nilbymouth BOOLEAN,
+		diabetic BOOLEAN,
+		allergies VARCHAR(100)
 	)
 
 	INSERT INTO dbver VALUES(1)
@@ -146,6 +168,8 @@ FUNCTION drop_tabs()
 	CALL dropTab("menuItems")
 	CALL dropTab("orders")
 	CALL dropTab("orderItems")
+	CALL dropTab("wards")
+	CALL dropTab("patients")
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION dropTab(l_tab STRING)

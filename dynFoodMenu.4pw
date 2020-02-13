@@ -113,12 +113,15 @@
         <File filePath="src/menuData.4gl"/>
         <File filePath="src/wsBackEnd.4gl"/>
       </Library>
+      <Library binaryName="Patients" dependencies="362164715,-1361191823,1074706446" id="-1322651328" label="Patients">
+        <File filePath="src/Patients.4gl"/>
+      </Library>
       <Library binaryName="Users" dependencies="-1361191823,1074706446,362164715" id="1638566760" label="Users">
         <File filePath="src_backend/Users.4gl"/>
       </Library>
     </Group>
     <Group id="10414220" label="Mobile" language="Genero">
-      <Application binaryName="dynFoodMenu" dependencies="159917928,212784684,362164715,455109296,-541155840,91913022,-1361191823,1770744530,1074706446,-4262148" id="400358049" label="dynFoodMenu">
+      <Application binaryName="dynFoodMenu" dependencies="159917928,212784684,362164715,455109296,-541155840,91913022,-1361191823,1770744530,1074706446,-4262148,1638566760,-1322651328" id="400358049" label="dynFoodMenu">
         <File filePath="src/dynFoodMenu.4gl"/>
         <File filePath="src/dynForm.4gl"/>
         <File filePath="src/main.4gl"/>

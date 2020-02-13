@@ -3,36 +3,32 @@ IMPORT os
 IMPORT FGL menuData
 
 &include "menus.inc"
+
+DEFINE m_JSONfile TEXT
 --------------------------------------------------------------------------------------------------------------
 FUNCTION load_data()
 	DEFINE l_data menuData
 	DEFINE l_users DYNAMIC ARRAY OF userRecord
 	DEFINE l_userDetails DYNAMIC ARRAY OF userDetailsRecord
+	DEFINE l_wards DYNAMIC ARRAY OF wardRecord
+	DEFINE l_patients DYNAMIC ARRAY OF patientRecord
 	DEFINE x,y SMALLINT
-	DEFINE l_userJSON TEXT
 
-	IF os.path.exists( "users.json" ) THEN
-		LOCATE l_userJSON IN MEMORY
-		CALL l_userJSON.readFile("users.json")
-		CALL util.JSON.parse(l_userJSON, l_users)
+
+	IF loadJSON( "users.json" ) THEN
+		CALL util.JSON.parse(m_JSONfile, l_users)
 		FOR x = 1 TO l_users.getLength()
 			DISPLAY "Insert User:",l_users[x].user_id
 			INSERT INTO users VALUES( l_users[x].* )
 		END FOR
-	ELSE
-		DISPLAY "Missing 'users.json'"
 	END IF
 
-	IF os.path.exists( "userDetails.json" ) THEN
-		LOCATE l_userJSON IN MEMORY
-		CALL l_userJSON.readFile("userDetails.json")
-		CALL util.JSON.parse(l_userJSON, l_userDetails)
+	IF loadJSON( "userDetails.json" ) THEN
+		CALL util.JSON.parse(m_JSONfile, l_userDetails)
 		FOR x = 1 TO l_userDetails.getLength()
 			DISPLAY "Insert UserDetails:",l_userDetails[x].user_id
 			INSERT INTO userDetails VALUES( l_userDetails[x].* )
 		END FOR
-	ELSE
-		DISPLAY "Missing 'usersDetails.json'"
 	END IF
 
 	IF l_data.getMenuListJSON() THEN
@@ -47,4 +43,30 @@ FUNCTION load_data()
 		END FOR
 	END IF
 
+	IF loadJSON( "wards.json" ) THEN
+		CALL util.JSON.parse(m_JSONfile, l_wards)
+		FOR x = 1 TO l_wards.getLength()
+			DISPLAY "Insert wards:",l_wards[x].ward_id
+			INSERT INTO wards VALUES( l_wards[x].* )
+		END FOR
+	END IF
+
+	IF loadJSON( "patients.json" ) THEN
+		CALL util.JSON.parse(m_JSONfile, l_patients)
+		FOR x = 1 TO l_patients.getLength()
+			DISPLAY "Insert patients:",l_patients[x].id
+			INSERT INTO patients VALUES( l_patients[x].* )
+		END FOR
+	END IF
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION loadJSON(l_file STRING) RETURNS BOOLEAN
+	IF os.path.exists( l_file ) THEN
+		LOCATE m_JSONfile IN MEMORY
+		CALL m_JSONfile.readFile(l_file)
+		RETURN TRUE
+	ELSE
+		DISPLAY SFMT("Missing '%1'",l_file)
+		RETURN FALSE
+	END IF
 END FUNCTION

@@ -3,13 +3,18 @@ This demo requires Genero 3.20 or above.
 
 The goal was to generate the screen and the dialog dynamically based on the data provided from the server.
 
-The demo includes the backend web REST service.
+The demo includes:
+* A backend web REST service.
+* A simple webcomponent for an 'icon' based selection screen based on data from the server
+* A simple custom GBC for running the appliction in a browser and using Universal Rendering in the GDC/Mobile.
 
-The demo is also using a simple custom GBC for running the appliction in a browser and using Universal Rendering in the GDC/Mobile.
-
-The front user menu is also dynamic with the items coming from the back end service.
-Then when you select an item from that menu the app requests the 'food menu' from the server and generates the form and input.
-Once you've made you selections the order is sent to the back server.
+Flow:
+1. Login
+2. Select Ward / Bed
+3. Select the 'Menu'  from that menu the app requests the 'food menu' from the server and generates the form and input.
+4. Make food selections
+5. Confirm the order so it's sent to the server
+6. Return to step 3 to order other meals
 
 There are a few programs provided:
 * dynFoodMenu - The main application

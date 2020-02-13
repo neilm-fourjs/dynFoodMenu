@@ -45,7 +45,6 @@ FUNCTION (this userRecord) login(l_win BOOLEAN) RETURNS BOOLEAN
 				CALL ui.Window.getCurrent().getForm().setFieldStyle("formonly.username","title curvedborder")
 				CALL wsBackEnd.getTimestamp() RETURNING l_stat, m_server_time
 				CALL debug.output(SFMT("getTimestamp: %1, reply: %2",l_stat, m_server_time),FALSE)
-
 				IF l_stat != 0 THEN
 					DISPLAY "Login error" TO username
 					CALL fgl_winMessage("Error","1) Error logging in, please try again.","exclamation")

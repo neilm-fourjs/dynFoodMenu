@@ -115,6 +115,7 @@
       </Library>
       <Library binaryName="Patients" dependencies="362164715,-1361191823,1074706446" id="-1322651328" label="Patients">
         <File filePath="src/Patients.4gl"/>
+        <File filePath="../../../../../opt/fourjs/all/my_github/dynFoodMenu/src/patients.per"/>
       </Library>
       <Library binaryName="Users" dependencies="-1361191823,1074706446,362164715" id="1638566760" label="Users">
         <File filePath="src_backend/Users.4gl"/>

@@ -31,8 +31,8 @@ FUNCTION (this Patients) select() RETURNS BOOLEAN
 			CLOSE WINDOW p
 			RETURN FALSE
 		END IF
-		DISPLAY IIF( this.patients.current.diabetic, "accept","cancel" ) TO dia
-		DISPLAY IIF( this.patients.current.nilbymouth, "accept","cancel" ) TO nil
+		DISPLAY IIF( this.patients.current.diabetic, "my-true","my-false" ) TO dia
+		DISPLAY IIF( this.patients.current.nilbymouth, "my-true","my-false" ) TO nil
 
 		CALL this.getPatient( this.patients.current.ward_id, this.patients.current.bed_no )
 		CALL debug.output(SFMT("Ward: %1 Bed: %2 Name: %3", this.patients.current.ward_id, this.patients.current.bed_no, this.patients.current.name ), FALSE)

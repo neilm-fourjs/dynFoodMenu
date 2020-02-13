@@ -24,7 +24,7 @@ GRID (STYLE="center")
 END -- GRID
 ATTRIBUTES
 IMAGE logo : logo, IMAGE="logo", SIZEPOLICY=FIXED, HEIGHT=64 PIXELS, AUTOSCALE, STYLE="noborder";
-GROUP login : g_login {, TEXT=%"Login"}, STYLE="login";
+GROUP login : g_login {, TEXT=%"Login"}, STYLE="nocollapse";
 LABEL l001 : l_userid, TEXT=%"User ID:", JUSTIFY=LEFT, STYLE="big bold";
 LABEL l002 : l_passwd, TEXT=%"Password:", JUSTIFY=LEFT, STYLE="big bold";
 EDIT f001 = FORMONLY.user_id, NOT NULL, REQUIRED, UPSHIFT, STYLE="big", TABINDEX=0, PLACEHOLDER="User Id" ;

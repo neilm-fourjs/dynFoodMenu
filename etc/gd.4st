@@ -17,11 +17,17 @@ Property of Four Js*
      <StyleAttribute name="alignment" value="left" />
      <StyleAttribute name="buttonType" value="link" />
   </Style>
+  <Style name=".blue">
+     <StyleAttribute name="textColor" value="blue" />
+  </Style>
   <Style name=".bold">
      <StyleAttribute name="fontWeight" value="bold" />
   </Style>
   <Style name="SpinEdit">
      <StyleAttribute name="fontSize" value="1.2em" />
+  </Style>
+  <Style name=".bigger">
+     <StyleAttribute name="fontSize" value="1.6em" />
   </Style>
   <Style name=".big">
      <StyleAttribute name="fontSize" value="1.2em" />

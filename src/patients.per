@@ -2,15 +2,18 @@
 LAYOUT (TEXT="Patients", STYLE="main")
 GRID
 {
-[l001           ]
-[f001                 ]
-[l002           ]
-[f002]
-[l003           ]
-[f003                            ]
-[l004           |f4]
-[l005           |f5]
-[l006           ]
+<G loc                              >
+ [l001         ]
+ [f001                 ]
+ [l002         ]
+ [f002]
+<                                   >
+<G patient                          >
+ [f003                             ]
+ [l004         |f4]
+ [l005         |f5]
+<                                   >
+<G allergies                        >
 [f006                              ]
 [                                  ]
 [                                  ]
@@ -18,15 +21,16 @@ GRID
 END -- GRID
 
 ATTRIBUTES
+GROUP loc : loc, TEXT=%"Location:", STYLE="nocollapse";
 LABEL l001 : lab1, TEXT=%"Ward:";
 LABEL l002 : lab2, TEXT=%"Bed:";
-LABEL l003 : lab3, TEXT=%"Name:";
-LABEL l004 : lab4, TEXT=%"Nil By Mouth:";
-LABEL l005 : lab5, TEXT=%"Diabetic:";
-LABEL l006 : lab6, TEXT=%"Allergies:";
-COMBOBOX f001 = FORMONLY.ward_id, STYLE="big", NOT NULL;
-SPINEDIT f002 = FORMONLY.bed_no, STYLE="big", VALUEMIN=1, VALUEMAX=8, NOT NULL;
-LABEL f003 = FORMONLY.name, STYLE="big";
+GROUP patient : patient, TEXT=%"Patient:", STYLE="nocollapse";
+LABEL l004 : lab4, TEXT=%"Nil By Mouth:", STYLE="big";
+LABEL l005 : lab5, TEXT=%"Diabetic:", STYLE="big";
+GROUP allergies : allergies, TEXT=%"Allergies:", STYLE="nocollapse";
+COMBOBOX f001 = FORMONLY.ward_id, STYLE="bigger", NOT NULL;
+SPINEDIT f002 = FORMONLY.bed_no, STYLE="bigger", VALUEMIN=1, VALUEMAX=8, NOT NULL;
+LABEL f003 = FORMONLY.name, STYLE="bigger blue";
 IMAGE f4 = FORMONLY.nil, STYLE="noborder";
 IMAGE f5 = FORMONLY.dia, STYLE="noborder";
-TEXTEDIT f006 = FORMONLY.allergies, STRETCH=BOTH;
+TEXTEDIT f006 = FORMONLY.allergies, STYLE="big", STRETCH=BOTH;

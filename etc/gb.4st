@@ -13,6 +13,9 @@ Property of Four Js*
   <Style name=".underline">
      <StyleAttribute name="textDecoration" value="underline" />
   </Style>
+  <Style name=".blue">
+     <StyleAttribute name="textColor" value="blue" />
+  </Style>
   <Style name=".flat">
      <StyleAttribute name="alignment" value="left" />
   </Style>
@@ -21,6 +24,9 @@ Property of Four Js*
   </Style>
   <Style name="SpinEdit">
      <StyleAttribute name="fontSize" value="1.4em" />
+  </Style>
+  <Style name=".bigger">
+     <StyleAttribute name="fontSize" value="1.6em" />
   </Style>
   <Style name=".big">
      <StyleAttribute name="fontSize" value="1.2em" />
@@ -35,7 +41,7 @@ Property of Four Js*
   <Style name=".noborder">
      <StyleAttribute name="border" value="none" />
   </Style>
-  <Style name="Group.login">
+  <Style name="Group.nocollapse">
      <StyleAttribute name="collapsible" value="no" />
   </Style>
   <Style name="Group">

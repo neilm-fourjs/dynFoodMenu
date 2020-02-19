@@ -245,8 +245,12 @@
         <File filePath="tests/dynFormTest.4gl"/>
         <File filePath="tests/menuData.4gl"/>
       </Application>
-      <Application binaryName="wsCliTest" dependencies="-541155840" id="-1109916243" label="wsCliTest">
-        <File filePath="tests/wsBackEnd.4gl"/>
+      <Library binaryName="wsClients" id="589689792" label="wsClients">
+        <File filePath="tests/wsMenus.4gl"/>
+        <File filePath="tests/wsPatients.4gl"/>
+        <File filePath="tests/wsUsers.4gl"/>
+      </Library>
+      <Application binaryName="wsCliTest" dependencies="-541155840,589689792" id="-1109916243" label="wsCliTest">
         <File filePath="tests/wsCliTest.4gl"/>
       </Application>
     </Group>

@@ -6,6 +6,23 @@ IMPORT FGL Patients
 IMPORT FGL utils
 IMPORT FGL debug
 &include "../src/menus.inc"
+
+PUBLIC DEFINE serviceInfo RECORD ATTRIBUTE(WSInfo)
+  title STRING,
+  description STRING,
+  termOfService STRING,
+  contact RECORD
+    name STRING,
+    url STRING,
+    email STRING
+  END RECORD,
+  version STRING
+  END RECORD = (
+    title: "dynFoodMenu", 
+		description: "A RESTFUL backend for the dynFoodMenu mobile demo",
+    version: "1.0", 
+    contact: ( name: "Neil J Martin", email:"neilm@4js.com") )
+
 DEFINE m_user Users
 DEFINE m_patients Patients
 DEFINE m_ts CHAR(19)

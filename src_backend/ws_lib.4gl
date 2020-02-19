@@ -32,3 +32,9 @@ FUNCTION ws_ProcessServices_stat( l_stat INT ) RETURNS BOOLEAN
 	END CASE
 	RETURN TRUE
 END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION checkToken( l_token STRING ) RETURNS BOOLEAN
+	IF l_token.getLength() < 10 THEN RETURN FALSE END IF
+--TODO: actually check the token
+	RETURN TRUE
+END FUNCTION

@@ -66,17 +66,17 @@
   <PlatformList version="1.0"/>
   <Group environment="value:GBC_USER=gbc-foodMenu,value:GBC_USER_DIR=$(ProjectDir),value:FGLGBCDIR=$(GBC_USER_DIR)/$(GBC_USER),value:FGLIMAGEPATH=../pics:$(FGLDIR)/lib/image2font.txt:$(FGLDIR)/lib,filelist:FGLPROFILE=$(ProjectDir)/etc/fglprofile.gst,dirlist:DBPATH=$(ProjectDir)/database;$(DBPATH)" id="-718261780" label="dynFoodMenu" language="Genero">
     <Group id="-2066936228" label="Backend" language="Genero" targetDirectory="$(ProjectDir)/binBackEnd">
-      <Application binaryName="dfm_ws_menus" dependencies="-1361191823,1074706446,-984239028,1770744530" id="987169070" label="dfm_ws_menus">
+      <Library binaryName="dfm_menus" dependencies="-1361191823,1074706446,-984239028" id="340558792" label="dfm_menus">
         <File filePath="src_backend/dfm_ws_menus.4gl"/>
-        <File filePath="src_backend/dfm_ws_menus_main.4gl"/>
-      </Application>
-      <Application binaryName="dfm_ws_patients" dependencies="1074706446,-1322651328,-984239028" id="1491779689" label="dfm_ws_patients">
+      </Library>
+      <Library binaryName="dfm_patients" dependencies="-1361191823,1074706446" id="-1118783498" label="dfm_patients">
         <File filePath="src_backend/dfm_ws_patients.4gl"/>
-        <File filePath="src_backend/dfm_ws_patients_main.4gl"/>
-      </Application>
-      <Application binaryName="dfm_ws_users" dependencies="1074706446,1638566760,-984239028" id="1438623444" label="dfm_ws_users">
+      </Library>
+      <Library binaryName="dfm_users" dependencies="-1361191823,1074706446,1638566760" id="-1000811841" label="dfm_users">
         <File filePath="src_backend/dfm_ws_users.4gl"/>
-        <File filePath="src_backend/dfm_ws_users_main.4gl"/>
+      </Library>
+      <Application binaryName="dfm_ws" dependencies="-1361191823,1074706446,1638566760,-1322651328,-984239028,1770744530,-593227916,1321734150,-1000811841,340558792,-1118783498" id="411074306" label="dfm_ws">
+        <File filePath="src_backend/dfm_ws_main.4gl"/>
       </Application>
       <Application binaryName="dynFoodRest" dependencies="-1361191823,1770744530,1074706446,362164715,1638566760,-1322651328" id="1074484008" label="dynFoodRest">
         <File filePath="src_backend/dynfoodrest.4gl"/>
@@ -94,9 +94,7 @@
         <File filePath="src_backend/ws_lib.4gl"/>
       </Library>
       <Library binaryName="ws_xcf" id="-593227916" label="xcf">
-        <File filePath="xcf/dfm_menus.xcf"/>
-        <File filePath="xcf/dfm_patients.xcf"/>
-        <File filePath="xcf/dfm_users.xcf"/>
+        <File filePath="xcf/dfm.xcf"/>
         <File filePath="xcf/dyn.xcf"/>
         <File filePath="xcf/dynFoodMenu.xcf"/>
         <File filePath="xcf/dynFoodUser.xcf"/>
@@ -127,9 +125,8 @@
         <File filePath="src/processing.per"/>
         <File filePath="src/utils.4gl"/>
       </Library>
-      <Library binaryName="libFoodMenu" dependencies="-541155840,-1361191823" id="1770744530" label="libFoodMenu" targetDirectory="$(ProjectDir)/binCommon">
+      <Library binaryName="libFoodMenu" dependencies="-541155840,-1361191823,362164715" id="1770744530" label="libFoodMenu" targetDirectory="$(ProjectDir)/binCommon">
         <File filePath="src/menuData.4gl"/>
-        <File filePath="src/wsBackEnd.4gl"/>
       </Library>
       <Library binaryName="Patients" dependencies="362164715,-1361191823,1074706446" id="-1322651328" label="Patients">
         <File filePath="src/Patients.4gl"/>
@@ -137,6 +134,9 @@
       </Library>
       <Library binaryName="Users" dependencies="-1361191823,1074706446,362164715" id="1638566760" label="Users">
         <File filePath="src_backend/Users.4gl"/>
+      </Library>
+      <Library binaryName="wsClientLib" dependencies="362164715,-1361191823" id="855703318" label="wsClientLib">
+        <File filePath="src/wsBackEnd.4gl"/>
       </Library>
     </Group>
     <Group id="10414220" label="Mobile" language="Genero">
@@ -165,7 +165,7 @@
       </Library>
     </Group>
     <Group id="674884836" label="Packages" language="Genero">
-      <Package binaryName="dynFoodBackEnd" dependencies="-593227916,-1361191823,1074484008,1074706446,1770744530,-541155840,400358049,455109296,91913022,875344568,362164715,1321734150,1638566760" description="WS dynFood Server" id="-255363164" label="dynFoodBackEnd" platform="Genero Application Server">
+      <Package binaryName="dynFoodBackEnd" dependencies="-593227916,-1361191823,1074484008,1074706446,1770744530,-541155840,400358049,455109296,91913022,875344568,362164715,1321734150,1638566760,-984239028,-1000811841,411074306,340558792,-1118783498" description="WS dynFood Server" id="-255363164" label="dynFoodBackEnd" platform="Genero Application Server">
         <DynamicProperty name="packageId" value="dynFoodRest"/>
         <DynamicProperty name="packageLabel" value="dynFoodRest"/>
         <Directory label="Bin" sourceDirectory="$(ProjectDir)/bin"/>

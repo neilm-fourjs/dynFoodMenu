@@ -1,6 +1,7 @@
 
 IMPORT util
 IMPORT FGL menuData
+IMPORT FGL ws_lib
 IMPORT FGL debug
 
 &include "../src/menus.inc"
@@ -57,18 +58,11 @@ PUBLIC FUNCTION placeOrder(l_order orderRecord) ATTRIBUTES(
 		WSPost, 
 		WSDescription = "Place an Order")
 	RETURNS (INT, STRING ATTRIBUTES(WSMedia = 'application/json'))
-	DEFINE l_json TEXT
-	DEFINE l_fileName STRING
 	DEFINE l_stat INTEGER
 	DEFINE l_ret STRING
 	DEFINE l_menu menuData
-	LET l_fileName = "order_"||util.Datetime.format(CURRENT,"%Y%m%d%H%M_")||l_order.user_id||".json"
-	CALL debug.output(SFMT("placeOrder User: %1 Items: %2 Saved: %3",l_order.user_id, l_order.rows, l_fileName), FALSE)
-	LOCATE l_json IN MEMORY
-	LET l_json = util.JSON.stringify(l_order)
-	CALL l_json.writeFile(l_fileName)
--- TODO: validate that the token is valid.
-	IF STATUS != 0 THEN
+	CALL debug.output(SFMT("placeOrder User: %1 Items: %2 Saved: %3",l_order.user_id, l_order.rows), FALSE)
+	IF NOT ws_lib.checkToken( l_order.user_token ) THEN
 		RETURN 100,"Invalid Token!"
 	END IF
 -- Store order in DB

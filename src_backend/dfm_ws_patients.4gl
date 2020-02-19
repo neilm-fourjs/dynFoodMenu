@@ -1,6 +1,6 @@
 IMPORT util
 IMPORT FGL Patients
-IMPORT FGL utils
+IMPORT FGL ws_lib
 IMPORT FGL debug
 
 &include "../src/menus.inc"
@@ -21,28 +21,37 @@ PUBLIC DEFINE serviceInfo RECORD ATTRIBUTE(WSInfo)
     version: "1.0", 
     contact: ( name: "Neil J Martin", email:"neilm@4js.com") )
 
-DEFINE m_patients Patients
 --------------------------------------------------------------------------------
 #+ GET <server>/dynFoodRest/getWards
 #+ result: An array of wards
-PUBLIC FUNCTION getWards() ATTRIBUTES( 
-		WSPath = "/getWards",
+PUBLIC FUNCTION getWards(l_token STRING ATTRIBUTE(WSParam)) ATTRIBUTES( 
+		WSPath = "/getWards/{l_token}",
 		WSGet, 
 		WSDescription = "Get wards")
 	RETURNS (wardList ATTRIBUTES(WSMedia = 'application/json'))
-	LET m_patients.wards.messsage = "getting wards from db ..."
-	CALL m_patients.getWardsDB()
-	RETURN m_patients.wards.*
+	DEFINE l_patients Patients
+	IF ws_lib.checkToken( l_token ) THEN
+		LET l_patients.wards.messsage = "getting wards from db ..."
+		CALL l_patients.getWardsDB()
+	ELSE
+		LET l_patients.wards.messsage = "Invalid Token."
+	END IF
+	RETURN l_patients.wards.*
 END FUNCTION
 --------------------------------------------------------------------------------
 #+ GET <server>/dynFoodRest/getPatients/<id>
 #+ result: A menu array by ID
-PUBLIC FUNCTION getPatients(l_ward SMALLINT ATTRIBUTE(WSParam)) ATTRIBUTES( 
-		WSPath = "/getPatients/{l_ward}", 
+PUBLIC FUNCTION getPatients(l_token STRING ATTRIBUTE(WSParam), l_ward SMALLINT ATTRIBUTE(WSParam)) ATTRIBUTES( 
+		WSPath = "/getPatients/{l_token}/{l_ward}", 
 		WSGet, 
 		WSDescription = "Get patients for ward")
 	RETURNS (patientList ATTRIBUTES(WSMedia = 'application/json'))
-	LET m_patients.wards.messsage = SFMT("getting patients for ward %1 from db ...", l_ward)
-	CALL m_patients.getPatientsDB(l_ward)
-	RETURN m_patients.patients.*
+	DEFINE l_patients Patients
+	IF ws_lib.checkToken( l_token ) THEN
+		LET l_patients.patients.messsage = SFMT("getting patients for ward %1 from db ...", l_ward)
+		CALL l_patients.getPatientsDB(l_ward)
+	ELSE
+		LET l_patients.patients.messsage = "Invalid Token."
+	END IF
+	RETURN l_patients.patients.*
 END FUNCTION

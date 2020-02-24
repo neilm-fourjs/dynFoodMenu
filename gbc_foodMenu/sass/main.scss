@@ -75,13 +75,13 @@ BODY {
 	border: none;
 }
 
-.mt-button, .gbc_style_noborder {
+.mt-button .gbc_style_noborder {
 	border: none !important;
 	box-shadow: none !important;	
 	justify-content: left !important;
 }
 
-.mt-button, .gbc_style_flat {
+.mt-button[__ButtonWidget].mt-button.buttonType_link {
 	background-color: transparent !important;
 	background-image: none !important;
 }

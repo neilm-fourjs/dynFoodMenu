@@ -30,7 +30,7 @@ LABEL l002 : l_passwd, TEXT=%"Password:", JUSTIFY=LEFT, STYLE="big bold";
 EDIT f001 = FORMONLY.user_id, NOT NULL, REQUIRED, UPSHIFT, STYLE="big", TABINDEX=0, PLACEHOLDER="User Id" ;
 EDIT f002 = FORMONLY.user_pwd, INVISIBLE, NOT NULL, REQUIRED, STYLE="big", TABINDEX=1, PLACEHOLDER="Password";
 LABEL usr = FORMONLY.username, STYLE="title",SIZEPOLICY=FIXED,JUSTIFY=CENTER;
-BUTTON b003 : register,TEXT=%"Not registerd? click here to sign up", STYLE="small flat noborder underline";
+BUTTON b003 : register,TEXT=%"Not registerd? click here to sign up", STYLE="small flat";
 WEBCOMPONENT menu=FORMONLY.l_iconmenu, TABINDEX=3, HIDDEN,
    COMPONENTTYPE="iconMenu",
    SIZEPOLICY=FIXED,

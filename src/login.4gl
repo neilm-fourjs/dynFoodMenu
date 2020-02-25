@@ -29,7 +29,7 @@ FUNCTION (this userRecord) login(l_win BOOLEAN) RETURNS BOOLEAN
 		RETURN TRUE
 	END IF
 	LET int_flag = FALSE
-	LET wsUsers.Endpoint.Address.Uri = C_WS_BACKEND
+	LET wsUsers.Endpoint.Address.Uri = C_WS_USERS
 	IF l_win THEN
 		OPEN WINDOW login WITH FORM "login"
 	END IF

@@ -2,7 +2,9 @@
 SCHEMA dynfooddemo
 
 CONSTANT C_APPVER="1.0"
-CONSTANT C_WS_BACKEND="https://generodemos.dynu.net/g/ws/r/dyn/dynFoodRest"
+CONSTANT C_WS_USERS="https://generodemos.dynu.net/g/ws/r/dfm/users"
+CONSTANT C_WS_MENUS="https://generodemos.dynu.net/g/ws/r/dfm/menus"
+CONSTANT C_WS_PATIENTS="https://generodemos.dynu.net/g/ws/r/dfm/patients"
 CONSTANT C_APIPASS="dynFoodMenuDemofqqGQg43ppgjcaqz"
 
 PUBLIC TYPE menuList RECORD

@@ -6,6 +6,8 @@ IMPORT xml
 IMPORT util
 IMPORT os
 
+&include "../src/menus.inc"
+
 #+
 #+ Global Endpoint user-defined type definition
 #+
@@ -28,7 +30,8 @@ PUBLIC DEFINE Endpoint tGlobalEndpointType
 PUBLIC CONSTANT C_SUCCESS = 0
 
 # generated getPatientsResponseBodyType
-PUBLIC TYPE getPatientsResponseBodyType RECORD
+PUBLIC TYPE getPatientsResponseBodyType patientList
+{RECORD
 	list DYNAMIC ARRAY OF RECORD
 		id INTEGER,
 		name STRING,
@@ -57,10 +60,11 @@ PUBLIC TYPE getPatientsResponseBodyType RECORD
 		placed DATETIME YEAR TO SECOND
 	END RECORD,
 	messsage STRING
-END RECORD
+END RECORD}
 
 # generated getWardsResponseBodyType
-PUBLIC TYPE getWardsResponseBodyType RECORD
+PUBLIC TYPE getWardsResponseBodyType wardList
+{RECORD
 	list DYNAMIC ARRAY OF RECORD
 		ward_id INTEGER,
 		ward_name STRING
@@ -70,7 +74,7 @@ PUBLIC TYPE getWardsResponseBodyType RECORD
 		ward_name STRING
 	END RECORD,
 	messsage STRING
-END RECORD
+END RECORD}
 
 ################################################################################
 # Operation /getPatients/{l_token}/{l_ward}

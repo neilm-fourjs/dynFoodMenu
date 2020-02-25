@@ -100,6 +100,7 @@
         <File filePath="etc/default.4ad"/>
         <File filePath="etc/dynfooddemo.4db"/>
         <File filePath="etc/fglprofile"/>
+        <File filePath="etc/fglprofile.be"/>
         <File filePath="etc/fglprofile.gst"/>
         <File filePath="etc/gb.4st"/>
         <File filePath="etc/gd.4st"/>
@@ -137,7 +138,7 @@
       </Library>
     </Group>
     <Group id="10414220" label="Mobile" language="Genero">
-      <Application binaryName="dynFoodMenu" dependencies="159917928,212784684,362164715,455109296,-541155840,91913022,-1361191823,1770744530,1074706446,-4262148,1638566760,-1322651328" id="400358049" label="dynFoodMenu">
+      <Application binaryName="dynFoodMenu" dependencies="159917928,212784684,362164715,455109296,-541155840,91913022,-1361191823,1770744530,1074706446,-4262148,1638566760,-1322651328,855703318" id="400358049" label="dynFoodMenu">
         <File filePath="src/dynFoodMenu.4gl"/>
         <File filePath="src/dynForm.4gl"/>
         <File filePath="src/main.4gl"/>
@@ -173,7 +174,7 @@
         <Directory label="pics" sourceDirectory="$(ProjectDir)/pics"/>
         <Directory label="xcf" sourceDirectory="$(ProjectDir)/xcf"/>
       </Package>
-      <Package binaryName="dynFoodMenu_GMA" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022" description="Android Package" id="187810339" label="dynFoodMenu_GMA" platform="Android">
+      <Package binaryName="dynFoodMenu_GMA" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022,-1361191823,1770744530,1074706446,-1322651328,1638566760,855703318" description="Android Package" distDirectory="$(ProjectDir)/distbinGMA" id="187810339" label="dynFoodMenu_GMA" platform="Android">
         <DynamicProperty name="gma-accent-color" value="#70a770"/>
         <DynamicProperty name="gma-navigationBarBackground-color" value="#1b5e20"/>
         <DynamicProperty name="gma-primary-color" value="#1b5e20"/>
@@ -186,7 +187,7 @@
         <Directory description="Configuration Files" label="etc" recursive="false" sourceDirectory="$(ProjectDir)/etc"/>
         <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>
       </Package>
-      <Package binaryName="dynFoodMenu_GMA8" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022" description="Android Package" distDirectory="$(ProjectDir)/distbin8" id="781176434" label="dynFoodMenu_GMA8" platform="Android">
+      <Package binaryName="dynFoodMenu_GMA8" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022" description="Android Package" distDirectory="$(ProjectDir)/distbinGMA8" id="781176434" label="dynFoodMenu_GMA8" platform="Android">
         <DynamicProperty name="gma-accent-color" value="#70a770"/>
         <DynamicProperty name="gma-navigationBarBackground-color" value="#225a1e"/>
         <DynamicProperty name="gma-primary-color" value="#38503a"/>
@@ -200,7 +201,7 @@
         <Directory description="Configuration Files" label="etc" recursive="false" sourceDirectory="$(ProjectDir)/etc"/>
         <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>
       </Package>
-      <Package binaryName="dynFoodMenuUR_GMA" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022,-4262148" description="Android Package" distDirectory="$(ProjectDir)/distbinUR" id="1667970550" label="dynFoodMenuUR_GMA" platform="Android">
+      <Package binaryName="dynFoodMenuUR_GMA" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022,-4262148,-1361191823,1770744530,1074706446,-1322651328,1638566760,855703318" description="Android Package" distDirectory="$(ProjectDir)/distbinGMAUR" id="1667970550" label="dynFoodMenuUR_GMA" platform="Android">
         <DynamicProperty name="gma-accent-color" value="#70a770"/>
         <DynamicProperty name="gma-navigationBarBackground-color" value="#1b5e20"/>
         <DynamicProperty name="gma-primary-color" value="#1b5e20"/>
@@ -214,7 +215,7 @@
         <Directory description="fglprofile" label="etc_ur" recursive="false" sourceDirectory="$(ProjectDir)/etc_ur"/>
         <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>
       </Package>
-      <Package binaryName="dynFoodMenuUR_GMI" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022,-4262148" description="iOS Package" distDirectory="$(ProjectDir)/distbinUR" id="1975526108" label="dynFoodMenuUR_GMI" platform="iOS">
+      <Package binaryName="dynFoodMenuUR_GMI" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022,-4262148" description="iOS Package" distDirectory="$(ProjectDir)/distbinGMIUR" id="1975526108" label="dynFoodMenuUR_GMI" platform="iOS">
         <DynamicProperty name="icon-xxhdpi" value="$(ProjectDir)/pics/iconUR.png"/>
         <DynamicProperty name="packageId" value="com.fjsemea.dynFoodMenuUR"/>
         <DynamicProperty name="packageLabel" value="FoodMenu UR"/>

@@ -5,7 +5,8 @@ IMPORT FGL about
 IMPORT FGL utils
 IMPORT FGL libMobile
 IMPORT FGL libCommon
-IMPORT FGL wsBackEnd
+--IMPORT FGL wsBackEnd
+IMPORT FGL wsUsers
 IMPORT FGL Users
 
 &include "menus.inc"
@@ -28,7 +29,7 @@ FUNCTION (this userRecord) login(l_win BOOLEAN) RETURNS BOOLEAN
 		RETURN TRUE
 	END IF
 	LET int_flag = FALSE
-	LET wsBackEnd.Endpoint.Address.Uri = C_WS_BACKEND
+	LET wsUsers.Endpoint.Address.Uri = C_WS_BACKEND
 	IF l_win THEN
 		OPEN WINDOW login WITH FORM "login"
 	END IF
@@ -41,17 +42,17 @@ FUNCTION (this userRecord) login(l_win BOOLEAN) RETURNS BOOLEAN
 		ON ACTION about CALL about.show()
 		AFTER INPUT
 			IF NOT int_flag THEN
-				CALL debug.output(SFMT("Getting token for: %1 from: %2 ", this.user_id, wsBackEnd.Endpoint.Address.Uri), FALSE)
+				CALL debug.output(SFMT("Getting token for: %1 from: %2 ", this.user_id, wsUsers.Endpoint.Address.Uri), FALSE)
 				LET l_pwd = this.user_pwd
 				CALL ui.Window.getCurrent().getForm().setFieldStyle("formonly.username","title curvedborder")
-				CALL wsBackEnd.getTimestamp() RETURNING l_stat, m_server_time
+				CALL wsUsers.getTimestamp() RETURNING l_stat, m_server_time
 				CALL debug.output(SFMT("getTimestamp: %1, reply: %2",l_stat, m_server_time),FALSE)
 				IF l_stat != 0 THEN
 					DISPLAY "Login error" TO username
 					CALL fgl_winMessage("Error","1) Error logging in, please try again.","exclamation")
 					NEXT FIELD user_id
 				END IF
-				CALL wsBackEnd.getToken(this.user_id, utils.apiPaas(this.user_id, m_server_time) ) RETURNING l_stat, this.*
+				CALL wsUsers.getToken(this.user_id, utils.apiPaas(this.user_id, m_server_time) ) RETURNING l_stat, this.*
 				CALL debug.output(SFMT("getToken: %1, reply: %2 : %3(%4)",this.user_id, l_stat, this.user_name, this.user_pwd),FALSE)
 				IF l_stat != 0 OR this.user_id = "ERROR" THEN
 					DISPLAY "Login error" TO username
@@ -100,7 +101,7 @@ FUNCTION register()
 	LET int_flag = FALSE
 	INPUT BY NAME m_users.currentUserDetails.*, l_pwd2 WITHOUT DEFAULTS
 		AFTER FIELD user_id
-			CALL wsBackEnd.checkUserID(m_users.currentUserDetails.user_id) RETURNING l_stat, l_exists, l_suggestion
+			CALL wsUsers.checkUserID(m_users.currentUserDetails.user_id) RETURNING l_stat, l_exists, l_suggestion
 			CALL debug.output(SFMT("checkUserID: %1, reply: %2:%3",l_stat, l_exists, l_suggestion ),FALSE)
 			IF l_exists THEN
 				IF l_suggestion != "EXISTS" THEN
@@ -142,7 +143,7 @@ FUNCTION register()
 		LET int_flag = FALSE
 	ELSE
 		CALL m_users.setPasswordHash( l_pwd2 )
-		CALL wsBackEnd.registerUser(m_users.currentUserDetails.*) RETURNING l_stat, l_ret, l_suggestion
+		CALL wsUsers.registerUser(m_users.currentUserDetails.*) RETURNING l_stat, l_ret, l_suggestion
 		CALL debug.output(SFMT("registerUser: %1, reply: %2:%3",l_stat, l_ret, l_suggestion ),FALSE)
 		IF l_stat = 0 AND l_ret = 0 THEN
 			CALL m_users.register() RETURNING l_ret, l_suggestion

@@ -41,6 +41,7 @@ MAIN
 		CALL libCommon.exit_program()
 	END IF
 	LET dynFoodMenu.m_user_token =  m_user.user_token
+	LET l_patients.token = m_user.user_token
 	LET dynFoodMenu.m_user_id = m_user.user_id
 	WHILE TRUE
 		IF NOT l_patients.select() THEN EXIT WHILE END IF

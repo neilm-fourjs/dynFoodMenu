@@ -3,13 +3,15 @@ IMPORT util
 IMPORT FGL db
 IMPORT FGL debug
 IMPORT FGL libCommon
-IMPORT FGL wsBackEnd
+--IMPORT FGL wsBackEnd
+IMPORT FGL wsPatients
 &include "../src/menus.inc"
 
 PUBLIC TYPE Patients RECORD
 	wards wardList,
 	patients patientList,
-	errorMessage STRING
+	errorMessage STRING,
+	token STRING
 END RECORD
 DEFINE m_arr DYNAMIC ARRAY OF RECORD
 			img STRING,
@@ -157,13 +159,20 @@ END FUNCTION
 -- Get a list of the wards from the DB.
 FUNCTION (this Patients) getPatientsDB(l_ward SMALLINT)
 	DEFINE l_cnt SMALLINT = 1
+	DEFINE x SMALLINT = 1
+	DEFINE l_ordered patientOrderRecord
 	IF NOT db.connect() THEN
 		LET this.patients.messsage = "failed to connect to db!"
 		EXIT PROGRAM
 	END IF
 	CALL this.patients.list.clear()
+	DECLARE p_ordcur CURSOR FOR SELECT patient_id, menu_id, placed FROM orders WHERE patient_id = ?
 	DECLARE p_cur CURSOR FOR SELECT * FROM patients WHERE ward_id = l_ward
 	FOREACH p_cur INTO this.patients.list[l_cnt].*
+		FOREACH p_ordcur USING this.patients.list[l_cnt].id INTO l_ordered.*
+			LET this.patients.ordered[x].* = l_ordered.*
+			LET x = x + 1
+		END FOREACH
 		LET l_cnt = l_cnt + 1
 	END FOREACH
 	CALL this.patients.list.deleteElement(l_cnt)
@@ -175,7 +184,8 @@ END FUNCTION
 -- Get a list of the wards from the server.
 FUNCTION (this Patients) getWardsWS()
 	DEFINE l_stat SMALLINT
-	CALL wsBackEnd.getWards() RETURNING l_stat, this.wards.*
+	LET wsPatients.Endpoint.Address.Uri = C_WS_BACKEND
+	CALL wsPatients.getWards(this.token) RETURNING l_stat, this.wards.*
 	CALL debug.output(SFMT("getWardsWS: %1 %2", l_stat, NVL(this.wards.messsage,"NULL")), FALSE)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
@@ -183,7 +193,8 @@ END FUNCTION
 FUNCTION (this Patients) getPatientsWS(l_ward SMALLINT)
 	DEFINE l_stat SMALLINT
 	CALL this.patients.list.clear()
-	CALL wsBackEnd.getPatients(l_ward) RETURNING l_stat, this.patients.*
+	LET wsPatients.Endpoint.Address.Uri = C_WS_BACKEND
+	CALL wsPatients.getPatients(this.token, l_ward) RETURNING l_stat, this.patients.*
 	LET this.patients.current.ward_id = l_ward -- restore the current ward id!
 	CALL debug.output(SFMT("getPatientsWS: %1 %2", l_stat, NVL(this.patients.messsage,"NULL")), FALSE)
 END FUNCTION

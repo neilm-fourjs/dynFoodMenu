@@ -97,7 +97,7 @@ FUNCTION input_okay() RETURNS BOOLEAN
 	LET m_data.ordered.user_token = m_user_token
 	LET m_data.ordered.bed_no = m_patients.patients.current.bed_no
 	LET m_data.ordered.ward_id = m_patients.patients.current.ward_id
-	LET m_data.ordered.patients_id = m_patients.patients.current.id
+	LET m_data.ordered.patient_id = m_patients.patients.current.id
 	LET l_order = SFMT("Ward: %1\nBed: %2\n Patient: %3\n\n", m_patients.wards.current.ward_name, m_data.ordered.bed_no,m_patients.patients.current.name) 
 	LET order_lines = 0
 	FOR x = 1 TO m_data.menuData.rows

@@ -135,7 +135,7 @@ FUNCTION create_tabs()
 		order_id SERIAL,
 		user_token VARCHAR(60),
 		user_id VARCHAR(6),
-		patients_id INTEGER,
+		patient_id INTEGER,
 		ward_id INTEGER,
 		bed_no SMALLINT,
 		menu_id VARCHAR(6),

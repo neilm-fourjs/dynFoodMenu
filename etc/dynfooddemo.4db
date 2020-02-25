@@ -48,7 +48,7 @@
     <Column fglLength="4" fglType="6" name="order_id" notNull="false" order="1" status="U" uuid="db/column48"/>
     <Column fglLength="60" fglType="201" name="user_token" notNull="false" order="2" status="U" uuid="db/column50"/>
     <Column fglLength="6" fglType="201" name="user_id" notNull="false" order="3" status="U" uuid="db/column52"/>
-    <Column fglLength="4" fglType="2" name="patients_id" notNull="false" order="4" status="U" uuid="db/column47"/>
+    <Column fglLength="4" fglType="2" name="patient_id" notNull="false" order="4" status="U" uuid="db/column76"/>
     <Column fglLength="4" fglType="2" name="ward_id" notNull="false" order="5" status="U" uuid="db/column59"/>
     <Column fglLength="2" fglType="1" name="bed_no" notNull="false" order="6" status="U" uuid="db/column61"/>
     <Column fglLength="6" fglType="201" name="menu_id" notNull="false" order="7" status="U" uuid="db/column54"/>

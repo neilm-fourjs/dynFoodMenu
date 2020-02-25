@@ -49,7 +49,7 @@ PUBLIC TYPE orderRecord RECORD
 		order_id INTEGER,
 		user_token STRING,
 		user_id STRING,
-		patients_id INTEGER,
+		patient_id INTEGER,
 		ward_id INTEGER,
 		bed_no SMALLINT,
 		menu_id STRING,
@@ -101,8 +101,15 @@ PUBLIC TYPE patientRecord RECORD
 		allergies VARCHAR(100)
 	END RECORD
 
+PUBLIC TYPE patientOrderRecord RECORD
+		patient_id INTEGER,
+		menu_id STRING,
+		placed DATETIME YEAR TO SECOND
+	END RECORD
+
 PUBLIC TYPE patientList RECORD
 		list DYNAMIC ARRAY OF patientRecord,
 		current patientRecord,
+		ordered DYNAMIC ARRAY OF patientOrderRecord,
 		messsage STRING
 	END RECORD

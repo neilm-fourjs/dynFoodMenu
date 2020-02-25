@@ -61,7 +61,7 @@ PUBLIC FUNCTION placeOrder(l_order orderRecord) ATTRIBUTES(
 	DEFINE l_stat INTEGER
 	DEFINE l_ret STRING
 	DEFINE l_menu menuData
-	CALL debug.output(SFMT("placeOrder User: %1 Items: %2 Saved: %3",l_order.user_id, l_order.rows), FALSE)
+	CALL debug.output(SFMT("placeOrder User: %1 Items: %2",l_order.user_id, l_order.rows), FALSE)
 	IF NOT ws_lib.checkToken( l_order.user_token ) THEN
 		RETURN 100,"Invalid Token!"
 	END IF

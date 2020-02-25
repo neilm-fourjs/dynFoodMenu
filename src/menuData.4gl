@@ -170,17 +170,20 @@ FUNCTION (this menuData) save()
 		l_stat INT,
 		l_msg STRING
 	END RECORD
-	LET wsMenus.Endpoint.Address.Uri = C_WS_MENUS
 	LET this.ordered.menu_id = this.menuData.menuName
 	CALL libCommon.processing("Saving Order ...",1)
+
+	LET wsMenus.Endpoint.Address.Uri = C_WS_MENUS
 	CALL wsMenus.placeOrder(this.ordered.*) RETURNING l_stat, l_resp.*
-	CALL libCommon.processing("Saved Order.",3)
 	CALL debug.output(SFMT("save Stat: %1-%2:%3", l_stat,l_resp.l_stat,l_resp.l_msg),FALSE)
+
+	CALL libCommon.processing("Saved Order.",3)
 	IF l_stat = 0 THEN
 		CALL fgl_winMessage("Order Confirmation",l_resp.l_msg,"information")
 	ELSE
-		CALL fgl_winMessage("Order Confirmation",SFMT("%1 : %2",l_resp.l_stat,l_resp.l_msg),"information")
+		CALL fgl_winMessage("Order Confirmation",SFMT("%1 - %2 : %3", l_stat,l_resp.l_stat,l_resp.l_msg),"information")
 	END IF
+
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- util function

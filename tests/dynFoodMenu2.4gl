@@ -23,6 +23,7 @@ DEFINE m_flds SMALLINT
 CONSTANT C_WIDTH=20
 MAIN
 	DEFINE l_json TEXT
+	DEFINE l_style CHAR(2)
 	DEFINE l_f ui.Form
 -- get test data
 	IF os.path.exists("../etc/data.json") THEN
@@ -31,7 +32,8 @@ MAIN
 		LOCATE l_json IN FILE "data.json"
 	END IF
 	CALL util.JSON.parse(l_json, m_tree)
-	CALL ui.Interface.loadStyles( DOWNSHIFT( ui.Interface.getFrontEndName()) )
+	LET l_style = DOWNSHIFT( ui.Interface.getFrontEndName())
+	CALL ui.Interface.loadStyles(l_style)
 -- build the form
 	CALL ui.Interface.setText("Menu")
 	CURRENT WINDOW IS SCREEN

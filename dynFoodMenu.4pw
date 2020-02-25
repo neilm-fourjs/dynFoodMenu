@@ -121,7 +121,7 @@
         <File filePath="src/processing.per"/>
         <File filePath="src/utils.4gl"/>
       </Library>
-      <Library binaryName="libFoodMenu" dependencies="-541155840,-1361191823,362164715" id="1770744530" label="libFoodMenu" targetDirectory="$(ProjectDir)/binCommon">
+      <Library binaryName="Menus" dependencies="-541155840,-1361191823,362164715" id="1770744530" label="Menus" targetDirectory="$(ProjectDir)/binCommon">
         <File filePath="src/menuData.4gl"/>
       </Library>
       <Library binaryName="Patients" dependencies="362164715,-1361191823,1074706446" id="-1322651328" label="Patients">

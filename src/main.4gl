@@ -14,6 +14,7 @@ MAIN
 	DEFINE l_patients Patients
 	DEFINE x SMALLINT
 	WHENEVER ERROR CALL libCommon.abort
+	CALL STARTLOG( base.Application.getProgramName()||".log" )
 	CALL libCommon.loadStyles()
 	CALL debug.output(SFMT("Started FGLPROFILE=%1", fgl_getEnv("FGLPROFILE")), FALSE)
 	OPEN FORM login FROM "login"

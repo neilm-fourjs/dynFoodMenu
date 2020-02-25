@@ -71,6 +71,13 @@ MAIN
 			LET l_patients[p].bed_no = x
 			LET l_patients[p].diabetic = FALSE
 			LET l_patients[p].nilbymouth = FALSE
+			CASE util.Math.rand(15) 
+				WHEN 10 LET l_patients[p].diabetic = TRUE
+				WHEN 11 LET l_patients[p].nilbymouth = TRUE
+				WHEN 1 LET l_patients[p].allergies = "Lactose"
+				WHEN 2 LET l_patients[p].allergies = "Gluten"
+				WHEN 3 LET l_patients[p].allergies = "Nuts"
+			END CASE
 			CASE y
 				WHEN 1 LET l_patients[p].gender_preference = "M"
 				WHEN 2 LET l_patients[p].gender_preference = "F"

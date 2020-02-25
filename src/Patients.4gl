@@ -11,43 +11,41 @@ PUBLIC TYPE Patients RECORD
 	patients patientList,
 	errorMessage STRING
 END RECORD
+DEFINE m_arr DYNAMIC ARRAY OF RECORD
+			img STRING,
+			bed_no SMALLINT,
+			fld1 STRING,
+			fld2 STRING
+		END RECORD
 --------------------------------------------------------------------------------
 --
 FUNCTION (this Patients) select() RETURNS BOOLEAN
 	DEFINE x SMALLINT
 	DEFINE l_cb ui.ComboBox
-	DEFINE l_arr DYNAMIC ARRAY OF RECORD
-			bed_no SMALLINT,
-			fld1 STRING,
-			fld2 STRING
-		END RECORD
-	DEFINE l_ward_id SMALLINT
 
 	WHENEVER ERROR CALL libCommon.abort
 	IF this.wards.list.getLength() = 0 THEN CALL this.getWards() END IF
 	OPEN WINDOW p WITH FORM "patients"
-	LET l_cb = ui.ComboBox.forName("formonly.l_ward_id")
+	LET l_cb = ui.ComboBox.forName("formonly.ward_id")
 	FOR x = 1 TO this.wards.list.getLength()
-		CALL l_cb.addItem(x, this.wards.list[x].ward_name CLIPPED)
+		CALL l_cb.addItem(this.wards.list[x].ward_id, this.wards.list[x].ward_name CLIPPED)
 	END FOR
+	IF this.patients.current.ward_id > 0 THEN
+		CALL this.setScrArr()
+	END IF
 	LET int_flag = TRUE
 	WHILE int_flag
 		LET int_flag = FALSE
 		DIALOG ATTRIBUTES(UNBUFFERED)
-			INPUT BY NAME l_ward_id ATTRIBUTES(WITHOUT DEFAULTS)
-				ON CHANGE l_ward_id
-					CALL this.getPatients( l_ward_id )
-					LET this.patients.current.ward_id = l_ward_id
-					CALL l_arr.clear()
-					FOR x = 1 TO this.patients.list.getLength()
-						LET l_arr[x].bed_no = this.patients.list[x].bed_no
-						LET l_arr[x].fld1 = SFMT("Bed #%1 Patient %2", this.patients.list[x].bed_no, this.patients.list[x].name)
-						LET l_arr[x].fld2 = SFMT("Nil by mouth: %1 - Diabetic: ", IIF(this.patients.list[x].nilbymouth,"YES","NO"), IIF(this.patients.list[x].diabetic,"YES","NO"))
-					END FOR
+			INPUT BY NAME this.patients.current.ward_id ATTRIBUTES(WITHOUT DEFAULTS)
+				ON CHANGE ward_id
+					IF this.patients.current.ward_id = 0 THEN NEXT FIELD ward_id END IF
+					CALL this.getPatients( this.patients.current.ward_id )
+					CALL this.setScrArr()
 			END INPUT
-			DISPLAY ARRAY l_arr TO arr.*
+			DISPLAY ARRAY m_arr TO arr.*
 				BEFORE ROW
-					LET this.patients.current.bed_no = l_arr[ arr_curr() ].bed_no
+					LET this.patients.current.bed_no = m_arr[ arr_curr() ].bed_no
 					CALL this.getPatient( this.patients.current.ward_id, this.patients.current.bed_no )
 					DISPLAY BY NAME this.patients.current.name, this.patients.current.allergies
 			END DISPLAY
@@ -79,6 +77,24 @@ FUNCTION (this Patients) select() RETURNS BOOLEAN
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- Get a list of the wards
+FUNCTION (this Patients) setScrArr()
+	DEFINE x SMALLINT
+	CALL m_arr.clear()
+	FOR x = 1 TO this.patients.list.getLength()
+		LET m_arr[x].img = "fa-bed"
+		IF this.patients.list[x].nilbymouth OR this.patients.list[x].diabetic OR  LENGTH(this.patients.list[x].allergies) > 1 THEN
+			LET m_arr[x].img = "fa-exclamation"
+		END IF
+		LET m_arr[x].bed_no = this.patients.list[x].bed_no
+		LET m_arr[x].fld1 = SFMT("Bed #%1 Patient %2", this.patients.list[x].bed_no, this.patients.list[x].name)
+		LET m_arr[x].fld2 = SFMT("Nil by mouth: %1 - Diabetic: %2 - %3", 
+						IIF(this.patients.list[x].nilbymouth,"YES","NO"), 
+						IIF(this.patients.list[x].diabetic,"YES","NO"),
+						IIF(LENGTH(this.patients.list[x].allergies) > 1,"See below","No Allergies"))
+	END FOR
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+-- Get a list of the wards
 FUNCTION (this Patients) getWards()
 	DEFINE l_cnt SMALLINT
 	IF NOT db.connect() THEN EXIT PROGRAM END IF
@@ -92,10 +108,9 @@ END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- get Patients for the ward
 FUNCTION (this Patients) getPatients(l_ward INT)
-	CALL debug.output(SFMT("getPatients: %1", l_ward), FALSE)
-	IF this.patients.list.getLength() = 0 THEN
-		CALL this.getPatientsDB(l_ward)
-	END IF
+	CALL debug.output(SFMT("getPatients: %1 Curr: %2", l_ward, this.patients.current.ward_id), FALSE)
+	CALL this.patients.list.clear()
+	CALL this.getPatientsDB(l_ward)
 	IF this.patients.list.getLength() = 0 THEN
 		CALL this.getPatientsWS(l_ward)
 	END IF
@@ -153,7 +168,7 @@ FUNCTION (this Patients) getPatientsDB(l_ward SMALLINT)
 	END FOREACH
 	CALL this.patients.list.deleteElement(l_cnt)
 	LET this.patients.messsage = SFMT("Found %1 Patients in ward %2",  this.patients.list.getLength(), l_ward)
-	CALL debug.output(SFMT("getPatientsDB: %1", this.patients.messsage), FALSE)
+	CALL debug.output(SFMT("getPatientsDB: %1 Ward: %2", this.patients.messsage, this.patients.current.ward_id), FALSE)
 END FUNCTION
 
 --------------------------------------------------------------------------------------------------------------
@@ -169,5 +184,6 @@ FUNCTION (this Patients) getPatientsWS(l_ward SMALLINT)
 	DEFINE l_stat SMALLINT
 	CALL this.patients.list.clear()
 	CALL wsBackEnd.getPatients(l_ward) RETURNING l_stat, this.patients.*
+	LET this.patients.current.ward_id = l_ward -- restore the current ward id!
 	CALL debug.output(SFMT("getPatientsWS: %1 %2", l_stat, NVL(this.patients.messsage,"NULL")), FALSE)
 END FUNCTION

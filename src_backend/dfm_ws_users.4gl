@@ -25,7 +25,7 @@ PUBLIC DEFINE serviceInfo RECORD ATTRIBUTE(WSInfo)
 DEFINE m_user Users
 DEFINE m_ts CHAR(19)
 --------------------------------------------------------------------------------
-#+ GET <server>/dynFoodRest/getToken/id/pwd
+#+ GET <server>/ws/r/dfm/users/getToken/id/pwd
 #+ result: A Record that contains uesr information
 PUBLIC FUNCTION getToken(l_id CHAR(6) ATTRIBUTE(WSParam), l_pwd STRING ATTRIBUTE(WSParam)) ATTRIBUTES( 
 		WSPath = "/getToken/{l_id}/{l_pwd}", 
@@ -51,7 +51,7 @@ PUBLIC FUNCTION getToken(l_id CHAR(6) ATTRIBUTE(WSParam), l_pwd STRING ATTRIBUTE
 	RETURN l_rec.*
 END FUNCTION
 --------------------------------------------------------------------------------
-#+ GET <server>/dynFoodRest/checkUserID/id
+#+ GET <server>/ws/r/dfm/users/checkUserID/id
 #+ result is boolean:false=okay to use true=exists plus a suggestion.
 PUBLIC FUNCTION checkUserID(l_id CHAR(6) ATTRIBUTE(WSParam)) ATTRIBUTES( 
 		WSPath = "/checkUserID/{l_id}", 
@@ -64,7 +64,7 @@ PUBLIC FUNCTION checkUserID(l_id CHAR(6) ATTRIBUTE(WSParam)) ATTRIBUTES(
 	RETURN l_exists, l_suggestion
 END FUNCTION
 --------------------------------------------------------------------------------
-#+ GET <server>/dynFoodRest/getTime
+#+ GET <server>/ws/r/dfm/users/getTime
 #+ result: A menu array by ID
 PUBLIC FUNCTION getTimeStamp() ATTRIBUTES( WSPath = "/getTimestamp", 
 		WSGet, 
@@ -74,7 +74,7 @@ PUBLIC FUNCTION getTimeStamp() ATTRIBUTES( WSPath = "/getTimestamp",
 	RETURN m_ts
 END FUNCTION
 --------------------------------------------------------------------------------
-#+ POST <server>/dynFoodRest/placeOrder
+#+ POST <server>/ws/r/dfm/users/placeOrder
 #+ result: String
 PUBLIC FUNCTION registerUser(l_userDets userDetailsRecord) ATTRIBUTES( 
 		WSPath = "/registerUser", 

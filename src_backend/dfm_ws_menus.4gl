@@ -23,7 +23,7 @@ PUBLIC DEFINE serviceInfo RECORD ATTRIBUTE(WSInfo)
     contact: ( name: "Neil J Martin", email:"neilm@4js.com") )
 
 --------------------------------------------------------------------------------
-#+ GET <server>/dynFoodRest/getMenus
+#+ GET <server>/ws/r/dfm/menus/getMenus
 #+ result: A Record that contains an Array
 PUBLIC FUNCTION getMenus() ATTRIBUTES( 
 		WSPath = "/getMenus", 
@@ -36,7 +36,7 @@ PUBLIC FUNCTION getMenus() ATTRIBUTES(
 	RETURN l_menu.menuList.*
 END FUNCTION
 --------------------------------------------------------------------------------
-#+ GET <server>/dynFoodRest/getMenu/<id>
+#+ GET <server>/ws/r/dfm/menus/getMenu/<id>
 #+ result: A menu array by ID
 PUBLIC FUNCTION getMenu(l_menuName VARCHAR(6) ATTRIBUTE(WSParam)) ATTRIBUTES( 
 		WSPath = "/getMenu/{l_menuName}", 
@@ -51,7 +51,7 @@ PUBLIC FUNCTION getMenu(l_menuName VARCHAR(6) ATTRIBUTE(WSParam)) ATTRIBUTES(
 	RETURN l_menu.menuData.*
 END FUNCTION
 --------------------------------------------------------------------------------
-#+ POST <server>/dynFoodRest/placeOrder
+#+ POST <server>/ws/r/dfm/menus/placeOrder
 #+ result: String
 PUBLIC FUNCTION placeOrder(l_order orderRecord) ATTRIBUTES( 
 		WSPath = "/placeOrder", 

@@ -22,7 +22,7 @@ PUBLIC DEFINE serviceInfo RECORD ATTRIBUTE(WSInfo)
     contact: ( name: "Neil J Martin", email:"neilm@4js.com") )
 
 --------------------------------------------------------------------------------
-#+ GET <server>/dynFoodRest/getWards
+#+ GET <server>/ws/r/dfm/patients/getWards/<token>
 #+ result: An array of wards
 PUBLIC FUNCTION getWards(l_token STRING ATTRIBUTE(WSParam)) ATTRIBUTES( 
 		WSPath = "/getWards/{l_token}",
@@ -39,7 +39,7 @@ PUBLIC FUNCTION getWards(l_token STRING ATTRIBUTE(WSParam)) ATTRIBUTES(
 	RETURN l_patients.wards.*
 END FUNCTION
 --------------------------------------------------------------------------------
-#+ GET <server>/dynFoodRest/getPatients/<id>
+#+ GET <server>/ws/r/dfm/patients/getPatients/<token>/<id>
 #+ result: A menu array by ID
 PUBLIC FUNCTION getPatients(l_token STRING ATTRIBUTE(WSParam), l_ward SMALLINT ATTRIBUTE(WSParam)) ATTRIBUTES( 
 		WSPath = "/getPatients/{l_token}/{l_ward}", 

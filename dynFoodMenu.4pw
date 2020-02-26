@@ -114,6 +114,7 @@
       <Library binaryName="libCommon" dependencies="-1361191823" id="1074706446" label="libCommon" targetDirectory="$(ProjectDir)/binCommon">
         <File filePath="src/about.4gl"/>
         <File filePath="src/about.per"/>
+        <File filePath="src/config.4gl"/>
         <File filePath="src_backend/db.4gl"/>
         <File filePath="src/debug.4gl"/>
         <File filePath="src/debug.per"/>
@@ -149,7 +150,6 @@
         <File filePath="etc_ur/fglprofile"/>
       </Library>
       <Library binaryName="libMobile" dependencies="-1361191823,1074706446" id="-541155840" label="libMobile">
-        <File filePath="src/config.4gl"/>
         <File filePath="src/libMobile.4gl"/>
       </Library>
       <Library binaryName="wc_iconMenu" id="91913022" label="wc_iconMenu">

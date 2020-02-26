@@ -18,7 +18,11 @@ MAIN
 	DEFINE x SMALLINT
 	WHENEVER ERROR CALL libCommon.abort
 
-	CALL l_config.init(NULL,NULL,NULL,NULL)
+	IF NOT l_config.initConfigFile(NULL) THEN
+		CALL fgl_winMessage("Error", l_config.message,"exclamation")
+		EXIT PROGRAM
+	END IF
+	CALL l_config.showCFG()
 	CALL STARTLOG( l_config.getLogFile() )
 	CALL libCommon.loadStyles()
 	CALL debug.output(SFMT("Started FGLPROFILE=%1", fgl_getEnv("FGLPROFILE")), FALSE)

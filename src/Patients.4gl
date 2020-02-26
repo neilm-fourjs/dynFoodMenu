@@ -37,6 +37,7 @@ FUNCTION (this Patients) select() RETURNS BOOLEAN
 		CALL this.setScrArr()
 	END IF
 	LET int_flag = TRUE
+	OPTIONS INPUT WRAP
 	WHILE int_flag
 		LET int_flag = FALSE
 		DIALOG ATTRIBUTES(UNBUFFERED)
@@ -46,7 +47,7 @@ FUNCTION (this Patients) select() RETURNS BOOLEAN
 					CALL this.getPatients( this.patients.current.ward_id )
 					CALL this.setScrArr()
 			END INPUT
-			DISPLAY ARRAY m_arr TO arr.*
+			DISPLAY ARRAY m_arr TO arr.* 
 				BEFORE ROW
 					LET this.patients.current.bed_no = m_arr[ arr_curr() ].bed_no
 					CALL this.getPatient( this.patients.current.ward_id, this.patients.current.bed_no )

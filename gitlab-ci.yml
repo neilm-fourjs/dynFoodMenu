@@ -1,0 +1,34 @@
+image: docker:stable
+
+variables:
+  GIT_SUBMODULE_STRATEGY: normal
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_DRIVER: overlay2
+
+stages:
+  - build
+  - test
+  - deploy
+
+build-gar:
+  stage: build
+  image: "registry.gitlab.com/uk-fourjs-internal/docker-kubernetes/genero_docker_container:genero320_dbifx_gst_srv"
+  script:
+    - apt-get update
+    - apt-get install -y make
+    - make gar || exit 1
+  artifacts:
+    paths:
+      - distbin/*
+
+test-gar:
+  stage: test
+  dependencies:
+    - build-gar
+  script:
+    - echo "I guess I would do some fglrun sense checking here before I deploy it somewhere to a staging server?"
+
+deploy-gar:
+  stage: deploy
+  script:
+    - echo "If we got this far, lets deploy to a staging server!"

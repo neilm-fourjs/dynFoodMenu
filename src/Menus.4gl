@@ -3,6 +3,7 @@
 IMPORT util
 IMPORT os
 IMPORT FGL debug
+IMPORT FGL config
 --IMPORT FGL wsBackEnd
 IMPORT FGL wsMenus
 IMPORT FGL db
@@ -11,17 +12,18 @@ IMPORT FGL libMobile
 
 &include "menus.inc"
 
-PUBLIC TYPE menuData RECORD
+PUBLIC TYPE Menus RECORD
+	config config,
 	fileName STRING,
 	menuList menuList,
-	menuData menuRecord,
+	menu menuRecord,
 	ordered orderRecord
 END RECORD
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this menuData) getMenu(l_menuName STRING) RETURNS BOOLEAN
+FUNCTION (this Menus) getMenu(l_menuName STRING) RETURNS BOOLEAN
 	WHENEVER ERROR CALL libCommon.abort
 	CALL debug.output(SFMT("Load %1",l_menuName), FALSE)
-	LET this.menuData.menuName = l_menuName
+	LET this.menu.menuName = l_menuName
 	IF libMobile.gotNetwork() THEN
 		IF NOT this.getMenuWS(l_menuName) THEN RETURN FALSE END IF
 	ELSE
@@ -31,7 +33,7 @@ FUNCTION (this menuData) getMenu(l_menuName STRING) RETURNS BOOLEAN
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this menuData) getMenuList() RETURNS BOOLEAN
+FUNCTION (this Menus) getMenuList() RETURNS BOOLEAN
 	CALL this.menulist.list.clear()
 	IF libMobile.gotNetwork() THEN
 		RETURN this.getMenuListWS()
@@ -41,7 +43,7 @@ FUNCTION (this menuData) getMenuList() RETURNS BOOLEAN
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- DB Code
-FUNCTION (this menuData) getMenuListDB() RETURNS BOOLEAN
+FUNCTION (this Menus) getMenuListDB() RETURNS BOOLEAN
 	IF this.menuList.rows = 0 THEN
 		IF NOT db.connect() THEN EXIT PROGRAM END IF
 		DECLARE l_cur1 CURSOR FOR SELECT * FROM menus
@@ -55,21 +57,21 @@ FUNCTION (this menuData) getMenuListDB() RETURNS BOOLEAN
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this menuData) getMenuDB(l_menuName STRING) RETURNS BOOLEAN
-	IF this.menuData.rows = 0 THEN
+FUNCTION (this Menus) getMenuDB(l_menuName STRING) RETURNS BOOLEAN
+	IF this.menu.rows = 0 THEN
 		IF NOT db.connect() THEN EXIT PROGRAM END IF
 		DECLARE l_cur2 CURSOR FOR SELECT * FROM menuItems WHERE menuName = l_menuName
-		LET this.menuData.rows = 0
-		FOREACH l_cur2 INTO this.menuData.items[ this.menuData.rows + 1 ].*
-			LET this.menuData.rows = this.menuData.rows + 1
+		LET this.menu.rows = 0
+		FOREACH l_cur2 INTO this.menu.items[ this.menu.rows + 1 ].*
+			LET this.menu.rows = this.menu.rows + 1
 		END FOREACH
-		CALL this.menuData.items.deleteElement(this.menuData.rows+1)
+		CALL this.menu.items.deleteElement(this.menu.rows+1)
 	END IF
-	CALL debug.output(SFMT("getMenuDB: %1 Items: %2", l_menuName, this.menuData.rows),FALSE)
+	CALL debug.output(SFMT("getMenuDB: %1 Items: %2", l_menuName, this.menu.rows),FALSE)
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this menuData) placeOrderDB() RETURNS (INTEGER, STRING)
+FUNCTION (this Menus) placeOrderDB() RETURNS (INTEGER, STRING)
 	DEFINE l_ord RECORD LIKE orders.*
 	DEFINE x SMALLINT
 	IF NOT db.connect() THEN RETURN 100, "No database connection1" END IF
@@ -95,7 +97,7 @@ FUNCTION (this menuData) placeOrderDB() RETURNS (INTEGER, STRING)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- JSON Code
-FUNCTION (this menuData) getMenuListJSON() RETURNS BOOLEAN
+FUNCTION (this Menus) getMenuListJSON() RETURNS BOOLEAN
 	DEFINE l_json TEXT
 	DEFINE l_fileName STRING = "menus.json"
 	IF NOT os.path.exists(l_fileName) THEN
@@ -107,9 +109,9 @@ FUNCTION (this menuData) getMenuListJSON() RETURNS BOOLEAN
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this menuData) getMenuJSON(l_menuName STRING) RETURNS BOOLEAN
+FUNCTION (this Menus) getMenuJSON(l_menuName STRING) RETURNS BOOLEAN
 	DEFINE l_json TEXT
-	CALL this.menuData.items.clear()
+	CALL this.menu.items.clear()
 	CALL debug.output(SFMT("getMenuJSON: %1",l_menuName), FALSE)
 -- get test data
 	LET this.fileName = l_menuName||".json"
@@ -122,21 +124,21 @@ FUNCTION (this menuData) getMenuJSON(l_menuName STRING) RETURNS BOOLEAN
 		ERROR SFMT("Failed to load Menu Data %1!",l_menuName)
 		RETURN FALSE
 	END IF
-	CALL util.JSON.parse(l_json, this.menuData.items)
-	LET this.menuData.rows = this.menuData.items.getLength()
+	CALL util.JSON.parse(l_json, this.menu.items)
+	LET this.menu.rows = this.menu.items.getLength()
 	CALL this.calcLevels(l_menuName)
-	CALL debug.output(SFMT("getMenuJSON: %1 Items: %2", l_menuName, this.menuData.rows),FALSE)
+	CALL debug.output(SFMT("getMenuJSON: %1 Items: %2", l_menuName, this.menu.rows),FALSE)
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- WS functions
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this menuData) getMenuListWS() RETURNS BOOLEAN
+FUNCTION (this Menus) getMenuListWS() RETURNS BOOLEAN
 	DEFINE l_stat SMALLINT
 	DEFINE l_json TEXT
 	DEFINE l_fileName STRING = "menus.json"
 	CALL libCommon.processing("Loading Menus ...",1)
-	LET wsMenus.Endpoint.Address.Uri = C_WS_MENUS
+	LET wsMenus.Endpoint.Address.Uri = this.config.getWSServer(C_WS_MENUS)
 	CALL wsMenus.getMenus() RETURNING l_stat,this.menuList.*
 	CALL libCommon.processing("Loading Menus ...",3)
 	IF l_stat != 0 THEN
@@ -149,31 +151,31 @@ FUNCTION (this menuData) getMenuListWS() RETURNS BOOLEAN
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this menuData) getMenuWS(l_menuName STRING) RETURNS BOOLEAN
+FUNCTION (this Menus) getMenuWS(l_menuName STRING) RETURNS BOOLEAN
 	DEFINE l_stat INT
-	LET wsMenus.Endpoint.Address.Uri = C_WS_MENUS
+	LET wsMenus.Endpoint.Address.Uri = this.config.getWSServer(C_WS_MENUS)
 	CALL libCommon.processing("Loading Menu ...",1)
-	CALL wsMenus.getMenu(l_menuName) RETURNING l_stat, this.menuData.*
+	CALL wsMenus.getMenu(l_menuName) RETURNING l_stat, this.menu.*
 	CALL libCommon.processing("Loading Menu ...",3)
 	IF l_stat != 0 THEN
 		CALL debug.output(SFMT("getMenuWS: %1 Stat: %2", l_menuName, l_stat),FALSE)
 		RETURN FALSE
 	END IF
-	CALL debug.output(SFMT("getMenuWS: %1 Rows: %2", l_menuName, this.menuData.rows),FALSE)
-	IF this.menuData.rows = 0 THEN RETURN FALSE END IF
+	CALL debug.output(SFMT("getMenuWS: %1 Rows: %2", l_menuName, this.menu.rows),FALSE)
+	IF this.menu.rows = 0 THEN RETURN FALSE END IF
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this menuData) save()
+FUNCTION (this Menus) save()
 	DEFINE l_stat INT
 	DEFINE l_resp RECORD
 		l_stat INT,
 		l_msg STRING
 	END RECORD
-	LET this.ordered.menu_id = this.menuData.menuName
+	LET this.ordered.menu_id = this.menu.menuName
 	CALL libCommon.processing("Saving Order ...",1)
 
-	LET wsMenus.Endpoint.Address.Uri = C_WS_MENUS
+	LET wsMenus.Endpoint.Address.Uri = this.config.getWSServer(C_WS_MENUS)
 	CALL wsMenus.placeOrder(this.ordered.*) RETURNING l_stat, l_resp.*
 	CALL debug.output(SFMT("save Stat: %1-%2:%3", l_stat,l_resp.l_stat,l_resp.l_msg),FALSE)
 
@@ -187,7 +189,7 @@ FUNCTION (this menuData) save()
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- util function
-PRIVATE FUNCTION (this menuData ) calcLevels(l_menuName STRING)
+PRIVATE FUNCTION (this Menus ) calcLevels(l_menuName STRING)
 	DEFINE x, y, l_id, l_pid, l_lev SMALLINT
 	DEFINE l_levs DYNAMIC ARRAY OF RECORD
 		pid SMALLINT,
@@ -195,9 +197,9 @@ PRIVATE FUNCTION (this menuData ) calcLevels(l_menuName STRING)
 	END RECORD
 	DEFINE l_found BOOLEAN
 	LET l_lev = 0
-	FOR x = 1 TO this.menuData.rows
-		LET l_id = this.menuData.items[x].t_id
-		LET l_pid = this.menuData.items[x].t_pid
+	FOR x = 1 TO this.menu.rows
+		LET l_id = this.menu.items[x].t_id
+		LET l_pid = this.menu.items[x].t_pid
 		LET l_found = FALSE
 		FOR y = 1 TO l_levs.getLength()
 			IF l_levs[y].pid = l_pid THEN
@@ -206,11 +208,11 @@ PRIVATE FUNCTION (this menuData ) calcLevels(l_menuName STRING)
 			END IF
 		END FOR
 		IF NOT l_found THEN LET l_lev = l_lev + 1 END IF
-		LET l_levs[l_id].pid = this.menuData.items[x].t_pid
+		LET l_levs[l_id].pid = this.menu.items[x].t_pid
 		LET l_levs[l_id].lev = l_lev
 	END FOR
-	FOR x = 1 TO this.menuData.rows
-		LET this.menuData.items[x].menuName = l_menuName
-		LET this.menuData.items[x].level = l_levs[this.menuData.items[x].t_id].lev
+	FOR x = 1 TO this.menu.rows
+		LET this.menu.items[x].menuName = l_menuName
+		LET this.menu.items[x].level = l_levs[this.menu.items[x].t_id].lev
 	END FOR
 END FUNCTION

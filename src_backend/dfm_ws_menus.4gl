@@ -1,6 +1,6 @@
 
 IMPORT util
-IMPORT FGL menuData
+IMPORT FGL Menus
 IMPORT FGL ws_lib
 IMPORT FGL debug
 
@@ -30,7 +30,7 @@ PUBLIC FUNCTION getMenus() ATTRIBUTES(
 		WSGet, 
 		WSDescription = "Get list of Menus")
 	RETURNS (menuList ATTRIBUTES(WSMedia = 'application/json'))
-	DEFINE l_menu menuData
+	DEFINE l_menu Menus
 	IF NOT l_menu.getMenuListDB() THEN
 	END IF
 	RETURN l_menu.menuList.*
@@ -43,12 +43,12 @@ PUBLIC FUNCTION getMenu(l_menuName VARCHAR(6) ATTRIBUTE(WSParam)) ATTRIBUTES(
 		WSGet, 
 		WSDescription = "Get a Menu")
 	RETURNS (MenuRecord ATTRIBUTES(WSMedia = 'application/json'))
-	DEFINE l_menu menuData
+	DEFINE l_menu Menus
 	IF NOT l_menu.getMenuDB(l_menuName) THEN
-		LET l_menu.menuData.menuName = "Invalid menuName!"
-		LET l_menu.menuData.rows = 0
+		LET l_menu.menu.menuName = "Invalid menuName!"
+		LET l_menu.menu.rows = 0
 	END IF
-	RETURN l_menu.menuData.*
+	RETURN l_menu.menu.*
 END FUNCTION
 --------------------------------------------------------------------------------
 #+ POST <server>/ws/r/dfm/menus/placeOrder
@@ -60,7 +60,7 @@ PUBLIC FUNCTION placeOrder(l_order orderRecord) ATTRIBUTES(
 	RETURNS (INT, STRING ATTRIBUTES(WSMedia = 'application/json'))
 	DEFINE l_stat INTEGER
 	DEFINE l_ret STRING
-	DEFINE l_menu menuData
+	DEFINE l_menu Menus
 	CALL debug.output(SFMT("placeOrder User: %1 Items: %2",l_order.user_id, l_order.rows), FALSE)
 	IF NOT ws_lib.checkToken( l_order.user_token ) THEN
 		RETURN 100,"Invalid Token!"

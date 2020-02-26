@@ -6,6 +6,7 @@ IMPORT xml
 IMPORT util
 IMPORT os
 
+&include "menus.inc"
 #+
 #+ Global Endpoint user-defined type definition
 #+
@@ -47,13 +48,14 @@ PUBLIC TYPE registerUserMultipartResponse RECORD
 END RECORD
 
 # generated getTokenResponseBodyType
-PUBLIC TYPE getTokenResponseBodyType RECORD
+PUBLIC TYPE getTokenResponseBodyType userRecord
+{ RECORD
 	user_id STRING,
 	user_name STRING,
 	user_pwd STRING,
 	user_token STRING,
 	token_ts DATETIME YEAR TO SECOND
-END RECORD
+END RECORD}
 
 # generated multipart checkUserIDMultipartResponse
 PUBLIC TYPE checkUserIDMultipartResponse RECORD

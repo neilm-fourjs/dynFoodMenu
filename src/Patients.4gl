@@ -2,6 +2,7 @@
 IMPORT util
 IMPORT FGL db
 IMPORT FGL debug
+IMPORT FGL config
 IMPORT FGL libCommon
 --IMPORT FGL wsBackEnd
 IMPORT FGL wsPatients
@@ -9,6 +10,7 @@ IMPORT FGL wsPatients
 &include "../src/menus.inc"
 
 PUBLIC TYPE Patients RECORD
+	config config,
 	wards wardList,
 	patients patientList,
 	errorMessage STRING,
@@ -186,7 +188,7 @@ END FUNCTION
 -- Get a list of the wards from the server.
 FUNCTION (this Patients) getWardsWS()
 	DEFINE l_stat SMALLINT
-	LET wsPatients.Endpoint.Address.Uri = C_WS_PATIENTS
+	LET wsPatients.Endpoint.Address.Uri = this.config.getWSServer(C_WS_PATIENTS)
 	CALL wsPatients.getWards(this.token) RETURNING l_stat, this.wards.*
 	CALL debug.output(SFMT("getWardsWS: %1 %2", l_stat, NVL(this.wards.messsage,"NULL")), FALSE)
 END FUNCTION
@@ -195,7 +197,7 @@ END FUNCTION
 FUNCTION (this Patients) getPatientsWS(l_ward SMALLINT)
 	DEFINE l_stat SMALLINT
 	CALL this.patients.list.clear()
-	LET wsPatients.Endpoint.Address.Uri = C_WS_PATIENTS
+	LET wsPatients.Endpoint.Address.Uri = this.config.getWSServer(C_WS_PATIENTS)
 	CALL wsPatients.getPatients(this.token, l_ward) RETURNING l_stat, this.patients.*
 	LET this.patients.current.ward_id = l_ward -- restore the current ward id!
 	CALL debug.output(SFMT("getPatientsWS: %1 %2", l_stat, NVL(this.patients.messsage,"NULL")), FALSE)

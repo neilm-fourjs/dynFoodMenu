@@ -1,13 +1,13 @@
 IMPORT util
 IMPORT os
-IMPORT FGL menuData
+IMPORT FGL Menus
 
 &include "menus.inc"
 
 DEFINE m_JSONfile TEXT
 --------------------------------------------------------------------------------------------------------------
 FUNCTION load_data()
-	DEFINE l_data menuData
+	DEFINE l_data Menus
 	DEFINE l_users DYNAMIC ARRAY OF userRecord
 	DEFINE l_userDetails DYNAMIC ARRAY OF userDetailsRecord
 	DEFINE l_wards DYNAMIC ARRAY OF wardRecord
@@ -51,8 +51,8 @@ FUNCTION load_data()
 			DISPLAY "Menu:",l_data.menuList.list[x].menuName,":",l_data.menuList.list[x].menuDesc
 			INSERT INTO menus VALUES( l_data.menuList.list[x].* )
 			IF l_data.getMenuJSON(l_data.menuList.list[x].menuName) THEN
-				FOR y = 1 TO l_data.menuData.rows
-					INSERT INTO menuItems VALUES( l_data.menuData.items[y].* )
+				FOR y = 1 TO l_data.menu.rows
+					INSERT INTO menuItems VALUES( l_data.menu.items[y].* )
 				END FOR
 			END IF
 		END FOR

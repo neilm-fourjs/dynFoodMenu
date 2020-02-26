@@ -1,4 +1,4 @@
-IMPORT FGL menuData
+IMPORT FGL Menus
 IMPORT FGL debug
 
 CONSTANT C_WIDTH=20
@@ -10,7 +10,7 @@ PUBLIC TYPE dynForm RECORD
 	END RECORD,
 	no_of_flds SMALLINT,
 	toolbar DYNAMIC ARRAY OF STRING,
-	menuData menuRecord
+	menu menuRecord
 END RECORD
 
 --------------------------------------------------------------------------------------------------------------
@@ -41,12 +41,12 @@ FUNCTION (this dynForm) buildForm( l_titl STRING, l_styl STRING, l_img STRING ) 
 	LET l_grid = l_vb.createChild("Grid")
 	CALL l_grid.setAttribute("width",C_WIDTH+6)
 	CALL l_grid.setAttribute("height",1)
-	FOR id = 1 TO this.menuData.rows
-		LET l_fldnam = this.menuData.items[id].field CLIPPED
-		LET l_desc = this.menuData.items[id].description CLIPPED
-		CALL debug.output(SFMT("buildForm:%1:%2:%3:%4:%5",this.menuData.items[id].type.subString(1,2),l_fldnam,IIF(this.menuData.items[id].hidden,"T","F"),l_desc,IIF(l_sgroup IS NULL,"G","SG")), FALSE)
-		IF this.menuData.items[id].hidden THEN CONTINUE FOR END IF
-		CASE this.menuData.items[id].type
+	FOR id = 1 TO this.menu.rows
+		LET l_fldnam = this.menu.items[id].field CLIPPED
+		LET l_desc = this.menu.items[id].description CLIPPED
+		CALL debug.output(SFMT("buildForm:%1:%2:%3:%4:%5",this.menu.items[id].type.subString(1,2),l_fldnam,IIF(this.menu.items[id].hidden,"T","F"),l_desc,IIF(l_sgroup IS NULL,"G","SG")), FALSE)
+		IF this.menu.items[id].hidden THEN CONTINUE FOR END IF
+		CASE this.menu.items[id].type
 			WHEN "Type"
 				CALL this.addField(id, 1, 1, l_grid, "",l_desc ,"Label", C_WIDTH,"title")
 			WHEN "Group"
@@ -59,7 +59,7 @@ FUNCTION (this dynForm) buildForm( l_titl STRING, l_styl STRING, l_img STRING ) 
 				IF l_cont IS NOT NULL AND l_items > 0 THEN -- set height for previous grid
 					CALL l_cont.setAttribute("height",l_items)
 				END IF
-				IF NOT this.menuData.items[id].hidden THEN
+				IF NOT this.menu.items[id].hidden THEN
 					IF l_group.getTagName() = "Group" THEN
 						LET l_group = l_group.createChild("VBox")
 					END IF
@@ -74,14 +74,14 @@ FUNCTION (this dynForm) buildForm( l_titl STRING, l_styl STRING, l_img STRING ) 
 					LET l_items = 0
 				END IF
 				LET l_items = l_items + 1
-				IF this.menuData.items[id].maxval = 1 THEN
+				IF this.menu.items[id].maxval = 1 THEN
 					CALL this.addField(id, l_items, 1, l_cont, l_fldnam, l_desc,"CheckBox", C_WIDTH,"")
 				ELSE
 					CALL this.addField(id, l_items, 1, l_cont, l_fldnam, l_desc,"SpinEdit", 3,"")
 					CALL this.addField(id, l_items, 5, l_cont, "", l_desc,"Label", C_WIDTH,"")
 				END IF
-				IF this.menuData.items[id].option_name IS NOT NULL THEN
-					CALL this.addField(id, l_items, 16,l_cont, l_fldnam||"o1", this.menuData.items[id].option_name,"CheckBox", C_WIDTH,"")
+				IF this.menu.items[id].option_name IS NOT NULL THEN
+					CALL this.addField(id, l_items, 16,l_cont, l_fldnam||"o1", this.menu.items[id].option_name,"CheckBox", C_WIDTH,"")
 				END IF
 		END CASE
 	END FOR
@@ -103,7 +103,7 @@ PRIVATE FUNCTION (this dynForm) addGroup(id SMALLINT, l_n om.DomNode, l_desc STR
 	DEFINE l_group om.DomNode
 	DEFINE l_nam STRING
 	LET l_group = l_n.createChild("Group")
-	LET l_nam = SFMT("%1_%2_%3",DOWNSHIFT(this.menuData.items[id].id CLIPPED), this.menuData.items[id].t_pid, this.menuData.items[id].t_id )
+	LET l_nam = SFMT("%1_%2_%3",DOWNSHIFT(this.menu.items[id].id CLIPPED), this.menu.items[id].t_pid, this.menu.items[id].t_id )
 	CALL l_group.setAttribute("name",  l_nam)
 	CALL l_group.setAttribute("text", l_desc)
 	RETURN l_group
@@ -149,8 +149,8 @@ PRIVATE FUNCTION (this dynForm) addField(id SMALLINT, x SMALLINT, y SMALLINT, l_
 		CALL l_w.setAttribute("style",l_style)
 	END IF
 	IF l_wdg = "SpinEdit" THEN
-		CALL l_w.setAttribute("valueMin",this.menuData.items[id].minval)
-		CALL l_w.setAttribute("valueMax",this.menuData.items[id].maxval)
+		CALL l_w.setAttribute("valueMin",this.menu.items[id].minval)
+		CALL l_w.setAttribute("valueMax",this.menu.items[id].maxval)
 	END IF
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------

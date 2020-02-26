@@ -1,48 +1,56 @@
+-- dynFoodMenu Demo
+IMPORT FGL config
 IMPORT FGL debug
 IMPORT FGL libCommon
 IMPORT FGL libMobile
 IMPORT FGL wc_iconMenu
 IMPORT FGL dynFoodMenu
-IMPORT FGL login
-IMPORT FGL menuData
+IMPORT FGL Users
+IMPORT FGL Menus
 IMPORT FGL Patients
 DEFINE myMenu wc_iconMenu.wc_iconMenu
-DEFINE m_user login.userRecord
 MAIN
 	DEFINE l_menuItem STRING = "."
-	DEFINE l_data menuData
+	DEFINE l_user Users
+	DEFINE l_config config
+	DEFINE l_menu Menus
 	DEFINE l_patients Patients
 	DEFINE x SMALLINT
 	WHENEVER ERROR CALL libCommon.abort
-	CALL STARTLOG( base.Application.getProgramName()||".log" )
+
+	CALL l_config.init(NULL,NULL,NULL,NULL)
+	CALL STARTLOG( l_config.getLogFile() )
 	CALL libCommon.loadStyles()
 	CALL debug.output(SFMT("Started FGLPROFILE=%1", fgl_getEnv("FGLPROFILE")), FALSE)
 	OPEN FORM login FROM "login"
 	DISPLAY FORM login
 
-	IF NOT m_user.login(FALSE) THEN
-		CALL debug.output(SFMT("Invalid login %1 %2",m_user.user_id, m_user.user_name),FALSE)
+	LET l_user.config = l_config
+
+	IF NOT l_user.login(FALSE) THEN
+		CALL debug.output(SFMT("Invalid login %1 %2",l_user.currentUser.user_id, l_user.currentUser.user_name),FALSE)
 		CALL libCommon.exit_program()
 	END IF
 	CALL ui.Window.getCurrent().getForm().setFieldHidden("formonly.l_iconmenu",FALSE)
-	IF NOT l_data.getMenuList() THEN
+	LET l_menu.config = l_config
+	IF NOT l_menu.getMenuList() THEN
 		CALL debug.output("Failed to get Menu list.",FALSE)
 		CALL libCommon.exit_program()
 	END IF
 	CALL ui.Window.getCurrent().getForm().setFieldHidden("formonly.l_iconmenu",FALSE)
 -- set the 4gl array for the menu data.
 	CALL myMenu.clear()
-	FOR x = 1 TO l_data.menuList.rows
-		CALL myMenu.addMenuItem( l_data.menuList.list[x].menuDesc, l_data.menuList.list[x].menuImage, l_data.menuList.list[x].menuName)
+	FOR x = 1 TO l_menu.menuList.rows
+		CALL myMenu.addMenuItem( l_menu.menuList.list[x].menuDesc, l_menu.menuList.list[x].menuImage, l_menu.menuList.list[x].menuName)
 	END FOR
 	CALL myMenu.addMenuItem("Close", "poweroff.png", "close")
 
 	IF NOT myMenu.init(NULL) THEN -- something wrong?
 		CALL libCommon.exit_program()
 	END IF
-	LET dynFoodMenu.m_user_token =  m_user.user_token
-	LET l_patients.token = m_user.user_token
-	LET dynFoodMenu.m_user_id = m_user.user_id
+	LET dynFoodMenu.m_user_token =  l_user.currentUser.user_token
+	LET dynFoodMenu.m_user_id = l_user.currentUser.user_id
+	LET l_patients.token = l_user.currentUser.user_token
 	WHILE TRUE
 		IF NOT l_patients.select() THEN EXIT WHILE END IF
 		DISPLAY SFMT("Ward: %1 Bed #%2 - %3", l_patients.wards.current.ward_name ,l_patients.patients.current.bed_no, l_patients.patients.current.name) TO username

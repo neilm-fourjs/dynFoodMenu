@@ -67,12 +67,12 @@ FUNCTION (this Patients) select() RETURNS BOOLEAN
 		CALL debug.output(SFMT("Ward: %1 Bed: %2 Name: %3", this.patients.current.ward_id, this.patients.current.bed_no, this.patients.current.name ), FALSE)
 		DISPLAY BY NAME this.patients.current.name, this.patients.current.allergies
 
-	-- Confirm
+{	-- Confirm
 		MENU
 			ON ACTION accept EXIT MENU
 			ON ACTION cancel LET int_flag = TRUE EXIT MENU
 			ON ACTION close LET int_flag = TRUE EXIT MENU
-		END MENU
+		END MENU}
 	END WHILE
 	CLOSE WINDOW p
 

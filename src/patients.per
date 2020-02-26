@@ -28,7 +28,7 @@ END -- GRID
 ATTRIBUTES
 GROUP loc : loc, TEXT=%"Location:", STYLE="nocollapse";
 LABEL l001 : lab1, TEXT=%"Ward:";
-TABLE patients : patients, WANTFIXEDPAGESIZE, STYLE="listView";
+TABLE patients : patients, WANTFIXEDPAGESIZE, STYLE="listView",DOUBLECLICK=selectrow;
 
 PHANTOM FORMONLY.a_img;
 PHANTOM FORMONLY.a_bed_no;

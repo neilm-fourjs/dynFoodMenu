@@ -11,7 +11,7 @@ export URL3=https://generodemos.dynu.net/g/ws/r/dfm/patients?openapi.json
 
 all: gar
 
-gar: tests/wsMenus.4gl tests/wsUsers.4gl tests/wsPatients.4gl
+gar: 
 	gsmake -t dynFoodBackEnd dynFoodMenu.4pw 
 
 gma: gar
@@ -22,6 +22,9 @@ gmaur: gar
 
 gmiur: gar
 	gsmake -t dynFoodMenuUR_GMI dynFoodMenu.4pw 
+
+testbin/CliWSTest.42r: tests/CliWSTest.4gl tests/wsMenus.4gl tests/wsUsers.4gl tests/wsPatients.4gl
+	gsmake -t CliWSTest dynFoodMenu.4pw
 
 tests/wsMenus.4gl:
 	fglrestful -o $@ $(URL1)

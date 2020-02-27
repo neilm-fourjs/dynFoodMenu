@@ -20,7 +20,7 @@ PUBLIC DEFINE serviceInfo RECORD ATTRIBUTE(WSInfo)
 		description: "A RESTFUL backend for the dynFoodMenu mobile demo - Serving: Patients",
     version: "1.0", 
     contact: ( name: "Neil J Martin", email:"neilm@4js.com") )
-
+DEFINE m_patients Patients
 --------------------------------------------------------------------------------
 #+ GET <server>/ws/r/dfm/patients/getWards/<token>
 #+ result: An array of wards
@@ -29,14 +29,14 @@ PUBLIC FUNCTION getWards(l_token STRING ATTRIBUTE(WSParam)) ATTRIBUTES(
 		WSGet, 
 		WSDescription = "Get wards")
 	RETURNS (wardList ATTRIBUTES(WSMedia = 'application/json'))
-	DEFINE l_patients Patients
+
 	IF ws_lib.checkToken( l_token ) THEN
-		LET l_patients.wards.messsage = "getting wards from db ..."
-		CALL l_patients.getWardsDB()
+		LET m_patients.wards.messsage = "getting wards from db ..."
+		CALL m_patients.getWardsDB()
 	ELSE
-		LET l_patients.wards.messsage = "Invalid Token."
+		LET m_patients.wards.messsage = "Invalid Token."
 	END IF
-	RETURN l_patients.wards.*
+	RETURN m_patients.wards.*
 END FUNCTION
 --------------------------------------------------------------------------------
 #+ GET <server>/ws/r/dfm/patients/getPatients/<token>/<id>
@@ -46,12 +46,12 @@ PUBLIC FUNCTION getPatients(l_token STRING ATTRIBUTE(WSParam), l_ward SMALLINT A
 		WSGet, 
 		WSDescription = "Get patients for ward")
 	RETURNS (patientList ATTRIBUTES(WSMedia = 'application/json'))
-	DEFINE l_patients Patients
+
 	IF ws_lib.checkToken( l_token ) THEN
-		LET l_patients.patients.messsage = SFMT("getting patients for ward %1 from db ...", l_ward)
-		CALL l_patients.getPatientsDB(l_ward)
+		LET m_patients.patients.messsage = SFMT("getting patients for ward %1 from db ...", l_ward)
+		CALL m_patients.getPatientsDB(l_ward)
 	ELSE
-		LET l_patients.patients.messsage = "Invalid Token."
+		LET m_patients.patients.messsage = "Invalid Token."
 	END IF
-	RETURN l_patients.patients.*
+	RETURN m_patients.patients.*
 END FUNCTION

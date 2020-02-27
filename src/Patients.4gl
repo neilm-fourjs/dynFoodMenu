@@ -1,16 +1,16 @@
 
 IMPORT util
-IMPORT FGL db
 IMPORT FGL debug
 IMPORT FGL config
+IMPORT FGL db
 IMPORT FGL libCommon
 --IMPORT FGL wsBackEnd
 IMPORT FGL wsPatients
 
-&include "../src/menus.inc"
+&include "menus.inc"
+&include "globals.inc"
 
 PUBLIC TYPE Patients RECORD
-	config config,
 	wards wardList,
 	patients patientList,
 	errorMessage STRING,
@@ -54,6 +54,8 @@ FUNCTION (this Patients) select() RETURNS BOOLEAN
 					LET this.patients.current.bed_no = m_arr[ arr_curr() ].bed_no
 					CALL this.getPatient( this.patients.current.ward_id, this.patients.current.bed_no )
 					DISPLAY BY NAME this.patients.current.name, this.patients.current.allergies
+					DISPLAY IIF( this.patients.current.diabetic, "my-true","my-false" ) TO dia
+					DISPLAY IIF( this.patients.current.nilbymouth, "my-true","my-false" ) TO nil
 			END DISPLAY
 			ON ACTION accept ACCEPT DIALOG
 			ON ACTION cancel CANCEL DIALOG
@@ -62,8 +64,6 @@ FUNCTION (this Patients) select() RETURNS BOOLEAN
 			CLOSE WINDOW p
 			RETURN FALSE
 		END IF
-		DISPLAY IIF( this.patients.current.diabetic, "my-true","my-false" ) TO dia
-		DISPLAY IIF( this.patients.current.nilbymouth, "my-true","my-false" ) TO nil
 
 		CALL this.getPatient( this.patients.current.ward_id, this.patients.current.bed_no )
 		CALL debug.output(SFMT("Ward: %1 Bed: %2 Name: %3", this.patients.current.ward_id, this.patients.current.bed_no, this.patients.current.name ), FALSE)
@@ -103,7 +103,7 @@ END FUNCTION
 -- Get a list of the wards
 FUNCTION (this Patients) getWards()
 	DEFINE l_cnt SMALLINT
-	IF NOT db.connect() THEN EXIT PROGRAM END IF
+	IF NOT g_db.connect() THEN EXIT PROGRAM END IF
 	SELECT COUNT(*) INTO l_cnt FROM wards
 	IF l_cnt = 0 THEN
 		CALL this.getWardsWS()
@@ -146,7 +146,7 @@ END FUNCTION
 -- Get a list of the wards from the DB.
 FUNCTION (this Patients) getWardsDB()
 	DEFINE l_cnt SMALLINT = 1
-	IF NOT db.connect() THEN 
+	IF NOT g_db.connect() THEN 
 		LET this.wards.messsage = "failed to connect to db!"
 		EXIT PROGRAM
 	END IF
@@ -165,7 +165,7 @@ FUNCTION (this Patients) getPatientsDB(l_ward SMALLINT)
 	DEFINE l_cnt SMALLINT = 1
 	DEFINE x SMALLINT = 1
 	DEFINE l_ordered patientOrderRecord
-	IF NOT db.connect() THEN
+	IF NOT g_db.connect() THEN
 		LET this.patients.messsage = "failed to connect to db!"
 		EXIT PROGRAM
 	END IF
@@ -188,17 +188,17 @@ END FUNCTION
 -- Get a list of the wards from the server.
 FUNCTION (this Patients) getWardsWS()
 	DEFINE l_stat SMALLINT
-	LET wsPatients.Endpoint.Address.Uri = this.config.getWSServer(C_WS_PATIENTS)
+	LET wsPatients.Endpoint.Address.Uri = g_cfg.getWSServer(C_WS_PATIENTS)
 	CALL wsPatients.getWards(this.token) RETURNING l_stat, this.wards.*
-	CALL debug.output(SFMT("getWardsWS: %1 %2", l_stat, NVL(this.wards.messsage,"NULL")), FALSE)
+	CALL debug.output(SFMT("getWardsWS: %1 %2 from %3", l_stat, NVL(this.wards.messsage,"NULL"), wsPatients.Endpoint.Address.Uri), FALSE)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- Get a list of the patients for the ward from the server.
 FUNCTION (this Patients) getPatientsWS(l_ward SMALLINT)
 	DEFINE l_stat SMALLINT
 	CALL this.patients.list.clear()
-	LET wsPatients.Endpoint.Address.Uri = this.config.getWSServer(C_WS_PATIENTS)
+	LET wsPatients.Endpoint.Address.Uri = g_cfg.getWSServer(C_WS_PATIENTS)
 	CALL wsPatients.getPatients(this.token, l_ward) RETURNING l_stat, this.patients.*
 	LET this.patients.current.ward_id = l_ward -- restore the current ward id!
-	CALL debug.output(SFMT("getPatientsWS: %1 %2", l_stat, NVL(this.patients.messsage,"NULL")), FALSE)
+	CALL debug.output(SFMT("getPatientsWS: %1 %2 from %3", l_stat, NVL(this.patients.messsage,"NULL"), wsPatients.Endpoint.Address.Uri), FALSE)
 END FUNCTION

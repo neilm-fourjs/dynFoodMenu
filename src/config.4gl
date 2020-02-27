@@ -1,7 +1,6 @@
 
 IMPORT os
 IMPORT util
-IMPORT FGL debug
 
 &include "menus.inc"
 
@@ -11,10 +10,12 @@ DEFINE m_loc DYNAMIC ARRAY OF STRING = [
         "/sdcard/Download",
         "/storage/sdcard0/download",
         "/mnt/sdcard/download",
-        "../etc",
+        "../cfg",
+        "../etcBackEnd",
         "." ]
 
 PUBLIC TYPE config RECORD
+		cfgDone BOOLEAN,
 		cfgDir STRING,
 		cfgFileName STRING,
 		cfgFile STRING,
@@ -38,15 +39,11 @@ FUNCTION (this config) initConfigFile(l_fileName STRING) RETURNS BOOLEAN
 			LET l_fileDir = m_loc[x]
 			EXIT FOR
 		END IF
-		CALL debug.output(SFMT("Failed to find config file: %1 in %2", l_fileName, m_loc[x]), FALSE)
 	END FOR
 	IF l_fileDir IS NULL THEN
 		LET this.message = SFMT("Failed to find config file: %1", l_FileName)
-		CALL debug.output(this.message,FALSE)
 		RETURN FALSE
 	END IF
-	LET this.message = SFMT("Using config file: %1", l_file)
-	CALL debug.output(this.message,FALSE)
 	LOCATE l_json IN MEMORY
 	CALL l_json.readFile( l_file )
 	CALL util.JSON.parse( l_json, this)
@@ -54,6 +51,8 @@ FUNCTION (this config) initConfigFile(l_fileName STRING) RETURNS BOOLEAN
 	LET this.cfgFileName = l_fileName
 	LET this.cfgFile = l_file
 	CALL this.setDefaults()
+	LET this.cfgDone = TRUE
+	LET this.message = SFMT("Using config file: %1", l_file)
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
@@ -83,9 +82,9 @@ FUNCTION (this config) setDefaults()
 	IF NOT os.path.exists(this.logDir) THEN
 		IF NOT os.path.mkdir(this.logDir) THEN
 			LET this.message = SFMT("Failed to create logDir '%1'!", this.logDir)
-			CALL debug.output(this.message,FALSE)
 		END IF
 	END IF
+	LET this.cfgDone = TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION (this config) getLogFile() RETURNS STRING

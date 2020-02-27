@@ -76,6 +76,7 @@
         <File filePath="src_backend/dfm_ws_users.4gl"/>
       </Library>
       <Application binaryName="dfm_ws" dependencies="-1361191823,1074706446,1638566760,-1322651328,-984239028,1770744530,-593227916,1321734150,-1000811841,340558792,-1118783498" id="411074306" label="dfm_ws">
+        <File filePath="etcBackEnd/dfm_ws.cfg"/>
         <File filePath="src_backend/dfm_ws_main.4gl"/>
       </Application>
       <Application binaryName="dynFoodUser" dependencies="-1361191823,1074706446,362164715,1638566760" id="875344568" label="dynFoodUser">
@@ -99,6 +100,7 @@
       <Library binaryName="etc" id="362164715" label="etc">
         <File filePath="etc/default.4ad"/>
         <File filePath="etc/dynfooddemo.4db"/>
+        <File filePath="etc/dynFoodMenu.cfg"/>
         <File filePath="etc/fglprofile"/>
         <File filePath="etc/fglprofile.be"/>
         <File filePath="etc/fglprofile.gst"/>
@@ -109,6 +111,7 @@
         <File filePath="etc/menu2.json"/>
       </Library>
       <Library binaryName="includes" dependencies="362164715" id="-1361191823" label="includes">
+        <File filePath="src/globals.inc"/>
         <File filePath="src/menus.inc"/>
       </Library>
       <Library binaryName="libCommon" dependencies="-1361191823" id="1074706446" label="libCommon" targetDirectory="$(ProjectDir)/binCommon">

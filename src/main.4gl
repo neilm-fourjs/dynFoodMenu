@@ -8,35 +8,36 @@ IMPORT FGL dynFoodMenu
 IMPORT FGL Users
 IMPORT FGL Menus
 IMPORT FGL Patients
+IMPORT FGL db
 DEFINE myMenu wc_iconMenu.wc_iconMenu
+&include "globals.inc"
 MAIN
 	DEFINE l_menuItem STRING = "."
 	DEFINE l_user Users
-	DEFINE l_config config
 	DEFINE l_menu Menus
 	DEFINE l_patients Patients
+
 	DEFINE x SMALLINT
 	WHENEVER ERROR CALL libCommon.abort
 
-	IF NOT l_config.initConfigFile(NULL) THEN
-		CALL fgl_winMessage("Error", l_config.message,"exclamation")
+	IF NOT g_cfg.initConfigFile(NULL) THEN
+		CALL fgl_winMessage("Error", g_cfg.message,"exclamation")
 		EXIT PROGRAM
 	END IF
-	CALL l_config.showCFG()
-	CALL STARTLOG( l_config.getLogFile() )
+	CALL g_cfg.showCFG()
+	CALL debug.output(g_cfg.message,FALSE)
+	CALL STARTLOG( g_cfg.getLogFile() )
 	CALL libCommon.loadStyles()
 	CALL debug.output(SFMT("Started FGLPROFILE=%1", fgl_getEnv("FGLPROFILE")), FALSE)
 	OPEN FORM login FROM "login"
 	DISPLAY FORM login
-
-	LET l_user.config = l_config
 
 	IF NOT l_user.login(FALSE) THEN
 		CALL debug.output(SFMT("Invalid login %1 %2",l_user.currentUser.user_id, l_user.currentUser.user_name),FALSE)
 		CALL libCommon.exit_program()
 	END IF
 	CALL ui.Window.getCurrent().getForm().setFieldHidden("formonly.l_iconmenu",FALSE)
-	LET l_menu.config = l_config
+
 	IF NOT l_menu.getMenuList() THEN
 		CALL debug.output("Failed to get Menu list.",FALSE)
 		CALL libCommon.exit_program()

@@ -1,17 +1,18 @@
 IMPORT util
 IMPORT security
 IMPORT FGL config
+IMPORT FGL db
 IMPORT FGL debug
 IMPORT FGL about
-IMPORT FGL db
 IMPORT FGL utils
 IMPORT FGL libCommon
 IMPORT FGL libMobile
 IMPORT FGL wsUsers
-&include "../src/menus.inc"
+
+&include "menus.inc"
+&include "globals.inc"
 
 PUBLIC TYPE Users RECORD
-	config config,
   list DYNAMIC ARRAY OF userRecord,
 	currentUser UserRecord,
 	currentUserDetails userDetailsRecord,
@@ -19,7 +20,7 @@ PUBLIC TYPE Users RECORD
 	server_time CHAR(19)
 END RECORD
 --------------------------------------------------------------------------------
---
+-- Does the user exist
 PUBLIC FUNCTION (this Users) get(l_userId LIKE users.user_id) RETURNS BOOLEAN
 	DEFINE x SMALLINT
 	WHENEVER ERROR CALL libCommon.abort
@@ -35,7 +36,7 @@ PUBLIC FUNCTION (this Users) get(l_userId LIKE users.user_id) RETURNS BOOLEAN
 	RETURN FALSE
 END FUNCTION
 --------------------------------------------------------------------------------
---
+-- Add a new to the database.
 PUBLIC FUNCTION (this Users) add() RETURNS BOOLEAN
 	IF this.currentUser.user_id IS NULL OR this.currentUser.user_id = " " THEN
 		LET this.errorMessage = "User Id invalid!"
@@ -45,7 +46,7 @@ PUBLIC FUNCTION (this Users) add() RETURNS BOOLEAN
 		LET this.errorMessage = "User Id already used!"
 		RETURN FALSE
 	END IF
-	IF NOT db.connect() THEN EXIT PROGRAM END IF
+	IF NOT g_db.connect() THEN EXIT PROGRAM END IF
 	LET this.errorMessage = "User Added Okay."
 	INSERT INTO users VALUES(this.currentUser.*)
 	IF STATUS != 0 THEN
@@ -61,9 +62,9 @@ PUBLIC FUNCTION (this Users) add() RETURNS BOOLEAN
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------
---
+-- Update a user record
 PUBLIC FUNCTION (this Users) update() RETURNS BOOLEAN
-	IF NOT db.connect() THEN EXIT PROGRAM END IF
+	IF NOT g_db.connect() THEN EXIT PROGRAM END IF
 	LET this.errorMessage = "User Update Okay."
 	UPDATE users SET users.* = this.currentUser.* WHERE users.user_id = this.currentUser.user_id
 	IF STATUS != 0 THEN
@@ -78,9 +79,9 @@ PUBLIC FUNCTION (this Users) update() RETURNS BOOLEAN
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------
---
+-- Delete a user record
 PUBLIC FUNCTION (this Users) delete(l_userId LIKE users.user_id) RETURNS BOOLEAN
-	IF NOT db.connect() THEN EXIT PROGRAM END IF
+	IF NOT g_db.connect() THEN EXIT PROGRAM END IF
 	LET this.errorMessage = "User Deleted Okay."
 	DELETE FROM users WHERE users.user_id = l_userId
 	IF STATUS != 0 THEN
@@ -101,7 +102,7 @@ PUBLIC FUNCTION (this Users) checkUserID(l_id  LIKE users.user_id) RETURNS (BOOL
 	DEFINE l_exists BOOLEAN = TRUE
 	DEFINE l_suggestion CHAR(6) = "EXISTS"
 	DEFINE l_cnt, l_len, x SMALLINT
-	IF NOT db.connect() THEN EXIT PROGRAM END IF
+	IF NOT g_db.connect() THEN EXIT PROGRAM END IF
 	SELECT COUNT(*) INTO l_cnt FROM users WHERE user_id = l_id
 	IF l_cnt = 0 THEN RETURN FALSE, "Okay" END IF
 	LET l_len = LENGTH( l_id )
@@ -142,7 +143,7 @@ END FUNCTION
 --
 FUNCTION (this Users) loadFromDB()
 	DEFINE l_user userRecord
-	IF NOT db.connect() THEN EXIT PROGRAM END IF
+	IF NOT g_db.connect() THEN EXIT PROGRAM END IF
 	CALL this.list.clear()
 	DECLARE load_cur CURSOR FOR SELECT * FROM users
 	FOREACH load_cur INTO l_user.*
@@ -164,7 +165,7 @@ FUNCTION (this Users) registerUI()
 	LET this.currentUserDetails.registered = CURRENT
 	LET this.currentUserDetails.dob = "01/01/1970"
 	LET int_flag = FALSE
-	LET wsUsers.Endpoint.Address.Uri = this.config.getWSServer(C_WS_USERS)
+	LET wsUsers.Endpoint.Address.Uri = g_cfg.getWSServer(C_WS_USERS)
 	INPUT BY NAME this.currentUserDetails.*, l_pwd2 WITHOUT DEFAULTS
 		AFTER FIELD user_id
 			CALL wsUsers.checkUserID(this.currentUserDetails.user_id) RETURNING l_stat, l_exists, l_suggestion
@@ -237,7 +238,7 @@ FUNCTION (this Users) login(l_win BOOLEAN) RETURNS BOOLEAN
 		RETURN TRUE
 	END IF
 	LET int_flag = FALSE
-	LET wsUsers.Endpoint.Address.Uri = this.config.getWSServer(C_WS_USERS)
+	LET wsUsers.Endpoint.Address.Uri = g_cfg.getWSServer(C_WS_USERS)
 	IF l_win THEN
 		OPEN WINDOW login WITH FORM "login"
 	END IF

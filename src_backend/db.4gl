@@ -1,82 +1,113 @@
 IMPORT os
 IMPORT util
 IMPORT FGL debug
+IMPORT FGL config
 IMPORT FGL libCommon
 IMPORT FGL db
 
 CONSTANT C_DBVER = 1
-CONSTANT C_DBDIR = "../dfmd"
 
 &include "menus.inc"
 
-PUBLIC DEFINE m_dbname, m_dbdir STRING
-PUBLIC DEFINE m_dbver SMALLINT
-PUBLIC DEFINE m_dbtype STRING
-PUBLIC DEFINE m_connected BOOLEAN = FALSE
+PUBLIC TYPE db RECORD
+	config config,
+	dbver SMALLINT,
+	dbtype STRING,
+	connected BOOLEAN
+END RECORD
 --------------------------------------------------------------------------------------------------------------
-FUNCTION connect() RETURNS BOOLEAN
+FUNCTION (this db) connect() RETURNS BOOLEAN
 	WHENEVER ERROR CALL libCommon.abort
-	IF m_connected THEN RETURN TRUE END IF
-	LET m_dbname = fgl_getResource("my.dbname")
+	IF NOT this.config.cfgDone THEN
+		IF NOT this.config.initConfigFile(NULL) THEN
+			RETURN FALSE
+		END IF
+	END IF
+	IF this.connected THEN RETURN TRUE END IF
+
 	IF NOT base.Application.isMobile() THEN -- if not mobile use C_DBDIR
-		IF NOT os.path.exists(C_DBDIR) THEN
-			IF NOT os.path.mkdir(C_DBDIR) THEN
-				CALL debug.output(SFMT("Failed to make %1",C_DBDIR), FALSE)
+		IF NOT os.path.exists(this.config.dbdir) THEN
+			IF NOT os.path.mkdir(this.config.dbdir) THEN
+				CALL debug.output(SFMT("Failed to make %1",this.config.dbdir), FALSE)
 				EXIT PROGRAM
 			END IF
 		END IF
-	END IF
-	IF NOT os.path.exists(m_dbname) THEN
-		CALL debug.output(SFMT("Creating %1",m_dbname),FALSE)
-		CREATE DATABASE m_dbname
-		CALL create()
+		LET this.config.dbname = os.path.join( this.config.dbDir, this.config.dbName)
 	END IF
 
-	CALL debug.output(SFMT("Connecting to %1",m_dbname),FALSE)
+	IF NOT os.path.exists(this.config.dbname) THEN
+		CALL debug.output(SFMT("Creating %1",this.config.dbname),FALSE)
+		CREATE DATABASE this.config.dbname
+		CALL this.create()
+	END IF
+
+	CALL debug.output(SFMT("Connecting to %1",this.config.dbname),FALSE)
 	TRY
-		CONNECT TO m_dbname
-		LET m_connected = TRUE
+		CONNECT TO this.config.dbname
+		LET this.connected = TRUE
 	CATCH
 		CALL libCommon.error(SFMT("DB Connect failed %1", SQLERRMESSAGE))
 		RETURN FALSE
 	END TRY
-	LET m_dbtype = fgl_getResource("dbi.default.driver")
-	CALL check()
-	CALL fix_serials("orders","order_id")
-	CALL fix_serials("wards","ward_id")
-	CALL fix_serials("patients","patient_id")
+	LET this.dbtype = fgl_getResource("dbi.default.driver")
+	CALL this.check()
+	CALL this.fix_serials("orders","order_id")
+	CALL this.fix_serials("wards","ward_id")
+	CALL this.fix_serials("patients","patient_id")
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION check()
+FUNCTION (this db) check()
 	TRY
-		SELECT * INTO m_dbver FROM dbver
+		SELECT * INTO this.dbver FROM dbver
 	CATCH
 	END TRY
-	IF m_dbver IS NULL OR m_dbver = 0 THEN
-		CALL create()
+	IF this.dbver IS NULL OR this.dbver = 0 THEN
+		CALL this.create()
 	END IF
-	CALL debug.output(SFMT("DbVer: %1", m_dbver), FALSE)
-	IF m_dbver < C_DBVER THEN
-		IF NOT update() THEN
+	CALL debug.output(SFMT("DbVer: %1", this.dbver), FALSE)
+	IF this.dbver < C_DBVER THEN
+		IF NOT this.update() THEN
 			EXIT PROGRAM
 		END IF
-		CALL debug.output(SFMT("DbVer: %1 Now", m_dbver), FALSE)
+		CALL debug.output(SFMT("DbVer: %1 Now", this.dbver), FALSE)
 	END IF
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION update()
+FUNCTION (this db) fix_serials(l_tab STRING, l_col STRING)
+	DEFINE l_id INTEGER
+	DEFINE l_sql STRING
+	IF this.dbtype = "dbmpgs" THEN
+		TRY
+			LET l_sql = SFMT("SELECT MAX(%1) FROM %2", l_col, l_tab)
+			PREPARE l_pre FROM l_sql 
+			EXECUTE l_pre INTO l_id
+			SELECT MAX(pick_id) INTO l_id FROM pick_hist
+			IF l_id IS NULL THEN
+				LET l_id = 0
+			END IF
+			LET l_id = l_id + 1
+			CALL debug.output(SFMT("Fixing serial for %1 : %2",l_tab, l_id), FALSE)
+			LET l_sql = SFMT("SELECT setval('%1_%2_seq', %3)", l_tab, l_col, l_id)
+			EXECUTE IMMEDIATE l_sql
+		CATCH
+			CALL libCommon.error(SFMT("DB Error %1:%2", STATUS, SQLERRMESSAGE))
+		END TRY
+	END IF
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION (this db) update() RETURNS BOOLEAN
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION create()
-	CALL drop_tabs()
-	CALL create_tabs()
+FUNCTION (this db) create()
+	CALL this.drop_tabs()
+	CALL this.create_tabs()
 	CALL debug.output("Attempting to run db_load.42r", FALSE)
 	RUN "fglrun load_data.42r"
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION create_tabs()
+FUNCTION (this db) create_tabs()
 	CALL debug.output("Create table: dbver", FALSE)
 	CREATE TABLE dbver (
 		dbver INTEGER
@@ -173,45 +204,23 @@ FUNCTION create_tabs()
 	INSERT INTO dbver VALUES(1)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION drop_tabs()
-	CALL dropTab("dbver")
-	CALL dropTab("users")
-	CALL dropTab("userDetails")
-	CALL dropTab("menus")
-	CALL dropTab("menuItems")
-	CALL dropTab("orders")
-	CALL dropTab("orderItems")
-	CALL dropTab("wards")
-	CALL dropTab("patients")
+FUNCTION (this db) drop_tabs()
+	CALL this.dropTab("dbver")
+	CALL this.dropTab("users")
+	CALL this.dropTab("userDetails")
+	CALL this.dropTab("menus")
+	CALL this.dropTab("menuItems")
+	CALL this.dropTab("orders")
+	CALL this.dropTab("orderItems")
+	CALL this.dropTab("wards")
+	CALL this.dropTab("patients")
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION dropTab(l_tab STRING)
+PRIVATE FUNCTION (this db) dropTab(l_tab STRING)
 	TRY
 		EXECUTE IMMEDIATE "drop table " || l_tab
 		CALL debug.output(SFMT("Dropped %1",l_tab), FALSE)
 	CATCH
 		CALL libCommon.error(SFMT("Failed to drop %1: %2 %3", l_tab, STATUS, SQLERRMESSAGE))
 	END TRY
-END FUNCTION
---------------------------------------------------------------------------------------------------------------
-FUNCTION fix_serials(l_tab STRING, l_col STRING)
-	DEFINE l_id INTEGER
-	DEFINE l_sql STRING
-	IF m_dbtype = "dbmpgs" THEN
-		TRY
-			LET l_sql = SFMT("SELECT MAX(%1) FROM %2", l_col, l_tab)
-			PREPARE l_pre FROM l_sql 
-			EXECUTE l_pre INTO l_id
-			SELECT MAX(pick_id) INTO l_id FROM pick_hist
-			IF l_id IS NULL THEN
-				LET l_id = 0
-			END IF
-			LET l_id = l_id + 1
-			CALL debug.output(SFMT("Fixing serial for %1 : %2",l_tab, l_id), FALSE)
-			LET l_sql = SFMT("SELECT setval('%1_%2_seq', %3)", l_tab, l_col, l_id)
-			EXECUTE IMMEDIATE l_sql
-		CATCH
-			CALL libCommon.error(SFMT("DB Error %1:%2", STATUS, SQLERRMESSAGE))
-		END TRY
-	END IF
 END FUNCTION

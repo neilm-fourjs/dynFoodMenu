@@ -4,16 +4,16 @@ IMPORT util
 IMPORT os
 IMPORT FGL debug
 IMPORT FGL config
+IMPORT FGL db
 --IMPORT FGL wsBackEnd
 IMPORT FGL wsMenus
-IMPORT FGL db
 IMPORT FGL libCommon
 IMPORT FGL libMobile
 
 &include "menus.inc"
+&include "globals.inc"
 
 PUBLIC TYPE Menus RECORD
-	config config,
 	fileName STRING,
 	menuList menuList,
 	menu menuRecord,
@@ -45,7 +45,7 @@ END FUNCTION
 -- DB Code
 FUNCTION (this Menus) getMenuListDB() RETURNS BOOLEAN
 	IF this.menuList.rows = 0 THEN
-		IF NOT db.connect() THEN EXIT PROGRAM END IF
+		IF NOT g_db.connect() THEN EXIT PROGRAM END IF
 		DECLARE l_cur1 CURSOR FOR SELECT * FROM menus
 		LET this.menulist.rows = 0
 		FOREACH l_cur1 INTO this.menulist.list[ this.menulist.rows + 1 ].*
@@ -59,7 +59,7 @@ END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION (this Menus) getMenuDB(l_menuName STRING) RETURNS BOOLEAN
 	IF this.menu.rows = 0 THEN
-		IF NOT db.connect() THEN EXIT PROGRAM END IF
+		IF NOT g_db.connect() THEN EXIT PROGRAM END IF
 		DECLARE l_cur2 CURSOR FOR SELECT * FROM menuItems WHERE menuName = l_menuName
 		LET this.menu.rows = 0
 		FOREACH l_cur2 INTO this.menu.items[ this.menu.rows + 1 ].*
@@ -74,7 +74,7 @@ END FUNCTION
 FUNCTION (this Menus) placeOrderDB() RETURNS (INTEGER, STRING)
 	DEFINE l_ord RECORD LIKE orders.*
 	DEFINE x SMALLINT
-	IF NOT db.connect() THEN RETURN 100, "No database connection1" END IF
+	IF NOT g_db.connect() THEN RETURN 100, "No database connection1" END IF
 -- Store order in DB
 	LET l_ord.menu_id = this.ordered.menu_id
 	LET l_ord.order_id = NULL
@@ -138,22 +138,22 @@ FUNCTION (this Menus) getMenuListWS() RETURNS BOOLEAN
 	DEFINE l_json TEXT
 	DEFINE l_fileName STRING = "menus.json"
 	CALL libCommon.processing("Loading Menus ...",1)
-	LET wsMenus.Endpoint.Address.Uri = this.config.getWSServer(C_WS_MENUS)
+	LET wsMenus.Endpoint.Address.Uri = g_cfg.getWSServer(C_WS_MENUS)
 	CALL wsMenus.getMenus() RETURNING l_stat,this.menuList.*
 	CALL libCommon.processing("Loading Menus ...",3)
 	IF l_stat != 0 THEN
-		CALL debug.output(SFMT("getMenuListWS: %1", l_stat),FALSE)
+		CALL debug.output(SFMT("getMenuListWS: %1 from %2", l_stat, wsMenus.Endpoint.Address.Uri),FALSE)
 		RETURN FALSE
 	END IF
 	LOCATE l_json IN FILE l_fileName
 	LET l_json = util.JSON.stringify(this.menulist) -- Save Menu List Locally
-	CALL debug.output(SFMT("getMenuListWS: %1", this.menuList.rows),FALSE)
+	CALL debug.output(SFMT("getMenuListWS: %1 from %2", this.menuList.rows, wsMenus.Endpoint.Address.Uri ),FALSE)
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION (this Menus) getMenuWS(l_menuName STRING) RETURNS BOOLEAN
 	DEFINE l_stat INT
-	LET wsMenus.Endpoint.Address.Uri = this.config.getWSServer(C_WS_MENUS)
+	LET wsMenus.Endpoint.Address.Uri = g_cfg.getWSServer(C_WS_MENUS)
 	CALL libCommon.processing("Loading Menu ...",1)
 	CALL wsMenus.getMenu(l_menuName) RETURNING l_stat, this.menu.*
 	CALL libCommon.processing("Loading Menu ...",3)
@@ -161,7 +161,7 @@ FUNCTION (this Menus) getMenuWS(l_menuName STRING) RETURNS BOOLEAN
 		CALL debug.output(SFMT("getMenuWS: %1 Stat: %2", l_menuName, l_stat),FALSE)
 		RETURN FALSE
 	END IF
-	CALL debug.output(SFMT("getMenuWS: %1 Rows: %2", l_menuName, this.menu.rows),FALSE)
+	CALL debug.output(SFMT("getMenuWS: %1 Rows: %2 from %3", l_menuName, this.menu.rows, wsMenus.Endpoint.Address.Uri),FALSE)
 	IF this.menu.rows = 0 THEN RETURN FALSE END IF
 	RETURN TRUE
 END FUNCTION
@@ -175,9 +175,9 @@ FUNCTION (this Menus) save()
 	LET this.ordered.menu_id = this.menu.menuName
 	CALL libCommon.processing("Saving Order ...",1)
 
-	LET wsMenus.Endpoint.Address.Uri = this.config.getWSServer(C_WS_MENUS)
+	LET wsMenus.Endpoint.Address.Uri = g_cfg.getWSServer(C_WS_MENUS)
 	CALL wsMenus.placeOrder(this.ordered.*) RETURNING l_stat, l_resp.*
-	CALL debug.output(SFMT("save Stat: %1-%2:%3", l_stat,l_resp.l_stat,l_resp.l_msg),FALSE)
+	CALL debug.output(SFMT("save Stat: %1-%2:%3 - from %4", l_stat,l_resp.l_stat,l_resp.l_msg, wsMenus.Endpoint.Address.Uri),FALSE)
 
 	CALL libCommon.processing("Saved Order.",3)
 	IF l_stat = 0 THEN

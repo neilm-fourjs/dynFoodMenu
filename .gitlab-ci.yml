@@ -4,6 +4,7 @@ variables:
   GIT_SUBMODULE_STRATEGY: normal
   DOCKER_HOST: tcp://docker:2375/
   DOCKER_DRIVER: overlay2
+  TARGET_GAR: dynFoodBackEnd.gar
 
 stages:
   - build
@@ -16,10 +17,13 @@ build-gar:
   script:
     - apt-get update
     - apt-get install -y make
+    - export LANG=en_GB.utf8
+    - update-locale en_GB.utf8
     - make gar || exit 1
+    - ls distbin/${TARGET_GAR} && echo "OK" || exit 1
   artifacts:
     paths:
-      - distbin/*
+      - distbin/${TARGET_GAR}
 
 test-gar:
   stage: test

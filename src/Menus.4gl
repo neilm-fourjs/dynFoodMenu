@@ -177,7 +177,7 @@ FUNCTION (this Menus) save()
 
 	LET wsMenus.Endpoint.Address.Uri = g_cfg.getWSServer(C_WS_MENUS)
 	CALL wsMenus.placeOrder(this.ordered.*) RETURNING l_stat, l_resp.*
-	CALL debug.output(SFMT("save Stat: %1-%2:%3 - from %4", l_stat,l_resp.l_stat,l_resp.l_msg, wsMenus.Endpoint.Address.Uri),FALSE)
+	CALL debug.output(SFMT("save Stat:%1:%2:%3 - from %4", l_stat,l_resp.l_stat,l_resp.l_msg, wsMenus.Endpoint.Address.Uri),FALSE)
 
 	CALL libCommon.processing("Saved Order.",3)
 	IF l_stat = 0 THEN

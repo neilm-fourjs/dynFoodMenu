@@ -17,10 +17,10 @@ MAIN
 		CALL fgl_winMessage("Error", l_config.message,"exclamation")
 		EXIT PROGRAM
 	END IF
+	CALL debug.output(l_config.message,FALSE)
 	IF NOT g_db.connect() THEN
 		EXIT PROGRAM
 	END IF
-	CALL debug.output(l_config.message,FALSE)
   CALL debug.output(SFMT("%1 Server started",base.Application.getProgramName()),FALSE)
   CALL com.WebServiceEngine.RegisterRestService("dfm_ws_menus", "menus")
   CALL com.WebServiceEngine.RegisterRestService("dfm_ws_users", "users")

@@ -5,7 +5,7 @@ my.dbname = "../dfmd/dynFoodDemo.db"
 mobile.environment.DBDATE ="DMY4/"
 
 # Rendering
-gui.rendering = "native"
+gui.rendering = "universal"
 
 # WS cert
 security.global.ca = "CABundle.pem"

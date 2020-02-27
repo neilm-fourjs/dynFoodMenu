@@ -38,19 +38,18 @@ FUNCTION (this Patients) select() RETURNS BOOLEAN
 	IF this.patients.current.ward_id > 0 THEN
 		CALL this.setScrArr()
 	END IF
+	MESSAGE ""
 	LET int_flag = TRUE
-	OPTIONS INPUT WRAP
 	WHILE int_flag
 		LET int_flag = FALSE
 		DIALOG ATTRIBUTES(UNBUFFERED)
 			INPUT BY NAME this.patients.current.ward_id ATTRIBUTES(WITHOUT DEFAULTS)
 				ON CHANGE ward_id
-					IF this.patients.current.ward_id = 0 THEN NEXT FIELD ward_id END IF
 					CALL this.getPatients( this.patients.current.ward_id )
 					CALL this.setScrArr()
 			END INPUT
 			DISPLAY ARRAY m_arr TO arr.* 
-				BEFORE ROW
+				ON ACTION selectrow
 					LET this.patients.current.bed_no = m_arr[ arr_curr() ].bed_no
 					CALL this.getPatient( this.patients.current.ward_id, this.patients.current.bed_no )
 					DISPLAY BY NAME this.patients.current.name, this.patients.current.allergies
@@ -64,10 +63,7 @@ FUNCTION (this Patients) select() RETURNS BOOLEAN
 			CLOSE WINDOW p
 			RETURN FALSE
 		END IF
-
-		CALL this.getPatient( this.patients.current.ward_id, this.patients.current.bed_no )
 		CALL debug.output(SFMT("Ward: %1 Bed: %2 Name: %3", this.patients.current.ward_id, this.patients.current.bed_no, this.patients.current.name ), FALSE)
-		DISPLAY BY NAME this.patients.current.name, this.patients.current.allergies
 
 {	-- Confirm
 		MENU
@@ -190,7 +186,7 @@ FUNCTION (this Patients) getWardsWS()
 	DEFINE l_stat SMALLINT
 	LET wsPatients.Endpoint.Address.Uri = g_cfg.getWSServer(C_WS_PATIENTS)
 	CALL wsPatients.getWards(this.token) RETURNING l_stat, this.wards.*
-	CALL debug.output(SFMT("getWardsWS: %1 %2 from %3", l_stat, NVL(this.wards.messsage,"NULL"), wsPatients.Endpoint.Address.Uri), FALSE)
+	CALL debug.output(SFMT("getWardsWS: Stat=%1 %2 From: %3", l_stat, NVL(this.wards.messsage,"NULL"), wsPatients.Endpoint.Address.Uri), FALSE)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- Get a list of the patients for the ward from the server.
@@ -200,5 +196,5 @@ FUNCTION (this Patients) getPatientsWS(l_ward SMALLINT)
 	LET wsPatients.Endpoint.Address.Uri = g_cfg.getWSServer(C_WS_PATIENTS)
 	CALL wsPatients.getPatients(this.token, l_ward) RETURNING l_stat, this.patients.*
 	LET this.patients.current.ward_id = l_ward -- restore the current ward id!
-	CALL debug.output(SFMT("getPatientsWS: %1 %2 from %3", l_stat, NVL(this.patients.messsage,"NULL"), wsPatients.Endpoint.Address.Uri), FALSE)
+	CALL debug.output(SFMT("getPatientsWS: %1 %2 From: %3", l_stat, NVL(this.patients.messsage,"NULL"), wsPatients.Endpoint.Address.Uri), FALSE)
 END FUNCTION

@@ -3,7 +3,6 @@ LAYOUT (TEXT="Patients", STYLE="main")
 GRID
 {
 <G loc                              >
- [l001         ]
  [f001                 ]
 <                                   >
 <T patients                         >
@@ -12,22 +11,18 @@ GRID
  [a001    |a002                    ]
  [a001    |a002                    ]
  [a001    |a002                    ]
- [a001    |a002                    ]
 <G patient                          >
  [f003                             ]
- [l004         |f4]
- [l005         |f5]
-<                                   >
-<G allergies                        >
-[f006                              ]
-[                                  ]
-[                                  ]
+ [l004         :f4|l005         :f5]
+ [l006             ]
+ [f006                             ]
+ [                                 ]
+ [                                 ]
 }
 END -- GRID
 
 ATTRIBUTES
-GROUP loc : loc, TEXT=%"Location:", STYLE="nocollapse";
-LABEL l001 : lab1, TEXT=%"Ward:";
+GROUP loc : loc, TEXT=%"Ward:", STYLE="nocollapse";
 TABLE patients : patients, WANTFIXEDPAGESIZE, STYLE="listView",DOUBLECLICK=selectrow;
 
 PHANTOM FORMONLY.a_img;
@@ -38,11 +33,11 @@ a002 = FORMONLY.patlist2, SCROLL;
 GROUP patient : patient, TEXT=%"Patient:", STYLE="nocollapse";
 LABEL l004 : lab4, TEXT=%"Nil By Mouth:", STYLE="big";
 LABEL l005 : lab5, TEXT=%"Diabetic:", STYLE="big";
-GROUP allergies : allergies, TEXT=%"Allergies:", STYLE="nocollapse";
 COMBOBOX f001 = FORMONLY.ward_id, STYLE="bigger", NOT NULL, PLACEHOLDER="Select a ward";
 LABEL f003 = FORMONLY.name, STYLE="bigger blue";
 IMAGE f4 = FORMONLY.nil, STYLE="noborder";
 IMAGE f5 = FORMONLY.dia, STYLE="noborder";
+LABEL l006 : allergies, TEXT=%"Allergies";
 TEXTEDIT f006 = FORMONLY.allergies, STYLE="big", STRETCH=BOTH;
 
 INSTRUCTIONS

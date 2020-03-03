@@ -1,5 +1,6 @@
 
 LAYOUT (TEXT="Patients", STYLE="main")
+HBOX  (SPLITTER, STYLE="splitView")
 GRID
 {
 <G loc                              >
@@ -11,15 +12,24 @@ GRID
  [a001    |a002                    ]
  [a001    |a002                    ]
  [a001    |a002                    ]
+ [a001    |a002                    ]
+ [a001    |a002                    ]
+ [a001    |a002                    ]
+}
+END -- GRID
+GRID
+{
 <G patient                          >
  [f003                             ]
- [l004         :f4|l005         :f5]
+ [l004         :f4 ]
+ [l005         :f5 ]
  [l006             ]
  [f006                             ]
  [                                 ]
  [                                 ]
 }
 END -- GRID
+END -- VBOX
 
 ATTRIBUTES
 GROUP loc : loc, TEXT=%"Ward:", STYLE="nocollapse";

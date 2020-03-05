@@ -35,6 +35,7 @@ FUNCTION (this config) initConfigFile(l_fileName STRING) RETURNS BOOLEAN
 	IF l_fileName IS NULL THEN LET l_fileName = base.Application.getProgramName()||".cfg" END IF
 	FOR x = 1 TO m_loc.getLength()
 		LET l_file = os.Path.join(m_loc[x], l_fileName)
+	--	DISPLAY "Check for :",l_file
 		IF os.Path.exists( l_file ) THEN
 			LET l_fileDir = m_loc[x]
 			EXIT FOR

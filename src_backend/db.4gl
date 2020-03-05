@@ -13,17 +13,22 @@ PUBLIC TYPE db RECORD
 	config config,
 	dbver SMALLINT,
 	dbtype STRING,
-	connected BOOLEAN
+	connected BOOLEAN,
+	message STRING
 END RECORD
 --------------------------------------------------------------------------------------------------------------
 FUNCTION (this db) connect() RETURNS BOOLEAN
 	WHENEVER ERROR CALL libCommon.abort
 	IF NOT this.config.cfgDone THEN
 		IF NOT this.config.initConfigFile(NULL) THEN
+			LET this.message = "Init config failed"
 			RETURN FALSE
 		END IF
 	END IF
-	IF this.connected THEN RETURN TRUE END IF
+	IF this.connected THEN
+		LET this.message = "Already connected"
+		RETURN TRUE
+	END IF
 
 	IF NOT base.Application.isMobile() THEN -- if not mobile use C_DBDIR
 		IF NOT os.path.exists(this.config.dbdir) THEN
@@ -54,6 +59,7 @@ FUNCTION (this db) connect() RETURNS BOOLEAN
 	CALL this.fix_serials("orders","order_id")
 	CALL this.fix_serials("wards","ward_id")
 	CALL this.fix_serials("patients","patient_id")
+	LET this.message = "Connected"
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------

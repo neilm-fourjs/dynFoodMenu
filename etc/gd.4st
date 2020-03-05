@@ -10,6 +10,10 @@ Property of Four Js*
 -->
 
 <StyleList>
+	<Style name="*">
+		<StyleAttribute name="defaultTTFColor" value="buttonText" />
+		<StyleAttribute name="fontFamily" value="Roboto" />
+	</Style>
   <Style name=".underline">
      <StyleAttribute name="textDecoration" value="underline" />
   </Style>

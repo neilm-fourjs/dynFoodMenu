@@ -2,17 +2,35 @@ IMPORT util
 IMPORT security
 IMPORT FGL about
 IMPORT FGL libCommon
+IMPORT FGL config
+IMPORT FGL debug
 IMPORT FGL Users
+IMPORT FGL db
 &include "menus.inc"
+&include "globals.inc"
 
 MAIN
 	DEFINE l_salt STRING
 	DEFINE l_user Users
 	DEFINE l_tmpUser userRecord
+	DEFINE l_config config
+
+	IF NOT l_config.initConfigFile("dfm_backEnd.cfg") THEN
+		CALL fgl_winMessage("Error", l_config.message,"exclamation")
+		EXIT PROGRAM
+	END IF
 
 	CALL libCommon.loadStyles()
 	OPEN FORM userMaint FROM "userMaint"
 	DISPLAY FORM userMaint
+
+	LET g_db.config = l_config
+	CALL debug.output(l_config.message,FALSE)
+	IF NOT g_db.connect() THEN
+		CALL debug.output(g_db.message, FALSE)
+		EXIT PROGRAM
+	END IF
+
 	CALL l_user.loadFromDB()
 	DISPLAY ARRAY l_user.list TO arr.* ATTRIBUTES( ACCEPT=FALSE, CANCEL=FALSE )
 		ON APPEND

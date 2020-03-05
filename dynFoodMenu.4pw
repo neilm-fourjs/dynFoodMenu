@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Project defaultApplication="400358049" gstVersion="31408" version="3.3">
+<Project defaultApplication="875344568" gstVersion="31408" version="3.3">
   <Settings>
     <DynamicProperties version="2">
       <DynamicProperty description="Accent color (Android 5.0 and later)" initialValue="#9575CD" isDefaultInherited="false" isHidden="false" label="Accent color" name="gma-accent-color" readOnly="false" type="COLOR"/>
@@ -65,105 +65,110 @@
   <LanguageList version="1.0"/>
   <PlatformList version="1.0"/>
   <Group environment="value:GBC_USER=gbc-foodMenu,value:GBC_USER_DIR=$(ProjectDir),value:FGLGBCDIR=$(GBC_USER_DIR)/$(GBC_USER),value:FGLIMAGEPATH=../pics:$(FGLDIR)/lib/image2font.txt:$(FGLDIR)/lib,filelist:FGLPROFILE=$(ProjectDir)/etc/fglprofile.gst,dirlist:DBPATH=$(ProjectDir)/database;$(DBPATH)" id="-718261780" label="dynFoodMenu" language="Genero">
-    <Group id="-2066936228" label="Backend" language="Genero" targetDirectory="$(ProjectDir)/binBackEnd">
-      <Library binaryName="dfm_menus" dependencies="-1361191823,1074706446,-984239028" id="340558792" label="dfm_menus">
-        <File filePath="src_backend/dfm_ws_menus.4gl"/>
-      </Library>
-      <Library binaryName="dfm_patients" dependencies="-1361191823,1074706446" id="-1118783498" label="dfm_patients">
-        <File filePath="src_backend/dfm_ws_patients.4gl"/>
-      </Library>
-      <Library binaryName="dfm_users" dependencies="-1361191823,1074706446" id="-1000811841" label="dfm_users">
-        <File filePath="src_backend/dfm_ws_users.4gl"/>
-      </Library>
-      <Application binaryName="dfm_ws" dependencies="-1361191823,1074706446,1638566760,-1322651328,-984239028,1770744530,-593227916,1321734150,-1000811841,340558792,-1118783498" id="411074306" label="dfm_ws">
-        <File filePath="etcBackEnd/dfm_ws.cfg"/>
-        <File filePath="src_backend/dfm_ws_main.4gl"/>
-      </Application>
-      <Application binaryName="dynFoodUser" dependencies="-1361191823,1074706446,362164715,1638566760" id="875344568" label="dynFoodUser">
-        <File filePath="src_backend/userMaint.4gl"/>
-        <File filePath="src_backend/userMaint.per"/>
-      </Application>
-      <Application binaryName="load_data" commandLineArguments="RELOAD" dependencies="1074706446,-1361191823,362164715,1770744530" id="1321734150" label="load_data">
-        <File filePath="src_backend/db_load.4gl"/>
-        <File filePath="src_backend/mkdb.4gl"/>
-      </Application>
-      <Library binaryName="ws_lib" dependencies="1074706446" id="-984239028" label="ws_lib">
-        <File filePath="src_backend/ws_lib.4gl"/>
-      </Library>
-      <Library binaryName="ws_xcf" id="-593227916" label="xcf">
-        <File filePath="xcf/dfm.xcf"/>
-        <File filePath="xcf/dynFoodMenu.xcf"/>
-        <File filePath="xcf/dynFoodUser.xcf"/>
-      </Library>
-    </Group>
-    <Group id="-1827913814" label="Common" language="Genero">
-      <Library binaryName="etc" id="362164715" label="etc">
-        <File filePath="etc/default.4ad"/>
-        <File filePath="etc/dynfooddemo.4db"/>
-        <File filePath="etc/dynFoodMenu.cfg"/>
-        <File filePath="etc/fglprofile"/>
-        <File filePath="etc/fglprofile.be"/>
-        <File filePath="etc/fglprofile.gst"/>
-        <File filePath="etc/gb.4st"/>
-        <File filePath="etc/gd.4st"/>
-        <File filePath="etc/gm.4st"/>
-        <File filePath="etc/menu1.json"/>
-        <File filePath="etc/menu2.json"/>
-      </Library>
-      <Library binaryName="includes" dependencies="362164715" id="-1361191823" label="includes">
-        <File filePath="src/globals.inc"/>
-        <File filePath="src/menus.inc"/>
-      </Library>
-      <Library binaryName="libCommon" dependencies="-1361191823" id="1074706446" label="libCommon" targetDirectory="$(ProjectDir)/binCommon">
-        <File filePath="src/about.4gl"/>
-        <File filePath="src/about.per"/>
-        <File filePath="src/config.4gl"/>
-        <File filePath="src_backend/db.4gl"/>
-        <File filePath="src/debug.4gl"/>
-        <File filePath="src/debug.per"/>
-        <File filePath="src/libCommon.4gl"/>
-        <File filePath="src/processing.per"/>
-        <File filePath="src/utils.4gl"/>
-      </Library>
-      <Library binaryName="Menus" dependencies="-541155840,-1361191823,362164715" id="1770744530" label="Menus" targetDirectory="$(ProjectDir)/binCommon">
-        <File filePath="src/Menus.4gl"/>
-      </Library>
-      <Library binaryName="Patients" dependencies="362164715,-1361191823,1074706446" id="-1322651328" label="Patients">
-        <File filePath="src/Patients.4gl"/>
-        <File filePath="src/patients.per"/>
-      </Library>
-      <Library binaryName="Users" dependencies="-1361191823,1074706446,362164715" id="1638566760" label="Users">
-        <File filePath="src/login.per"/>
-        <File filePath="src/register.per"/>
-        <File filePath="src/Users.4gl"/>
-      </Library>
-      <Library binaryName="wsClientLib" dependencies="362164715,-1361191823" id="855703318" label="wsClientLib">
-        <File filePath="src/wsMenus.4gl"/>
-        <File filePath="src/wsPatients.4gl"/>
-        <File filePath="src/wsUsers.4gl"/>
-      </Library>
-    </Group>
-    <Group id="10414220" label="Mobile" language="Genero">
-      <Application binaryName="dynFoodMenu" dependencies="159917928,212784684,362164715,455109296,-541155840,91913022,-1361191823,1770744530,1074706446,-4262148,1638566760,-1322651328,855703318" id="400358049" label="dynFoodMenu">
-        <File filePath="src/dynFoodMenu.4gl"/>
-        <File filePath="src/dynForm.4gl"/>
-        <File filePath="src/main.4gl"/>
-      </Application>
-      <Library binaryName="etcUR" id="-4262148" label="etcUR">
-        <File filePath="etc_ur/fglprofile"/>
-      </Library>
-      <Library binaryName="libMobile" dependencies="-1361191823,1074706446" id="-541155840" label="libMobile">
-        <File filePath="src/libMobile.4gl"/>
-      </Library>
-      <Library binaryName="wc_iconMenu" id="91913022" label="wc_iconMenu">
-        <VirtualFolder label="wc">
-          <File filePath="pics/webcomponents/iconMenu/iconMenu.css"/>
-          <File filePath="pics/webcomponents/iconMenu/iconMenu.html"/>
-          <File filePath="pics/webcomponents/iconMenu/iconMenu.js"/>
-        </VirtualFolder>
-        <File filePath="src/wc_iconMenu.4gl"/>
-        <File filePath="src/wc_iconMenu.per"/>
-      </Library>
+    <Group id="-1176894928" label="4GL">
+      <Group id="-2066936228" label="Backend" language="Genero" targetDirectory="$(ProjectDir)/binBackEnd">
+        <Library binaryName="dfm_menus" dependencies="-1361191823,1074706446,-984239028" id="340558792" label="dfm_menus">
+          <File filePath="src_backend/dfm_ws_menus.4gl"/>
+        </Library>
+        <Library binaryName="dfm_patients" dependencies="-1361191823,1074706446" id="-1118783498" label="dfm_patients">
+          <File filePath="src_backend/dfm_ws_patients.4gl"/>
+        </Library>
+        <Library binaryName="dfm_users" dependencies="-1361191823,1074706446" id="-1000811841" label="dfm_users">
+          <File filePath="src_backend/dfm_ws_users.4gl"/>
+        </Library>
+        <Application binaryName="dfm_ws" dependencies="-1361191823,1074706446,1638566760,-1322651328,-984239028,1770744530,-593227916,1321734150,-1000811841,340558792,-1118783498" id="411074306" label="dfm_ws">
+          <File filePath="src_backend/dfm_ws_main.4gl"/>
+        </Application>
+        <Application binaryName="dynFoodUser" dependencies="-1361191823,1074706446,362164715,1638566760" id="875344568" label="dynFoodUser">
+          <File filePath="src_backend/userMaint.4gl"/>
+          <File filePath="src_backend/userMaint.per"/>
+        </Application>
+        <Library binaryName="etc" id="-795797368" label="etc">
+          <File filePath="etcBackEnd/dfm_backEnd.cfg"/>
+          <File filePath="etcBackEnd/dfm_ws.cfg"/>
+        </Library>
+        <Application binaryName="load_data" commandLineArguments="RELOAD" dependencies="1074706446,-1361191823,362164715,1770744530" id="1321734150" label="load_data">
+          <File filePath="src_backend/db_load.4gl"/>
+          <File filePath="src_backend/mkdb.4gl"/>
+        </Application>
+        <Library binaryName="ws_lib" dependencies="1074706446" id="-984239028" label="ws_lib">
+          <File filePath="src_backend/ws_lib.4gl"/>
+        </Library>
+        <Library binaryName="ws_xcf" id="-593227916" label="xcf">
+          <File filePath="xcf/dfm.xcf"/>
+          <File filePath="xcf/dynFoodMenu.xcf"/>
+          <File filePath="xcf/dynFoodUser.xcf"/>
+        </Library>
+      </Group>
+      <Group id="-1827913814" label="Common" language="Genero">
+        <Library binaryName="etc" id="362164715" label="etc">
+          <File filePath="etc/default.4ad"/>
+          <File filePath="etc/dynfooddemo.4db"/>
+          <File filePath="etc/dynFoodMenu.cfg"/>
+          <File filePath="etc/fglprofile"/>
+          <File filePath="etc/fglprofile.be"/>
+          <File filePath="etc/fglprofile.gst"/>
+          <File filePath="etc/gb.4st"/>
+          <File filePath="etc/gd.4st"/>
+          <File filePath="etc/gm.4st"/>
+          <File filePath="etc/menu1.json"/>
+          <File filePath="etc/menu2.json"/>
+        </Library>
+        <Library binaryName="includes" dependencies="362164715" id="-1361191823" label="includes">
+          <File filePath="src/globals.inc"/>
+          <File filePath="src/menus.inc"/>
+        </Library>
+        <Library binaryName="libCommon" dependencies="-1361191823" id="1074706446" label="libCommon" targetDirectory="$(ProjectDir)/binCommon">
+          <File filePath="src/about.4gl"/>
+          <File filePath="src/about.per"/>
+          <File filePath="src/config.4gl"/>
+          <File filePath="src_backend/db.4gl"/>
+          <File filePath="src/debug.4gl"/>
+          <File filePath="src/debug.per"/>
+          <File filePath="src/libCommon.4gl"/>
+          <File filePath="src/processing.per"/>
+          <File filePath="src/utils.4gl"/>
+        </Library>
+        <Library binaryName="Menus" dependencies="-541155840,-1361191823,362164715" id="1770744530" label="Menus" targetDirectory="$(ProjectDir)/binCommon">
+          <File filePath="src/Menus.4gl"/>
+        </Library>
+        <Library binaryName="Patients" dependencies="362164715,-1361191823,1074706446" id="-1322651328" label="Patients">
+          <File filePath="src/Patients.4gl"/>
+          <File filePath="src/patients.per"/>
+        </Library>
+        <Library binaryName="Users" dependencies="-1361191823,1074706446,362164715" id="1638566760" label="Users">
+          <File filePath="src/login.per"/>
+          <File filePath="src/register.per"/>
+          <File filePath="src/Users.4gl"/>
+        </Library>
+        <Library binaryName="wsClientLib" dependencies="362164715,-1361191823" id="855703318" label="wsClientLib">
+          <File filePath="src/wsMenus.4gl"/>
+          <File filePath="src/wsPatients.4gl"/>
+          <File filePath="src/wsUsers.4gl"/>
+        </Library>
+      </Group>
+      <Group id="10414220" label="Mobile" language="Genero">
+        <Application binaryName="dynFoodMenu" dependencies="159917928,212784684,362164715,455109296,-541155840,91913022,-1361191823,1770744530,1074706446,-4262148,1638566760,-1322651328,855703318" id="400358049" label="dynFoodMenu">
+          <File filePath="src/dynFoodMenu.4gl"/>
+          <File filePath="src/dynForm.4gl"/>
+          <File filePath="src/main.4gl"/>
+        </Application>
+        <Library binaryName="etcUR" id="-4262148" label="etcUR">
+          <File filePath="etc_ur/fglprofile"/>
+        </Library>
+        <Library binaryName="libMobile" dependencies="-1361191823,1074706446" id="-541155840" label="libMobile">
+          <File filePath="src/libMobile.4gl"/>
+        </Library>
+        <Library binaryName="wc_iconMenu" id="91913022" label="wc_iconMenu">
+          <VirtualFolder label="wc">
+            <File filePath="pics/webcomponents/iconMenu/iconMenu.css"/>
+            <File filePath="pics/webcomponents/iconMenu/iconMenu.html"/>
+            <File filePath="pics/webcomponents/iconMenu/iconMenu.js"/>
+          </VirtualFolder>
+          <File filePath="src/wc_iconMenu.4gl"/>
+          <File filePath="src/wc_iconMenu.per"/>
+        </Library>
+      </Group>
     </Group>
     <Group id="674884836" label="Packages" language="Genero">
       <Package binaryName="dynFoodBackEnd" dependencies="-593227916,-1361191823,1074484008,1074706446,1770744530,-541155840,400358049,455109296,91913022,875344568,362164715,1321734150,1638566760,-984239028,-1000811841,411074306,340558792,-1118783498" description="WS dynFood Server" id="-255363164" label="dynFoodBackEnd" platform="Genero Application Server">

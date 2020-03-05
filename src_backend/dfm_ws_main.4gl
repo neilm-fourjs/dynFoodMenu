@@ -18,6 +18,7 @@ MAIN
 		EXIT PROGRAM
 	END IF
 	CALL debug.output(l_config.message,FALSE)
+	LET g_db.config = l_config
 	IF NOT g_db.connect() THEN
 		EXIT PROGRAM
 	END IF

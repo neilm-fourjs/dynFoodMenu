@@ -40,10 +40,7 @@
 
 # Other
 .directory
-bin
-bin310
-bin320
-distbin
-distbinUR
+bin*
+distbin*
 build
 *.build

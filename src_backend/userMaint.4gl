@@ -41,13 +41,14 @@ MAIN
 						NEXT FIELD user_id
 					END IF
 				AFTER INPUT
+					LET l_user.currentUser.* = l_tmpUser.*
 					CALL l_user.setPasswordHash( l_tmpUser.user_pwd )
-					LET l_user.list[ arr_curr() ].* = l_user.currentUser.*
 					IF NOT l_user.add() THEN
 						ERROR l_user.errorMessage
 					ELSE
 						MESSAGE l_user.errorMessage
 					END IF
+					LET l_user.list[ arr_curr() ].* = l_user.currentUser.*
 			END INPUT
 		ON DELETE
 			IF libCommon.confirm("Delete User ?") THEN

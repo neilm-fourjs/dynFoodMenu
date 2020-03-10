@@ -1,5 +1,6 @@
 # Genero compiler output
 *.42?
+*.4gl~
 
 # Genero Studio generated  project files
 *.4pwvs

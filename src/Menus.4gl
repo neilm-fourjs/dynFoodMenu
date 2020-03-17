@@ -58,16 +58,19 @@ FUNCTION (this Menus) getMenuListDB() RETURNS BOOLEAN
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION (this Menus) getMenuDB(l_menuName STRING) RETURNS BOOLEAN
-	IF this.menu.rows = 0 THEN
-		IF NOT g_db.connect() THEN EXIT PROGRAM END IF
-		DECLARE l_cur2 CURSOR FOR SELECT * FROM menuItems WHERE menuName = l_menuName
-		LET this.menu.rows = 0
-		FOREACH l_cur2 INTO this.menu.items[ this.menu.rows + 1 ].*
-			LET this.menu.rows = this.menu.rows + 1
-		END FOREACH
-		CALL this.menu.items.deleteElement(this.menu.rows+1)
-	END IF
+	IF NOT g_db.connect() THEN EXIT PROGRAM END IF
+	CALL this.menu.items.clear()
+	DECLARE l_cur2 CURSOR FOR SELECT * FROM menuItems WHERE menuName = l_menuName
+	LET this.menu.rows = 0
+	FOREACH l_cur2 INTO this.menu.items[ this.menu.rows + 1 ].*
+		LET this.menu.rows = this.menu.rows + 1
+	END FOREACH
+	CALL this.menu.items.deleteElement(this.menu.rows+1)
 	CALL debug.output(SFMT("getMenuDB: %1 Items: %2", l_menuName, this.menu.rows),FALSE)
+	IF this.menu.items.getLength() = 0 THEN
+			LET this.menu.menuName = "Invalid Menu!"
+		RETURN FALSE
+	END IF
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------

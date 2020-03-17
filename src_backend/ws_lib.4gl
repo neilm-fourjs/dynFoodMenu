@@ -1,6 +1,8 @@
 
 IMPORT FGL debug
 
+DEFINE m_host STRING
+
 FUNCTION ws_ProcessServices_stat( l_stat INT ) RETURNS BOOLEAN
 	CASE l_stat
 		WHEN 0
@@ -32,6 +34,23 @@ FUNCTION ws_ProcessServices_stat( l_stat INT ) RETURNS BOOLEAN
 	END CASE
 	RETURN TRUE
 END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION getHostName()
+	DEFINE c base.Channel
+	DEFINE l_host STRING
+	IF m_host.getLength() > 1 THEN RETURN m_host END IF
+	LET l_host = fgl_getEnv("HOSTNAME")
+	IF l_host.getLength() < 2 THEN
+		LET c = base.Channel.create()
+		CALL c.openPipe("hostname -f","r")
+		LET l_host = c.readLine()
+		CALL c.close()
+	END IF
+	IF l_host.getLength() < 2 THEN LET l_host = "Unknown!" END IF
+	LET m_host = l_host
+	RETURN l_host
+END FUNCTION
+--------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------
 FUNCTION checkToken( l_token STRING ) RETURNS BOOLEAN
 	IF l_token.getLength() < 10 THEN RETURN FALSE END IF

@@ -1,3 +1,6 @@
+
+-- This program registers the services.
+
 IMPORT com
 
 IMPORT FGL dfm_ws_menus

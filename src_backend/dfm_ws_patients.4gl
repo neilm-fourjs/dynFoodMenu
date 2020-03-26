@@ -1,3 +1,6 @@
+
+-- This service provides the list of Wards and Patients.
+
 IMPORT util
 IMPORT FGL Patients
 IMPORT FGL ws_lib

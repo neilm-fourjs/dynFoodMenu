@@ -18,8 +18,15 @@ Flow:
 
 There are a few programs provided:
 * dynFoodMenu - The main application
-* dynFoodRest - RESTful web service for providing the menus.
+* dmf_ws - RESTful web service for providing the users/menus/patients
 * dynFoodMenu2 - (see tests in the project) a single .4gl example of just the form generation and input based on a JSON data set.
+
+The bulk of the business logic is handled by 3 modules:
+* Menus : handles the menus, menu items an placing an order
+* Users : handles the application users and the security token
+* Patients : handles getting the list of wards and patients
+
+Those modules can be used by the frontend program and by the backend web services to handle data access via a database connection or via the published web services depending on the need.
 
 ## Running on Android: Universal Rendering
 ### Login

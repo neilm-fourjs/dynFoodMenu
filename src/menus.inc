@@ -1,7 +1,7 @@
 
 SCHEMA dynfooddemo
 
-CONSTANT C_APPVER="1.0"
+CONSTANT C_APPVER="1.1"
 CONSTANT C_WSSERVER="https://generodemos.dynu.net/g/ws/r/"
 CONSTANT C_WS_USERS="dfm/users"
 CONSTANT C_WS_MENUS="dfm/menus"

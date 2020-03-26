@@ -1,3 +1,6 @@
+
+-- This service handles the login and issueing the security token.
+
 IMPORT security
 IMPORT util
 IMPORT FGL Users

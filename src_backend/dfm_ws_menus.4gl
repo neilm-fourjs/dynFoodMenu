@@ -1,4 +1,6 @@
 
+-- This service provides the menus, menu items and ability to place an order.
+
 IMPORT util
 IMPORT com
 IMPORT FGL Menus

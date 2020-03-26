@@ -20,7 +20,7 @@ PUBLIC TYPE Menus RECORD
 	ordered orderRecord
 END RECORD
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this Menus) getMenu(l_menuName STRING) RETURNS BOOLEAN
+PUBLIC FUNCTION (this Menus) getMenu(l_menuName STRING) RETURNS BOOLEAN
 	WHENEVER ERROR CALL libCommon.abort
 	CALL debug.output(SFMT("Load %1",l_menuName), FALSE)
 	LET this.menu.menuName = l_menuName
@@ -33,7 +33,7 @@ FUNCTION (this Menus) getMenu(l_menuName STRING) RETURNS BOOLEAN
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this Menus) getMenuList() RETURNS BOOLEAN
+PUBLIC FUNCTION (this Menus) getMenuList() RETURNS BOOLEAN
 	CALL this.menulist.list.clear()
 	IF libMobile.gotNetwork() THEN
 		RETURN this.getMenuListWS()
@@ -43,7 +43,7 @@ FUNCTION (this Menus) getMenuList() RETURNS BOOLEAN
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- DB Code
-FUNCTION (this Menus) getMenuListDB() RETURNS BOOLEAN
+PUBLIC FUNCTION (this Menus) getMenuListDB() RETURNS BOOLEAN
 	IF this.menuList.rows = 0 THEN
 		IF NOT g_db.connect() THEN EXIT PROGRAM END IF
 		DECLARE l_cur1 CURSOR FOR SELECT * FROM menus
@@ -57,7 +57,7 @@ FUNCTION (this Menus) getMenuListDB() RETURNS BOOLEAN
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this Menus) getMenuDB(l_menuName STRING) RETURNS BOOLEAN
+PUBLIC FUNCTION (this Menus) getMenuDB(l_menuName STRING) RETURNS BOOLEAN
 	IF NOT g_db.connect() THEN EXIT PROGRAM END IF
 	CALL this.menu.items.clear()
 	DECLARE l_cur2 CURSOR FOR SELECT * FROM menuItems WHERE menuName = l_menuName
@@ -74,7 +74,7 @@ FUNCTION (this Menus) getMenuDB(l_menuName STRING) RETURNS BOOLEAN
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this Menus) placeOrderDB() RETURNS (INTEGER, STRING)
+PUBLIC FUNCTION (this Menus) placeOrderDB() RETURNS (INTEGER, STRING)
 	DEFINE l_ord RECORD LIKE orders.*
 	DEFINE x SMALLINT
 	IF NOT g_db.connect() THEN RETURN 100, "No database connection1" END IF
@@ -100,7 +100,7 @@ FUNCTION (this Menus) placeOrderDB() RETURNS (INTEGER, STRING)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- JSON Code
-FUNCTION (this Menus) getMenuListJSON() RETURNS BOOLEAN
+PUBLIC FUNCTION (this Menus) getMenuListJSON() RETURNS BOOLEAN
 	DEFINE l_json TEXT
 	DEFINE l_fileName STRING = "menus.json"
 	IF NOT os.path.exists(l_fileName) THEN
@@ -112,7 +112,7 @@ FUNCTION (this Menus) getMenuListJSON() RETURNS BOOLEAN
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this Menus) getMenuJSON(l_menuName STRING) RETURNS BOOLEAN
+PUBLIC FUNCTION (this Menus) getMenuJSON(l_menuName STRING) RETURNS BOOLEAN
 	DEFINE l_json TEXT
 	CALL this.menu.items.clear()
 	CALL debug.output(SFMT("getMenuJSON: %1",l_menuName), FALSE)

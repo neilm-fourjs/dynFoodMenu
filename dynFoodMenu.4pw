@@ -250,6 +250,10 @@
         <File filePath="tests/wsPatients.4gl"/>
         <File filePath="tests/wsUsers.4gl"/>
       </Library>
+      <Application binaryName="WSTestSimple" dependencies="589689792" id="635072604" label="WSTestSimple">
+        <File filePath="tests/mytypes.inc"/>
+        <File filePath="tests/WSTestSimple.4gl"/>
+      </Application>
     </Group>
     <Group excludeFromBuild="true" id="-224330844" label="TestsOLD">
       <Application binaryName="test" dependencies="1074706446" id="-1267941975" label="test" language="Genero">

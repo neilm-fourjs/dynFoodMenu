@@ -59,7 +59,7 @@ PUBLIC TYPE getPatientsResponseBodyType patientList
 		menu_id STRING,
 		placed DATETIME YEAR TO SECOND
 	END RECORD,
-	messsage STRING
+	message STRING
 END RECORD}
 
 # generated getWardsResponseBodyType
@@ -73,7 +73,7 @@ PUBLIC TYPE getWardsResponseBodyType wardList
 		ward_id INTEGER,
 		ward_name STRING
 	END RECORD,
-	messsage STRING
+	message STRING
 END RECORD}
 
 ################################################################################

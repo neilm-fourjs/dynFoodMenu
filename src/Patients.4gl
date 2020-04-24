@@ -10,18 +10,19 @@ IMPORT FGL wsPatients
 &include "menus.inc"
 &include "globals.inc"
 
-PUBLIC TYPE Patients RECORD
-	wards wardList,
-	patients patientList,
-	errorMessage STRING,
-	token STRING
-END RECORD
 DEFINE m_arr DYNAMIC ARRAY OF RECORD
 			img STRING,
 			bed_no SMALLINT,
 			fld1 STRING,
 			fld2 STRING
 		END RECORD
+
+PUBLIC TYPE Patients RECORD
+	wards wardList,  -- Record: list (array of wardRecord), current & message
+	patients patientList,  -- Record: list (array of patientRecord), ordered (array of patientOrderRecord) , current & message
+	errorMessage STRING,
+	token STRING
+END RECORD
 --------------------------------------------------------------------------------
 --
 FUNCTION (this Patients) select() RETURNS BOOLEAN
@@ -143,7 +144,7 @@ END FUNCTION
 FUNCTION (this Patients) getWardsDB()
 	DEFINE l_cnt SMALLINT = 1
 	IF NOT g_db.connect() THEN 
-		LET this.wards.messsage = "failed to connect to db!"
+		LET this.wards.message = "failed to connect to db!"
 		EXIT PROGRAM
 	END IF
 	CALL this.wards.list.clear()
@@ -152,8 +153,8 @@ FUNCTION (this Patients) getWardsDB()
 		LET l_cnt = l_cnt + 1
 	END FOREACH
 	CALL this.wards.list.deleteElement(l_cnt)
-	LET this.wards.messsage = SFMT("Found %1 Wards",  this.wards.list.getLength())
-	CALL debug.output(SFMT("getWardsDB: %1", this.wards.messsage), FALSE)
+	LET this.wards.message = SFMT("Found %1 Wards",  this.wards.list.getLength())
+	CALL debug.output(SFMT("getWardsDB: %1", this.wards.message), FALSE)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- Get a list of the wards from the DB.
@@ -162,7 +163,7 @@ FUNCTION (this Patients) getPatientsDB(l_ward SMALLINT)
 	DEFINE x SMALLINT = 1
 	DEFINE l_ordered patientOrderRecord
 	IF NOT g_db.connect() THEN
-		LET this.patients.messsage = "failed to connect to db!"
+		LET this.patients.message = "failed to connect to db!"
 		EXIT PROGRAM
 	END IF
 	CALL this.patients.list.clear()
@@ -176,8 +177,8 @@ FUNCTION (this Patients) getPatientsDB(l_ward SMALLINT)
 		LET l_cnt = l_cnt + 1
 	END FOREACH
 	CALL this.patients.list.deleteElement(l_cnt)
-	LET this.patients.messsage = SFMT("Found %1 Patients in ward %2",  this.patients.list.getLength(), l_ward)
-	CALL debug.output(SFMT("getPatientsDB: %1 Ward: %2", this.patients.messsage, this.patients.current.ward_id), FALSE)
+	LET this.patients.message = SFMT("Found %1 Patients in ward %2",  this.patients.list.getLength(), l_ward)
+	CALL debug.output(SFMT("getPatientsDB: %1 Ward: %2", this.patients.message, this.patients.current.ward_id), FALSE)
 END FUNCTION
 
 --------------------------------------------------------------------------------------------------------------
@@ -186,7 +187,7 @@ FUNCTION (this Patients) getWardsWS()
 	DEFINE l_stat SMALLINT
 	LET wsPatients.Endpoint.Address.Uri = g_cfg.getWSServer(C_WS_PATIENTS)
 	CALL wsPatients.getWards(this.token) RETURNING l_stat, this.wards.*
-	CALL debug.output(SFMT("getWardsWS: Stat=%1 %2 From: %3", l_stat, NVL(this.wards.messsage,"NULL"), wsPatients.Endpoint.Address.Uri), FALSE)
+	CALL debug.output(SFMT("getWardsWS: Stat=%1 %2 From: %3", l_stat, NVL(this.wards.message,"NULL"), wsPatients.Endpoint.Address.Uri), FALSE)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- Get a list of the patients for the ward from the server.
@@ -196,5 +197,5 @@ FUNCTION (this Patients) getPatientsWS(l_ward SMALLINT)
 	LET wsPatients.Endpoint.Address.Uri = g_cfg.getWSServer(C_WS_PATIENTS)
 	CALL wsPatients.getPatients(this.token, l_ward) RETURNING l_stat, this.patients.*
 	LET this.patients.current.ward_id = l_ward -- restore the current ward id!
-	CALL debug.output(SFMT("getPatientsWS: %1 %2 From: %3", l_stat, NVL(this.patients.messsage,"NULL"), wsPatients.Endpoint.Address.Uri), FALSE)
+	CALL debug.output(SFMT("getPatientsWS: %1 %2 From: %3", l_stat, NVL(this.patients.message,"NULL"), wsPatients.Endpoint.Address.Uri), FALSE)
 END FUNCTION

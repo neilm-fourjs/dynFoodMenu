@@ -90,7 +90,7 @@ PUBLIC TYPE wardRecord RECORD
 PUBLIC TYPE wardList RECORD
 		list DYNAMIC ARRAY OF wardRecord,
 		current wardRecord,
-		messsage STRING
+		message STRING
 	END RECORD
 
 PUBLIC TYPE patientRecord RECORD
@@ -115,5 +115,5 @@ PUBLIC TYPE patientList RECORD
 		list DYNAMIC ARRAY OF patientRecord,
 		current patientRecord,
 		ordered DYNAMIC ARRAY OF patientOrderRecord,
-		messsage STRING
+		message STRING
 	END RECORD

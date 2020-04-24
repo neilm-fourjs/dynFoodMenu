@@ -14,7 +14,7 @@ theme/common:
 
 # Create a symbolic link to our custom gbc files
 $(GBCBASE)/gbc-$(PACKVER)/customization/$(CUSTOMNAME): 
-	ln -s $(PWD) $@
+	ln -fs $(PWD) $@
 
 # Build our custom gbc
 $(GBCBASE)/gbc-$(PACKVER)/dist/$(CUSTOMNAME): $(GBCBASE)/gbc-$(PACKVER) $(GBCBASE)/gbc-$(PACKVER)/customization/$(CUSTOMNAME)

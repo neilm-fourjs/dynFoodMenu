@@ -34,10 +34,10 @@ PUBLIC FUNCTION getWards(l_token STRING ATTRIBUTE(WSParam)) ATTRIBUTES(
 	RETURNS (wardList ATTRIBUTES(WSMedia = 'application/json'))
 
 	IF ws_lib.checkToken( l_token ) THEN
-		LET m_patients.wards.messsage = "getting wards from db ..."
+		LET m_patients.wards.message = "getting wards from db ..."
 		CALL m_patients.getWardsDB()
 	ELSE
-		LET m_patients.wards.messsage = "Invalid Token."
+		LET m_patients.wards.message = "Invalid Token."
 	END IF
 	RETURN m_patients.wards.*
 END FUNCTION
@@ -51,10 +51,10 @@ PUBLIC FUNCTION getPatients(l_token STRING ATTRIBUTE(WSParam), l_ward SMALLINT A
 	RETURNS (patientList ATTRIBUTES(WSMedia = 'application/json'))
 
 	IF ws_lib.checkToken( l_token ) THEN
-		LET m_patients.patients.messsage = SFMT("getting patients for ward %1 from db ...", l_ward)
+		LET m_patients.patients.message = SFMT("getting patients for ward %1 from db ...", l_ward)
 		CALL m_patients.getPatientsDB(l_ward)
 	ELSE
-		LET m_patients.patients.messsage = "Invalid Token."
+		LET m_patients.patients.message = "Invalid Token."
 	END IF
 	RETURN m_patients.patients.*
 END FUNCTION

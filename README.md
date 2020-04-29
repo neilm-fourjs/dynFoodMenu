@@ -36,6 +36,24 @@ cd gbc_foodMenu
 make
 ```
 
+## Android SDK install on Linux ( avoiding download of full Android Studio IDE )
+Ideally you can just download the command line tools and use those to get the required Android elements.
+These are the steps I did on a clean fresh install of Kubuntu 20.04 LTS.
+```
+cd ~/Downlods
+wget https://dl.google.com/android/repository/commandlinetools-linux-6200805_latest.zip
+sudo mkdir /opt/AndroidSDK
+sudo chmod  777 /opt/AndroidSDK
+cd /opt/AndroidSDK/
+unzip ~/Downlods/commandlinetools-linux-6200805_latest.zip 
+export ANDROID_HOME=/opt/AndroidSDK
+export PATH=$PATH:$ANDROID_HOME/tools/bin
+yes | $ANDROID_HOME/tools/bin/sdkmanager --sdk_root=${ANDROID_HOME} --licenses
+sdkmanager --sdk_root=${ANDROID_HOME} "tools"
+```
+Once this is done you can use the GST 'Android Tools / Auto-configure Android SDK' option.
+NOTE: The Android SDK does take a LOT of disk space ( allow for about 10GB ! )
+
 ## Running on Android: Universal Rendering
 
 ### Login

@@ -3,12 +3,12 @@ This demo requires Genero 3.20 or above.
 
 The goal was to generate the screen and the dialog dynamically based on the data provided from the server.
 
-The demo includes:
+## The demo includes
 * A backend web REST service.
 * A simple webcomponent for an 'icon' based selection screen based on data from the server
 * A simple custom GBC for running the appliction in a browser and using Universal Rendering in the GDC/Mobile.
 
-Flow:
+## Flow
 1. Login
 2. Select Ward / Bed
 3. Select the 'Menu'  from that menu the app requests the 'food menu' from the server and generates the form and input.
@@ -16,7 +16,7 @@ Flow:
 5. Confirm the order so it's sent to the server
 6. Return to step 3 to order other meals
 
-There are a few programs provided:
+## There are a few programs provided
 * dynFoodMenu - The main application
 * dmf_ws - RESTful web service for providing the users/menus/patients
 * dynFoodMenu2 - (see tests in the project) a single .4gl example of just the form generation and input based on a JSON data set.
@@ -28,7 +28,16 @@ The bulk of the business logic is handled by 3 modules:
 
 Those modules can be used by the frontend program and by the backend web services to handle data access via a database connection or via the published web services depending on the need.
 
+## Custom GBC build on Linux.
+This assumes you have installed the GBC Prerequisites and have downloaded the current GBC project zip file and either placed it in a folder of ~/FourJs_Downloads/GBC or have set GBCPROJECTDIR to the folder containing that zip file.
+```
+cd gbc_foodMenu
+./gbc-setup.sh
+make
+```
+
 ## Running on Android: Universal Rendering
+
 ### Login
 ![ss1u](https://github.com/neilm-fourjs/dynFoodMenu/raw/master/screenshots/ss1ur.png "SS1UR")
 ### Registar a new operator

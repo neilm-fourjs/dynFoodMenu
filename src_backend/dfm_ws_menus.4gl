@@ -1,5 +1,6 @@
 
 -- This service provides the menus, menu items and ability to place an order.
+-- http://localhost/g/ws/r/dfm/menus?openapi.json
 
 IMPORT util
 IMPORT com

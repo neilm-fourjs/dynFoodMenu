@@ -2,7 +2,7 @@
 -- This program registers the services.
 
 IMPORT com
-
+IMPORT FGL fgldialog
 IMPORT FGL dfm_ws_menus
 IMPORT FGL dfm_ws_users
 IMPORT FGL dfm_ws_patients
@@ -17,7 +17,7 @@ IMPORT FGL db
 MAIN
 	DEFINE l_config config
 	IF NOT l_config.initConfigFile(NULL) THEN
-		CALL fgl_winMessage("Error", l_config.message,"exclamation")
+		CALL fgldialog.fgl_winMessage("Error", l_config.message,"exclamation")
 		EXIT PROGRAM
 	END IF
 	CALL debug.output(l_config.message,FALSE)

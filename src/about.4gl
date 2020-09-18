@@ -23,6 +23,12 @@ FUNCTION show()
 	OPEN WINDOW about WITH FORM "about"
 	DISPLAY BY NAME l_about
 	MENU
+		BEFORE MENU
+      IF ui.Interface.getFrontEndName() != "GMA" THEN
+        CALL DIALOG.setActionHidden("gmaabout",TRUE)
+      END IF
+    ON ACTION gmaabout
+      CALL ui.interface.frontCall("Android","showAbout",[],[])
 		ON ACTION close EXIT MENU
 	END MENU
 	CLOSE WINDOW about

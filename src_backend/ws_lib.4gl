@@ -50,10 +50,13 @@ FUNCTION getHostName()
 	LET m_host = l_host
 	RETURN l_host
 END FUNCTION
---------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------
 FUNCTION checkToken( l_token STRING ) RETURNS BOOLEAN
 	IF l_token.getLength() < 10 THEN RETURN FALSE END IF
 --TODO: actually check the token
 	RETURN TRUE
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION auditLog(l_ts DATETIME YEAR TO SECOND, l_func STRING, l_ip STRING )
+	DISPLAY SFMT("WSAudit: %1 ) %2 from %3", l_ts, l_func, l_ip )
 END FUNCTION

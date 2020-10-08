@@ -66,7 +66,7 @@
   <PlatformList version="1.0"/>
   <Group environment="value:GBCDISTPATH=$(ProjectDir)/gbc-current/dist/customization,value:GBC_USER=gbc-foodMenu,value:GBC_USER_DIR=$(ProjectDir),value:FGLGBCDIR=$(GBCDISTPATH)/$(GBC_USER),value:FGLIMAGEPATH=../pics:$(FGLDIR)/lib/image2font.txt:$(FGLDIR)/lib,filelist:FGLPROFILE=$(ProjectDir)/etc/fglprofile.gst,dirlist:DBPATH=$(ProjectDir)/database;$(DBPATH)" id="-718261780" label="dynFoodMenu" language="Genero">
     <Group id="-1176894928" label="4GL">
-      <Group id="-2066936228" label="Backend" language="Genero" targetDirectory="$(ProjectDir)/binBackEnd">
+      <Group compilerOptions="-D USE_SCOPES" id="-2066936228" label="Backend" language="Genero" targetDirectory="$(ProjectDir)/binBackEnd">
         <Library binaryName="dfm_menus" dependencies="-1361191823,1074706446,-984239028" id="340558792" label="dfm_menus">
           <File filePath="src_backend/dfm_ws_menus.4gl"/>
         </Library>

@@ -20,6 +20,8 @@ MAIN
 		CALL fgldialog.fgl_winMessage("Error", l_config.message,"exclamation")
 		EXIT PROGRAM
 	END IF
+	RUN "env | sort > /tmp/dfm_ws"||fgl_getPID()||".env"
+
 	CALL debug.output(l_config.message,FALSE)
 	LET g_db.config = l_config
 	IF NOT g_db.connect() THEN

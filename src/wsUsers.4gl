@@ -23,7 +23,7 @@ TYPE tGlobalEndpointType RECORD # Rest Endpoint
 END RECORD
 
 PUBLIC DEFINE Endpoint tGlobalEndpointType
-		= (Address:(Uri: "https://generodemos.dynu.net/z/ws/r/dfm/users"))
+		= (Address:(Uri: "https://generodemos.dynu.net/z/ws/r/dfm/users/v1"))
 
 # Error codes
 PUBLIC CONSTANT C_SUCCESS = 0

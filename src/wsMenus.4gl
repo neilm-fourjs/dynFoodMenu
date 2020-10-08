@@ -24,7 +24,7 @@ TYPE tGlobalEndpointType RECORD # Rest Endpoint
 END RECORD
 
 PUBLIC DEFINE Endpoint tGlobalEndpointType
-		= (Address:(Uri: "https://generodemos.dynu.net/z/ws/r/dfm/menus"))
+		= (Address:(Uri: "https://generodemos.dynu.net/z/ws/r/dfm/menus/v1"))
 
 # Error codes
 PUBLIC CONSTANT C_SUCCESS = 0
@@ -191,7 +191,7 @@ PUBLIC FUNCTION getMenus() RETURNS(INTEGER, getMenusResponseBodyType)
 
 		# Prepare request path
 		LET fullpath = base.StringBuffer.Create()
-		CALL fullpath.append("/getMenus")
+		CALL fullpath.append("/getMenu")
 
 		# Create request and configure it
 		LET req =

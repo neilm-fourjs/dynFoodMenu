@@ -225,7 +225,7 @@ END FUNCTION
 -- Register a new user
 FUNCTION (this Users) login(l_win BOOLEAN) RETURNS BOOLEAN
 	DEFINE l_stat INT
-	DEFINE l_pwd STRING
+	DEFINE l_pwd, l_msg STRING
 	WHENEVER ERROR CALL libCommon.abort
 	IF NOT libMobile.gotNetwork() THEN
 		LET this.currentUser.user_id = "DUMMY"
@@ -255,11 +255,14 @@ FUNCTION (this Users) login(l_win BOOLEAN) RETURNS BOOLEAN
 				LET l_pwd = this.currentUser.user_pwd
 				CALL ui.Window.getCurrent().getForm().setFieldStyle("formonly.username","title curvedborder")
 				CALL wsUsers.getTimestamp() RETURNING l_stat, this.server_time
-				CALL debug.output(SFMT("getTimestamp: %1, reply: %2",l_stat, this.server_time),FALSE)
 				IF l_stat != 0 THEN
-					DISPLAY "Login error" TO username
+					LET l_msg = utils.ws_replyStat(l_stat)
+					CALL debug.output(SFMT("getTimestamp: %1, reply: %2",l_stat, l_msg),FALSE)
+					DISPLAY "Login error: "||l_msg  TO username
 					CALL fgl_winMessage("Error","1) Error logging in, please try again.","exclamation")
 					NEXT FIELD user_id
+				ELSE
+					CALL debug.output(SFMT("getTimestamp: %1, reply: %2",l_stat, this.server_time),FALSE)
 				END IF
 				CALL wsUsers.getToken(this.currentUser.user_id, utils.apiPaas(this.currentUser.user_id, this.server_time) ) RETURNING l_stat, this.currentUser.*
 				CALL debug.output(SFMT("getToken: %1, reply: %2 : %3(%4)",this.currentUser.user_id, l_stat, this.currentUser.user_name, this.currentUser.user_pwd),FALSE)

@@ -25,6 +25,7 @@ PUBLIC TYPE config RECORD
 		logFile STRING,
 		errFile STRING,
 		wsServer STRING,
+		wsVersion STRING,
 		message STRING
 	END RECORD
 
@@ -57,12 +58,13 @@ FUNCTION (this config) initConfigFile(l_fileName STRING) RETURNS BOOLEAN
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION (this config) init(l_dbDir STRING, l_dbName STRING, l_logDir STRING, l_logfile STRING, l_wsServer STRING)
+FUNCTION (this config) init(l_dbDir STRING, l_dbName STRING, l_logDir STRING, l_logfile STRING, l_wsServer STRING, l_wsVersion STRING)
 	LET this.dbDir = l_dbDir
 	LET this.dbName = l_dbName
 	LET this.logDir =l_logDir
 	LET this.logFile =l_logFile
 	LET this.wsServer = l_wsServer
+	LET this.wsVersion = l_wsVersion
 	CALL this.setDefaults()
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
@@ -70,6 +72,7 @@ FUNCTION (this config) showCFG()
 	DISPLAY "CFG:",util.JSON.stringify(this)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
+-- Set anything not set in the config file to sane defaults
 FUNCTION (this config) setDefaults()
 	IF this.dbDir IS NULL THEN LET this.dbDir = "." END IF
 	IF this.dbName IS NULL THEN LET this.dbName = fgl_getResource("my.dbname") END IF
@@ -77,6 +80,7 @@ FUNCTION (this config) setDefaults()
 	IF this.logFile IS NULL THEN LET this.logFile = base.Application.getProgramName()||".log" END IF
 	IF this.errFile IS NULL THEN LET this.errFile = base.Application.getProgramName()||".err" END IF
 	IF this.wsServer IS NULL THEN LET this.wsServer = C_WSSERVER END IF
+	IF this.wsVersion IS NULL THEN LET this.wsVersion = C_DEFWSVER END IF
 	IF this.wsServer.getCharAt(this.wsServer.getLength()) != "/" THEN
 		LET this.wsServer = this.wsServer.append("/")
 	END IF
@@ -100,7 +104,6 @@ END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION (this config) getWSServer(l_serviceMethod STRING) RETURNS STRING
 	CALL this.setDefaults()
-	RETURN this.wsServer||l_serviceMethod
+	RETURN this.wsServer||l_serviceMethod||"/"||this.wsVersion
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-

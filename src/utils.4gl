@@ -17,3 +17,16 @@ FUNCTION  apiPaas(l_usr STRING, l_ts CHAR(19)) RETURNS STRING
 	DISPLAY "APIPass:", l_ret
 	RETURN l_ret
 END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION ws_replyStat( l_stat INT ) RETURNS STRING
+	DEFINE l_reply STRING
+	CASE l_stat
+		WHEN 200
+			LET l_reply = "Success"
+		WHEN 403
+			LET l_reply = "Forbidden"
+		OTHERWISE
+			LET l_reply = SFMT("Unexpected reply status: %1 ",l_stat)
+	END CASE
+	RETURN l_reply
+END FUNCTION

@@ -1,5 +1,6 @@
 
 export FGLWSDEBUG=0
+export MYWSDEBUG=9
 
 #SRV=https://generodemos.dynu.net/z/ws/r
 # My local GAS

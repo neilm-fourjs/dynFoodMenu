@@ -26,6 +26,8 @@ PUBLIC TYPE config RECORD
 		errFile STRING,
 		wsServer STRING,
 		wsVersion STRING,
+		ClientID STRING,
+		SecretID STRING,
 		message STRING
 	END RECORD
 

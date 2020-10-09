@@ -1,5 +1,6 @@
 
 IMPORT util
+IMPORT os
 IMPORT FGL OAuthAPI
 
 PUBLIC DEFINE serviceConfig RECORD
@@ -20,7 +21,11 @@ PUBLIC DEFINE user_id STRING
 FUNCTION init(l_cfgFileName STRING) RETURNS BOOLEAN
 	DEFINE l_stat INT
 	DEFINE l_cfg TEXT
-
+	IF NOT os.path.exists( l_cfgFileName ) THEN
+		DISPLAY SFMT("Missing config file '%1' !", l_cfgFileName)
+		EXIT PROGRAM 1
+	END IF
+	DISPLAY SFMT("Using '%1' for configuration", l_cfgFileName)
 	LOCATE l_cfg IN FILE l_cfgFileName
 	CALL util.json.parse( l_cfg, serviceConfig )
 	
@@ -59,5 +64,6 @@ PRIVATE FUNCTION getAccessToken()
 	ELSE
 		DISPLAY SFMT("Token expires in %1 seconds", serviceConfig.tokenExpire)
 	END IF
+--	DISPLAY SFMT("Token: %1", serviceConfig.token)
 
 END FUNCTION

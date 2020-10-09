@@ -66,7 +66,7 @@
   <PlatformList version="1.0"/>
   <Group environment="value:GBCDISTPATH=$(ProjectDir)/gbc-current/dist/customization,value:GBC_USER=gbc-foodMenu,value:GBC_USER_DIR=$(ProjectDir),value:FGLGBCDIR=$(GBCDISTPATH)/$(GBC_USER),value:FGLIMAGEPATH=../pics:$(FGLDIR)/lib/image2font.txt:$(FGLDIR)/lib,filelist:FGLPROFILE=$(ProjectDir)/etc/fglprofile.gst,dirlist:DBPATH=$(ProjectDir)/database;$(DBPATH)" id="-718261780" label="dynFoodMenu" language="Genero">
     <Group id="-1176894928" label="4GL">
-      <Group compilerOptions="-D USE_SCOPES" id="-2066936228" label="Backend" language="Genero" targetDirectory="$(ProjectDir)/binBackEnd">
+      <Group compilerOptions="-D USE_SCOPESx" id="-2066936228" label="Backend" language="Genero" targetDirectory="$(ProjectDir)/binBackEnd">
         <Library binaryName="dfm_menus" dependencies="-1361191823,1074706446,-984239028" id="340558792" label="dfm_menus">
           <File filePath="src_backend/dfm_ws_menus.4gl"/>
         </Library>
@@ -190,6 +190,17 @@
         <Directory label="pics" sourceDirectory="$(ProjectDir)/pics"/>
         <Directory label="xcf" sourceDirectory="$(ProjectDir)/xcf"/>
       </Package>
+      <Package binaryName="dynFoodBackEndws" dependencies="-593227916,-1361191823,1074484008,1074706446,1770744530,-541155840,400358049,455109296,91913022,875344568,362164715,1321734150,1638566760,-984239028,-1000811841,411074306,340558792,-1118783498" description="WS dynFood Server" id="1703106160" label="dynFoodBackEndws" platform="Genero Application Server">
+        <DynamicProperty name="packageId" value="dynFoodRest"/>
+        <DynamicProperty name="packageLabel" value="dynFoodRest"/>
+        <Directory label="Bin" sourceDirectory="$(ProjectDir)/bin"/>
+        <Directory excludedFiles="Test.42r" includedFiles="*.42?" label="BinBE" sourceDirectory="$(ProjectDir)/binBackEnd"/>
+        <Directory label="Common" sourceDirectory="$(ProjectDir)/binCommon"/>
+        <Directory label="Config" sourceDirectory="$(ProjectDir)/etc"/>
+        <Directory label="ConfigBE" sourceDirectory="$(ProjectDir)/etcBackEnd"/>
+        <Directory label="pics" sourceDirectory="$(ProjectDir)/pics"/>
+        <Directory label="xcf" sourceDirectory="$(ProjectDir)/xcf_ws"/>
+      </Package>
       <Package binaryName="dynFoodMenu_GMA" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022,-1361191823,1770744530,1074706446,-1322651328,1638566760,855703318" description="Android Package" distDirectory="$(ProjectDir)/distbinGMA" id="187810339" label="dynFoodMenu_GMA" platform="Android">
         <DynamicProperty name="gma-accent-color" value="#70a770"/>
         <DynamicProperty name="gma-navigationBarBackground-color" value="#1b5e20"/>
@@ -257,8 +268,9 @@
       </Package>
     </Group>
     <Group id="-973564800" label="Tests" language="Genero" targetDirectory="$(ProjectDir)/testbin">
-      <Application binaryName="CliWSTest" dependencies="-541155840,589689792" id="-1109916243" label="CliWSTest">
+      <Application binaryName="CliWSTest" dependencies="-541155840,589689792" id="-1109916243" label="CliWSTest" targetDirectory="$(ProjectDir)/tests">
         <File filePath="tests/CliWSTest.4gl"/>
+        <File filePath="tests/libWSAuth.4gl"/>
       </Application>
       <Application binaryName="dynFoodMenu2" dependencies="362164715" id="1005836130" label="dynFoodMenu2">
         <File filePath="etc/data.json"/>

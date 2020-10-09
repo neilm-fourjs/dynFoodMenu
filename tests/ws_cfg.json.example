@@ -1,0 +1,8 @@
+{
+	"GAS": "http://localhost/gas/",
+	"Endpoint": "dfmv2",
+	"ClientID": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+	"SecretID": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+	"idp": "ws/r/services/GeneroIdentityProvider",
+	"scopes": "DFM dfm.get dfm.put"
+}

@@ -1,8 +1,25 @@
 {
-	"GAS": "http://localhost/gas/",
-	"Endpoint": "dfmv2",
-	"ClientID": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
-	"SecretID": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-	"idp": "ws/r/services/GeneroIdentityProvider",
-	"scopes": "DFM dfm.get dfm.put"
+  "default": "test",
+  "cfgs": [
+    {
+      "name": "test",
+      "GAS": "http://test/g/ws/r",
+      "ServiceName": "myservice",
+      "ServiceVersion": "v1",
+      "ClientID": "XXX",
+      "SecretID": "XXX",
+      "idp": "services/GeneroIdentityProvider",
+      "Scopes": "MYSRV mysrv.get mysrv.put mysrv.post mysrv.delete"
+    },
+    {
+      "name": "live",
+      "GAS": "https://live/g/ws/r",
+      "ServiceName": "myservice",
+      "ServiceVersion": "v1",
+      "ClientID": "XXX",
+      "SecretID": "XXX",
+      "idp": "services/GeneroIdentityProvider",
+      "Scopes": "MYSRV mysrv.get mysrv.put mysrv.post mysrv.delete"
+    }
+  ]
 }

@@ -2,62 +2,102 @@ IMPORT util
 IMPORT os
 IMPORT FGL OAuthAPI
 
+TYPE t_cfg RECORD
+		name 						 STRING,
+		GAS              STRING,
+		ServiceName      STRING,
+		ServiceVersion   STRING,
+		ClientID         STRING,
+		SecretID         STRING,
+		Scopes           STRING,
+		idp              STRING,
+		idpTokenEndpoint STRING
+	END RECORD
+
 PUBLIC TYPE wsAuthLib RECORD
 	cfgFileName      STRING,
+  cfgName          STRING,
+  cfgCur           SMALLINT,
 	user_id          STRING,
 	connectionExpire INTEGER,
 	token            STRING,
 	tokenExpire      INTEGER,
-	cfg RECORD
-		GAS              STRING,
-		endPoint         STRING,
-		ClientID         STRING,
-		SecretID         STRING,
-		scopes           STRING,
-		idp              STRING,
-		idpTokenEndpoint STRING
-	END RECORD
+	endpoint				 STRING,
+	cfgJSON RECORD
+		default STRING,
+		cfgs DYNAMIC ARRAY OF t_cfg
+	END RECORD,
+	cfg t_cfg,
+	message STRING
 END RECORD
 
-PUBLIC FUNCTION (this wsAuthLib) init(l_cfgFileName STRING) RETURNS BOOLEAN
+PUBLIC FUNCTION (this wsAuthLib) init(l_cfgFileName STRING, l_cfgName STRING) RETURNS BOOLEAN
 	DEFINE l_stat       INT
 	DEFINE l_cfg        TEXT
+	DEFINE x SMALLINT
 
 -- check for and read the json configure for the web services
-	IF NOT os.path.exists(l_cfgFileName) THEN
-		DISPLAY SFMT("Missing config file '%1' !", l_cfgFileName)
-		EXIT PROGRAM 1
+	IF this.cfgJSON.default IS NULL THEN
+		LET this.cfgFileName = l_cfgFileName
+		IF NOT os.path.exists(l_cfgFileName) THEN
+			LET this.message = SFMT("Missing config file '%1' !", l_cfgFileName)
+			RETURN FALSE
+		END IF
+		LET this.message = SFMT("Using '%1' for configuration", l_cfgFileName)
+		LOCATE l_cfg IN FILE l_cfgFileName
+		CALL util.json.parse(l_cfg, this.cfgJSON)
+		IF fgl_getEnv("MYWSDEBUG") = "9" THEN
+			DISPLAY SFMT("wsAuthLib.init: File: %1", this.cfgFileName)
+		END IF
 	END IF
-	DISPLAY SFMT("Using '%1' for configuration", l_cfgFileName)
-	LOCATE l_cfg IN FILE l_cfgFileName
-	CALL util.json.parse(l_cfg, this.cfg)
+
+	LET this.cfgCur = 0
+	LET this.cfgName = l_cfgName
+	IF this.cfgName IS NULL THEN LET this.cfgName = this.cfgJSON.default END IF
+	FOR x = 1 TO this.cfgJSON.cfgs.getLength()
+		IF this.cfgJSON.cfgs[x].name = this.cfgName THEN
+			LET this.cfgCur = x
+			LET this.cfg.* =this.cfgJSON.cfgs[x].*
+		END IF
+	END FOR
+	IF this.cfgCur = 0 THEN
+		LET this.message = SFMT("Invalid Config Name '%1'", this.cfgName )
+		RETURN FALSE
+	END IF
+
+	IF fgl_getEnv("MYWSDEBUG") = "9" THEN
+		DISPLAY SFMT("wsAuthLib.init: Config Name: %1", this.cfgName)
+	END IF
 
 -- Set the endpoint for the GAS
-	LET this.cfg.endPoint = this.cfg.GAS || "/ws/r/" || this.cfg.endPoint
+	LET this.endpoint = this.cfg.GAS || "/" || this.cfg.ServiceName || "/"
 -- Set the IDP for the GAS
-	LET this.cfg.idp = this.cfg.GAS || this.cfg.idp
+	LET this.cfg.idp = this.cfg.GAS || "/" || this.cfg.idp
 
 	IF fgl_getEnv("MYWSDEBUG") = "9" THEN
 		DISPLAY SFMT("wsAuthLib.init: GAS: %1", this.cfg.GAS)
-		DISPLAY SFMT("wsAuthLib.init: Endpoint: %1", this.cfg.endPoint)
+		DISPLAY SFMT("wsAuthLib.init: ServiceName: %1", this.cfg.ServiceName)
+		DISPLAY SFMT("wsAuthLib.init: ServiceVersion: %1", this.cfg.ServiceVersion)
 		DISPLAY SFMT("wsAuthLib.init: IDP: %1", this.cfg.idp)
 		DISPLAY SFMT("wsAuthLib.init: ClientID: %1, SecretID: %2", this.cfg.ClientID, this.cfg.SecretID)
-		DISPLAY SFMT("wsAuthLib.init: Scopes: %1", this.cfg.scopes)
+		DISPLAY SFMT("wsAuthLib.init: Scopes: %1", this.cfg.Scopes)
 	END IF
 
 -- Retrieve access token using login credentials
-	CALL this.getAccessToken()
+	IF NOT this.getAccessToken() THEN
+		RETURN FALSE
+	END IF
 
 -- Initialize OAuth access
 	CALL OAuthAPI.InitService(this.connectionExpire, this.Token) RETURNING l_stat
-
+	IF l_stat != 1 THEN LET this.message = "InitService failed!" END IF
 -- Is this actually useful to anyone ?
 	LET this.user_id = OAuthAPI.getIDSubject()
 
 	RETURN l_stat
 END FUNCTION
 --------------------------------------------------------------------------------
-PRIVATE FUNCTION (this      wsAuthLib) getAccessToken()
+PRIVATE FUNCTION (this wsAuthLib) getAccessToken() RETURNS BOOLEAN
 	DEFINE l_metadata         OAuthAPI.OpenIDMetadataType
 	DEFINE l_scopes_supported STRING
 	DEFINE x                  SMALLINT
@@ -68,8 +108,8 @@ PRIVATE FUNCTION (this      wsAuthLib) getAccessToken()
 	END IF
 	CALL OAuthAPI.FetchOpenIDMetadata(5, this.cfg.idp) RETURNING l_metadata.*
 	IF l_metadata.issuer IS NULL THEN
-		DISPLAY SFMT("Error : IDP unavailable: %1", this.cfg.idp)
-		EXIT PROGRAM 1
+		LET this.message = SFMT("Error : IDP unavailable: %1", this.cfg.idp)
+		RETURN FALSE
 	END IF
 
 	IF fgl_getEnv("MYWSDEBUG") = "9" THEN
@@ -85,9 +125,9 @@ PRIVATE FUNCTION (this      wsAuthLib) getAccessToken()
 					5, l_metadata.token_endpoint, this.cfg.ClientId, this.cfg.SecretId, this.cfg.scopes)
 			RETURNING this.token, this.tokenExpire
 	IF this.token IS NULL THEN
-		DISPLAY SFMT("Unable to retrieve token: %1 CliID: %2 Secid: %3 Scopes: %4 ",
+		LET this.message = SFMT("Unable to retrieve token: %1 CliID: %2 Secid: %3 Scopes: %4 ",
 				l_metadata.token_endpoint, this.cfg.ClientId, this.cfg.SecretId, this.cfg.scopes)
-		EXIT PROGRAM 1
+		RETURN FALSE
 	ELSE
 		DISPLAY "Token received."
 	END IF
@@ -95,5 +135,5 @@ PRIVATE FUNCTION (this      wsAuthLib) getAccessToken()
 		DISPLAY SFMT("wsAuthLib.getAccessToken: Token: %1", this.token)
 		DISPLAY SFMT("wsAuthLib.getAccessToken: Token Expires in %1 seconds", this.tokenExpire)
 	END IF
-
+	RETURN TRUE
 END FUNCTION

@@ -270,7 +270,7 @@
         <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>
       </Package>
     </Group>
-    <Group id="-973564800" label="Tests" language="Genero" targetDirectory="$(ProjectDir)/tests">
+    <Group environment="value:MYWSDEBUG=9" id="-973564800" label="Tests" language="Genero" targetDirectory="$(ProjectDir)/tests">
       <Application binaryName="CliWSTest" dependencies="589689792,1280753935" id="-1109916243" label="CliWSTest">
         <File filePath="tests/CliWSTest.4gl"/>
       </Application>

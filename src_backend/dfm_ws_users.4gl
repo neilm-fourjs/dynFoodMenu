@@ -22,7 +22,7 @@ PUBLIC DEFINE serviceInfo RECORD ATTRIBUTE(WSInfo)
   END RECORD = (
     title: "dynFoodMenu", 
 		description: "A RESTFUL backend for the dynFoodMenu mobile demo - Serving: Users",
-    version: "1.0", 
+    version: "v2", 
     contact: ( name: "Neil J Martin", email:"neilm@4js.com") )
 
 DEFINE m_user Users
@@ -74,6 +74,7 @@ PUBLIC FUNCTION v1_getTimeStamp() ATTRIBUTES( WSPath = "/v1/getTimestamp",
 		WSDescription = "Get the server time")
 	RETURNS (CHAR(19) ATTRIBUTES(WSMedia = 'application/json'))
 	IF m_ts IS NULL THEN LET m_ts = CURRENT YEAR TO SECOND END IF
+	RUN "env | sort > /tmp/ws_getTimestamp.env"
 	RETURN m_ts
 END FUNCTION
 --------------------------------------------------------------------------------

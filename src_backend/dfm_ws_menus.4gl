@@ -24,7 +24,7 @@ PUBLIC DEFINE serviceInfo RECORD ATTRIBUTE(WSInfo)
   END RECORD = (
     title: "dynFoodMenu", 
 		description: "A RESTFUL backend for the dynFoodMenu mobile demo - Serving: Menus",
-    version: "1.0", 
+    version: "v2", 
     contact: ( name: "Neil J Martin", email:"neilm@4js.com"),
 		modules: ["One","Two", "Three"] )
 

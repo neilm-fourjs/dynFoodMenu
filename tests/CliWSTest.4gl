@@ -1,4 +1,6 @@
-IMPORT FGL libWSAuth
+
+IMPORT FGL wsAuthLib
+
 IMPORT FGL wsUsers
 IMPORT FGL wsMenus
 IMPORT FGL wsPatients
@@ -9,20 +11,23 @@ MAIN
 	DEFINE l_ret2 wsMenus.v1_getMenusResponseBodyType
 	DEFINE l_ret3 wsMenus.v1_getMenuResponseBodyType
 	DEFINE l_ret4 wsPatients.v1_getWardsResponseBodyType
+	DEFINE l_cfgFileName STRING
 	DEFINE l_ts   STRING
+	DEFINE wsAuth wsAuthLib
 
 -- Initialize Secure Access
-	IF NOT libWSAuth.init("ws_cfg.json") THEN
+  LET l_cfgFileName = IIF(NUM_ARGS()>0, ARG_VAL(1), "ws_cfg.json")
+	IF NOT wsAuth.init(l_cfgFileName) THEN
 		DISPLAY "libWSAuth init failed."
 		EXIT PROGRAM
 	ELSE
-		DISPLAY "userID: ", libWSAuth.user_id
+		DISPLAY "userID: ", wsAuth.user_id
 	END IF
 
 -- Setup my specific service end points
-	LET wsUsers.Endpoint.Address.Uri    = libWSAuth.serviceConfig.endPoint || "/users"
-	LET wsMenus.Endpoint.Address.Uri    = libWSAuth.serviceConfig.endPoint || "/menus"
-	LET wsPatients.Endpoint.Address.Uri = libWSAuth.serviceConfig.endPoint || "/patients"
+	LET wsUsers.Endpoint.Address.Uri    = wsAuth.cfg.endPoint || "/users"
+	LET wsMenus.Endpoint.Address.Uri    = wsAuth.cfg.endPoint || "/menus"
+	LET wsPatients.Endpoint.Address.Uri = wsAuth.cfg.endPoint || "/patients"
 
 -- Do test calls
 	CALL wsUsers.v1_getTimestamp() RETURNING l_stat, l_ts

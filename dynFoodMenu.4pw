@@ -139,6 +139,9 @@
           <File filePath="src/register.per"/>
           <File filePath="src/Users.4gl"/>
         </Library>
+        <Library binaryName="wsAuthLib" id="1280753935" label="wsAuthLib">
+          <File filePath="src/wsAuthLib.4gl"/>
+        </Library>
         <Library binaryName="wsClientLib" dependencies="362164715,-1361191823" id="855703318" label="wsClientLib">
           <File filePath="src/wsMenus.4gl"/>
           <File filePath="src/wsPatients.4gl"/>
@@ -267,10 +270,9 @@
         <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>
       </Package>
     </Group>
-    <Group id="-973564800" label="Tests" language="Genero" targetDirectory="$(ProjectDir)/testbin">
-      <Application binaryName="CliWSTest" dependencies="-541155840,589689792" id="-1109916243" label="CliWSTest" targetDirectory="$(ProjectDir)/tests">
+    <Group id="-973564800" label="Tests" language="Genero" targetDirectory="$(ProjectDir)/tests">
+      <Application binaryName="CliWSTest" dependencies="589689792,1280753935" id="-1109916243" label="CliWSTest">
         <File filePath="tests/CliWSTest.4gl"/>
-        <File filePath="tests/libWSAuth.4gl"/>
       </Application>
       <Application binaryName="dynFoodMenu2" dependencies="362164715" id="1005836130" label="dynFoodMenu2">
         <File filePath="etc/data.json"/>
@@ -278,6 +280,9 @@
       </Application>
       <Application binaryName="mktestdata" dependencies="1638566760,1770744530,362164715,1074706446,-1361191823" id="2099037741" label="mktestdata">
         <File filePath="tests/mktestdata.4gl"/>
+      </Application>
+      <Application binaryName="myGetToken" dependencies="1280753935" id="-1239902885" label="myGetToken">
+        <File filePath="tests/myGetToken.4gl"/>
       </Application>
       <Library binaryName="wsClients" id="589689792" label="wsClients">
         <File filePath="tests/wsMenus.4gl"/>

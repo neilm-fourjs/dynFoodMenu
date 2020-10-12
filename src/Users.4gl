@@ -2,6 +2,7 @@ IMPORT util
 IMPORT security
 IMPORT FGL config
 IMPORT FGL db
+IMPORT FGL wsAuthLib
 IMPORT FGL debug
 IMPORT FGL about
 IMPORT FGL utils
@@ -165,10 +166,10 @@ FUNCTION (this Users) registerUI()
 	LET this.currentUserDetails.registered = CURRENT
 	LET this.currentUserDetails.dob = "01/01/1970"
 	LET int_flag = FALSE
-	LET wsUsers.Endpoint.Address.Uri = g_cfg.getWSServer(C_WS_USERS)
+	LET wsUsers.Endpoint.Address.Uri = g_wsAuth.getWSServer(C_WS_USERS)
 	INPUT BY NAME this.currentUserDetails.*, l_pwd2 WITHOUT DEFAULTS
 		AFTER FIELD user_id
-			CALL wsUsers.checkUserID(this.currentUserDetails.user_id) RETURNING l_stat, l_exists, l_suggestion
+			CALL wsUsers.v2_checkUserID(this.currentUserDetails.user_id) RETURNING l_stat, l_exists, l_suggestion
 			CALL debug.output(SFMT("checkUserID: %1, reply: %2:%3",l_stat, l_exists, l_suggestion ),FALSE)
 			IF l_exists THEN
 				IF l_suggestion != "EXISTS" THEN
@@ -210,7 +211,7 @@ FUNCTION (this Users) registerUI()
 		LET int_flag = FALSE
 	ELSE
 		CALL this.setPasswordHash( l_pwd2 )
-		CALL wsUsers.registerUser(this.currentUserDetails.*) RETURNING l_stat, l_ret, l_suggestion
+		CALL wsUsers.v2_registerUser(this.currentUserDetails.*) RETURNING l_stat, l_ret, l_suggestion
 		CALL debug.output(SFMT("registerUser: %1, reply: %2:%3",l_stat, l_ret, l_suggestion ),FALSE)
 		IF l_stat = 0 AND l_ret = 0 THEN
 			CALL this.register() RETURNING l_ret, l_suggestion
@@ -238,7 +239,7 @@ FUNCTION (this Users) login(l_win BOOLEAN) RETURNS BOOLEAN
 		RETURN TRUE
 	END IF
 	LET int_flag = FALSE
-	LET wsUsers.Endpoint.Address.Uri = g_cfg.getWSServer(C_WS_USERS)
+	LET wsUsers.Endpoint.Address.Uri = g_wsAuth.getWSServer(C_WS_USERS)
 	IF l_win THEN
 		OPEN WINDOW login WITH FORM "login"
 	END IF
@@ -254,7 +255,7 @@ FUNCTION (this Users) login(l_win BOOLEAN) RETURNS BOOLEAN
 				CALL debug.output(SFMT("Getting token for: %1 from: %2 ", this.currentUser.user_id, wsUsers.Endpoint.Address.Uri), FALSE)
 				LET l_pwd = this.currentUser.user_pwd
 				CALL ui.Window.getCurrent().getForm().setFieldStyle("formonly.username","title curvedborder")
-				CALL wsUsers.getTimestamp() RETURNING l_stat, this.server_time
+				CALL wsUsers.v2_getTimestamp() RETURNING l_stat, this.server_time
 				IF l_stat != 0 THEN
 					LET l_msg = utils.ws_replyStat(l_stat)
 					CALL debug.output(SFMT("getTimestamp: %1, reply: %2",l_stat, l_msg),FALSE)
@@ -264,7 +265,7 @@ FUNCTION (this Users) login(l_win BOOLEAN) RETURNS BOOLEAN
 				ELSE
 					CALL debug.output(SFMT("getTimestamp: %1, reply: %2",l_stat, this.server_time),FALSE)
 				END IF
-				CALL wsUsers.getToken(this.currentUser.user_id, utils.apiPaas(this.currentUser.user_id, this.server_time) ) RETURNING l_stat, this.currentUser.*
+				CALL wsUsers.v2_getToken(this.currentUser.user_id, utils.apiPaas(this.currentUser.user_id, this.server_time) ) RETURNING l_stat, this.currentUser.*
 				CALL debug.output(SFMT("getToken: %1, reply: %2 : %3(%4)",this.currentUser.user_id, l_stat, this.currentUser.user_name, this.currentUser.user_pwd),FALSE)
 				IF l_stat != 0 OR this.currentUser.user_id = "ERROR" THEN
 					DISPLAY "Login error" TO username

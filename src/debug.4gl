@@ -15,7 +15,7 @@ FUNCTION clear()
 	END IF
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION init( l_logDir STRING, l_logFile STRING )
+FUNCTION init_debug( l_logDir STRING, l_logFile STRING )
 	DEFINE l_config config
 	IF l_logDir IS NULL THEN
 		IF l_config.initConfigFile(NULL) THEN
@@ -33,7 +33,7 @@ FUNCTION output(l_str STRING, l_wait BOOLEAN)
 	DEFINE c base.Channel
 	LET l_str = SFMT("%1:%2) %3", CURRENT, fgl_getPid(), l_str)
 &ifdef USEFILE
-	IF m_logFile IS NULL THEN CALL init(NULL,NULL) END IF
+	IF m_logFile IS NULL THEN CALL init_debug(NULL,NULL) END IF
 	LET c = base.Channel.create()
 	CALL c.openFile(m_logFile, "a+")
 	CALL c.writeLine(l_str)
@@ -79,7 +79,7 @@ FUNCTION showFile()
 	DEFINE c base.Channel
 	DEFINE l_str STRING
 	LET c = base.Channel.create()
-	IF m_logFile IS NULL THEN CALL init(NULL,NULL) END IF
+	IF m_logFile IS NULL THEN CALL init_debug(NULL,NULL) END IF
 	CALL c.openFile(m_logFile, "r")
 	LET l_str = "Debug:\n"
 	WHILE NOT c.isEof()

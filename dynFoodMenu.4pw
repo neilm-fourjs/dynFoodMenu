@@ -112,7 +112,7 @@
           <File filePath="etc/gd.4st"/>
           <File filePath="etc/gm.4st"/>
         </Library>
-        <Library binaryName="includes" dependencies="362164715" id="-1361191823" label="includes">
+        <Library binaryName="includes" dependencies="362164715,1280753935" id="-1361191823" label="includes">
           <File filePath="src/globals.inc"/>
           <File filePath="src/menus.inc"/>
         </Library>
@@ -148,7 +148,7 @@
           <File filePath="src/wsUsers.4gl"/>
         </Library>
       </Group>
-      <Group id="10414220" label="Mobile" language="Genero">
+      <Group environment="value:MYWSDEBUG=9" id="10414220" label="Mobile" language="Genero">
         <Application binaryName="dynFoodMenu" dependencies="159917928,212784684,362164715,455109296,-541155840,91913022,-1361191823,1770744530,1074706446,-4262148,1638566760,-1322651328,855703318" id="400358049" label="dynFoodMenu">
           <File filePath="src/dynFoodMenu.4gl"/>
           <File filePath="src/dynForm.4gl"/>

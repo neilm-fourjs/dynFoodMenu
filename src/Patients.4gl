@@ -2,6 +2,7 @@
 IMPORT util
 IMPORT FGL debug
 IMPORT FGL config
+IMPORT FGL wsAuthLib
 IMPORT FGL db
 IMPORT FGL libCommon
 --IMPORT FGL wsBackEnd
@@ -185,8 +186,8 @@ END FUNCTION
 -- Get a list of the wards from the server.
 FUNCTION (this Patients) getWardsWS()
 	DEFINE l_stat SMALLINT
-	LET wsPatients.Endpoint.Address.Uri = g_cfg.getWSServer(C_WS_PATIENTS)
-	CALL wsPatients.getWards(this.token) RETURNING l_stat, this.wards.*
+	LET wsPatients.Endpoint.Address.Uri = g_wsAuth.getWSServer(C_WS_PATIENTS)
+	CALL wsPatients.v2_getWards(this.token) RETURNING l_stat, this.wards.*
 	CALL debug.output(SFMT("getWardsWS: Stat=%1 %2 From: %3", l_stat, NVL(this.wards.message,"NULL"), wsPatients.Endpoint.Address.Uri), FALSE)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
@@ -194,8 +195,8 @@ END FUNCTION
 FUNCTION (this Patients) getPatientsWS(l_ward SMALLINT)
 	DEFINE l_stat SMALLINT
 	CALL this.patients.list.clear()
-	LET wsPatients.Endpoint.Address.Uri = g_cfg.getWSServer(C_WS_PATIENTS)
-	CALL wsPatients.getPatients(this.token, l_ward) RETURNING l_stat, this.patients.*
+	LET wsPatients.Endpoint.Address.Uri = g_wsAuth.getWSServer(C_WS_PATIENTS)
+	CALL wsPatients.v2_getPatients(this.token, l_ward) RETURNING l_stat, this.patients.*
 	LET this.patients.current.ward_id = l_ward -- restore the current ward id!
 	CALL debug.output(SFMT("getPatientsWS: %1 %2 From: %3", l_stat, NVL(this.patients.message,"NULL"), wsPatients.Endpoint.Address.Uri), FALSE)
 END FUNCTION

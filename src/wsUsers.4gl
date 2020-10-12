@@ -5,116 +5,154 @@ IMPORT com
 IMPORT xml
 IMPORT util
 IMPORT os
+IMPORT FGL OAuthAPI
 
-&include "menus.inc"
 #+
 #+ Global Endpoint user-defined type definition
 #+
 TYPE tGlobalEndpointType RECORD # Rest Endpoint
-	Address RECORD # Address
-		Uri STRING # URI
+	Address RECORD                # Address
+		Uri STRING                  # URI
 	END RECORD,
-	Binding RECORD # Binding
-		Version STRING, # HTTP Version (1.0 or 1.1)
+	Binding RECORD               # Binding
+		Version           STRING,  # HTTP Version (1.0 or 1.1)
 		ConnectionTimeout INTEGER, # Connection timeout
-		ReadWriteTimeout INTEGER, # Read write timeout
-		CompressRequest STRING # Compression (gzip or deflate)
+		ReadWriteTimeout  INTEGER, # Read write timeout
+		CompressRequest   STRING   # Compression (gzip or deflate)
 	END RECORD
 END RECORD
 
-PUBLIC DEFINE Endpoint tGlobalEndpointType
-		= (Address:(Uri: "https://generodemos.dynu.net/z/ws/r/dfm/users/v1"))
+PUBLIC DEFINE Endpoint tGlobalEndpointType = (Address:(Uri: "http://neilm-predator/g/ws/r/dfmv2/users"))
 
 # Error codes
 PUBLIC CONSTANT C_SUCCESS = 0
 
-# generated registerUserRequestBodyType
-PUBLIC TYPE registerUserRequestBodyType RECORD
-	user_id STRING,
-	salutation STRING,
-	firstnames STRING,
-	surname STRING,
-	email STRING,
-	dob DATE,
+# generated v2_registerUserRequestBodyType
+PUBLIC TYPE v2_registerUserRequestBodyType RECORD
+	user_id           STRING,
+	salutation        STRING,
+	firstnames        STRING,
+	surname           STRING,
+	email             STRING,
+	dob               DATE,
 	gender_preference STRING,
-	password_hash STRING,
-	registered DATETIME YEAR TO SECOND
+	password_hash     STRING,
+	registered        DATETIME YEAR TO SECOND
 END RECORD
 
-# generated multipart registerUserMultipartResponse
-PUBLIC TYPE registerUserMultipartResponse RECORD
+# generated multipart v2_registerUserMultipartResponse
+PUBLIC TYPE v2_registerUserMultipartResponse RECORD
 	rv0 INTEGER,
 	rv1 STRING
 END RECORD
 
-# generated getTokenResponseBodyType
-PUBLIC TYPE getTokenResponseBodyType userRecord
-{ RECORD
-	user_id STRING,
-	user_name STRING,
-	user_pwd STRING,
-	user_token STRING,
-	token_ts DATETIME YEAR TO SECOND
-END RECORD}
+# generated v1_registerUserRequestBodyType
+PUBLIC TYPE v1_registerUserRequestBodyType RECORD
+	user_id           STRING,
+	salutation        STRING,
+	firstnames        STRING,
+	surname           STRING,
+	email             STRING,
+	dob               DATE,
+	gender_preference STRING,
+	password_hash     STRING,
+	registered        DATETIME YEAR TO SECOND
+END RECORD
 
-# generated multipart checkUserIDMultipartResponse
-PUBLIC TYPE checkUserIDMultipartResponse RECORD
+# generated multipart v1_registerUserMultipartResponse
+PUBLIC TYPE v1_registerUserMultipartResponse RECORD
+	rv0 INTEGER,
+	rv1 STRING
+END RECORD
+
+# generated v2_getTokenResponseBodyType
+PUBLIC TYPE v2_getTokenResponseBodyType RECORD
+	user_id    STRING,
+	user_name  STRING,
+	user_pwd   STRING,
+	user_token STRING,
+	token_ts   DATETIME YEAR TO SECOND
+END RECORD
+
+# generated v1_getTokenResponseBodyType
+PUBLIC TYPE v1_getTokenResponseBodyType RECORD
+	user_id    STRING,
+	user_name  STRING,
+	user_pwd   STRING,
+	user_token STRING,
+	token_ts   DATETIME YEAR TO SECOND
+END RECORD
+
+# generated multipart v2_checkUserIDMultipartResponse
+PUBLIC TYPE v2_checkUserIDMultipartResponse RECORD
+	rv0 BOOLEAN,
+	rv1 STRING
+END RECORD
+
+# generated multipart v1_checkUserIDMultipartResponse
+PUBLIC TYPE v1_checkUserIDMultipartResponse RECORD
 	rv0 BOOLEAN,
 	rv1 STRING
 END RECORD
 
 ################################################################################
-# Operation /registerUser
+# Operation /v2/registerUser
 #
 # VERB: POST
+# ID:          v2_registerUser
 # DESCRIPTION: Register a user
 #
-PUBLIC FUNCTION registerUser(p_body registerUserRequestBodyType)
-		RETURNS(INTEGER, registerUserMultipartResponse)
-	DEFINE fullpath base.StringBuffer
+PUBLIC FUNCTION v2_registerUser(p_body v2_registerUserRequestBodyType)
+		RETURNS(INTEGER, v2_registerUserMultipartResponse)
+	DEFINE fullpath    base.StringBuffer
 	DEFINE contentType STRING
-	DEFINE req com.HTTPRequest
-	DEFINE resp com.HTTPResponse
-	DEFINE resp_body registerUserMultipartResponse
-	DEFINE part com.HttpPart
-	DEFINE ind INTEGER
-	DEFINE xml_body xml.DomDocument
-	DEFINE xml_node xml.DomNode
-	DEFINE json_body STRING
+	DEFINE req         com.HTTPRequest
+	DEFINE resp        com.HTTPResponse
+	DEFINE resp_body   v2_registerUserMultipartResponse
+	DEFINE part        com.HttpPart
+	DEFINE ind         INTEGER
+	DEFINE xml_body    xml.DomDocument
+	DEFINE xml_node    xml.DomNode
+	DEFINE json_body   STRING
+	DEFINE txt         STRING
 
 	TRY
 
 		# Prepare request path
 		LET fullpath = base.StringBuffer.Create()
-		CALL fullpath.append("/registerUser")
+		CALL fullpath.append("/v2/registerUser")
 
-		# Create request and configure it
-		LET req =
-				com.HTTPRequest.Create(
-						SFMT("%1%2", Endpoint.Address.Uri, fullpath.toString()))
-		IF Endpoint.Binding.Version IS NOT NULL THEN
-			CALL req.setVersion(Endpoint.Binding.Version)
-		END IF
-		IF Endpoint.Binding.ConnectionTimeout <> 0 THEN
-			CALL req.setConnectionTimeout(Endpoint.Binding.ConnectionTimeout)
-		END IF
-		IF Endpoint.Binding.ReadWriteTimeout <> 0 THEN
-			CALL req.setTimeout(Endpoint.Binding.ReadWriteTimeout)
-		END IF
-		IF Endpoint.Binding.CompressRequest IS NOT NULL THEN
-			CALL req.setHeader("Content-Encoding", Endpoint.Binding.CompressRequest)
-		END IF
+		WHILE TRUE
+			# Create oauth request and configure it
+			LET req = OAuthAPI.CreateHTTPAuthorizationRequest(SFMT("%1%2", Endpoint.Address.Uri, fullpath.toString()))
+			IF Endpoint.Binding.Version IS NOT NULL THEN
+				CALL req.setVersion(Endpoint.Binding.Version)
+			END IF
+			IF Endpoint.Binding.ConnectionTimeout <> 0 THEN
+				CALL req.setConnectionTimeout(Endpoint.Binding.ConnectionTimeout)
+			END IF
+			IF Endpoint.Binding.ReadWriteTimeout <> 0 THEN
+				CALL req.setTimeout(Endpoint.Binding.ReadWriteTimeout)
+			END IF
+			IF Endpoint.Binding.CompressRequest IS NOT NULL THEN
+				CALL req.setHeader("Content-Encoding", Endpoint.Binding.CompressRequest)
+			END IF
 
-		# Perform request
-		CALL req.setMethod("POST")
-		CALL req.setHeader("Accept", "multipart/form-data")
-		# Perform JSON request
-		CALL req.setHeader("Content-Type", "application/json")
-		LET json_body = util.JSON.stringify(p_body)
-		CALL req.DoTextRequest(json_body)
+			# Perform request
+			CALL req.setMethod("POST")
+			CALL req.setHeader("Accept", "multipart/form-data")
+			# Perform JSON request
+			CALL req.setHeader("Content-Type", "application/json")
+			LET json_body = util.JSON.stringify(p_body)
+			CALL req.DoTextRequest(json_body)
 
-		# Retrieve response
-		LET resp = req.getResponse()
+			# Retrieve response
+			LET resp = req.getResponse()
+			# Retry if access token has expired
+			IF NOT OAuthAPI.RetryHTTPRequest(resp) THEN
+				EXIT WHILE
+			END IF
+		END WHILE
 		# Process response
 		INITIALIZE resp_body TO NULL
 		LET contentType = resp.getHeader("Content-Type")
@@ -125,7 +163,8 @@ PUBLIC FUNCTION registerUser(p_body registerUserRequestBodyType)
 					# Parse Multipart response
 					# Parse main part rv0 response
 					# Parse TEXT response
-					LET resp_body.rv0 = resp.getTextResponse()
+					LET txt           = resp.getTextResponse()
+					LET resp_body.rv0 = txt
 					FOR ind = 1 TO resp.getPartCount()
 						LET part = resp.getPart(ind)
 						# Parse rv1 response
@@ -147,49 +186,55 @@ END FUNCTION
 ################################################################################
 
 ################################################################################
-# Operation /getTimestamp
+# Operation /v2/getTimestamp
 #
 # VERB: GET
+# ID:          v2_getTimeStamp
 # DESCRIPTION: Get the server time
 #
-PUBLIC FUNCTION getTimeStamp() RETURNS(INTEGER, STRING)
-	DEFINE fullpath base.StringBuffer
+PUBLIC FUNCTION v2_getTimeStamp() RETURNS(INTEGER, STRING)
+	DEFINE fullpath    base.StringBuffer
 	DEFINE contentType STRING
-	DEFINE req com.HTTPRequest
-	DEFINE resp com.HTTPResponse
-	DEFINE resp_body STRING
-	DEFINE json_body STRING
+	DEFINE req         com.HTTPRequest
+	DEFINE resp        com.HTTPResponse
+	DEFINE resp_body   STRING
+	DEFINE json_body   STRING
+	DEFINE txt         STRING
 
 	TRY
 
 		# Prepare request path
 		LET fullpath = base.StringBuffer.Create()
-		CALL fullpath.append("/getTimestamp")
+		CALL fullpath.append("/v2/getTimestamp")
 
-		# Create request and configure it
-		LET req =
-				com.HTTPRequest.Create(
-						SFMT("%1%2", Endpoint.Address.Uri, fullpath.toString()))
-		IF Endpoint.Binding.Version IS NOT NULL THEN
-			CALL req.setVersion(Endpoint.Binding.Version)
-		END IF
-		IF Endpoint.Binding.ConnectionTimeout <> 0 THEN
-			CALL req.setConnectionTimeout(Endpoint.Binding.ConnectionTimeout)
-		END IF
-		IF Endpoint.Binding.ReadWriteTimeout <> 0 THEN
-			CALL req.setTimeout(Endpoint.Binding.ReadWriteTimeout)
-		END IF
-		IF Endpoint.Binding.CompressRequest IS NOT NULL THEN
-			CALL req.setHeader("Content-Encoding", Endpoint.Binding.CompressRequest)
-		END IF
+		WHILE TRUE
+			# Create oauth request and configure it
+			LET req = OAuthAPI.CreateHTTPAuthorizationRequest(SFMT("%1%2", Endpoint.Address.Uri, fullpath.toString()))
+			IF Endpoint.Binding.Version IS NOT NULL THEN
+				CALL req.setVersion(Endpoint.Binding.Version)
+			END IF
+			IF Endpoint.Binding.ConnectionTimeout <> 0 THEN
+				CALL req.setConnectionTimeout(Endpoint.Binding.ConnectionTimeout)
+			END IF
+			IF Endpoint.Binding.ReadWriteTimeout <> 0 THEN
+				CALL req.setTimeout(Endpoint.Binding.ReadWriteTimeout)
+			END IF
+			IF Endpoint.Binding.CompressRequest IS NOT NULL THEN
+				CALL req.setHeader("Content-Encoding", Endpoint.Binding.CompressRequest)
+			END IF
 
-		# Perform request
-		CALL req.setMethod("GET")
-		CALL req.setHeader("Accept", "application/json")
-		CALL req.DoRequest()
+			# Perform request
+			CALL req.setMethod("GET")
+			CALL req.setHeader("Accept", "application/json")
+			CALL req.DoRequest()
 
-		# Retrieve response
-		LET resp = req.getResponse()
+			# Retrieve response
+			LET resp = req.getResponse()
+			# Retry if access token has expired
+			IF NOT OAuthAPI.RetryHTTPRequest(resp) THEN
+				EXIT WHILE
+			END IF
+		END WHILE
 		# Process response
 		INITIALIZE resp_body TO NULL
 		LET contentType = resp.getHeader("Content-Type")
@@ -214,52 +259,220 @@ END FUNCTION
 ################################################################################
 
 ################################################################################
-# Operation /getToken/{l_id}/{l_pwd}
+# Operation /v1/registerUser
 #
-# VERB: GET
-# DESCRIPTION: Validate User and get Token
+# VERB: POST
+# ID:          v1_registerUser
+# DESCRIPTION: Register a user
 #
-PUBLIC FUNCTION getToken(p_l_id STRING, p_l_pwd STRING)
-		RETURNS(INTEGER, getTokenResponseBodyType)
-	DEFINE fullpath base.StringBuffer
+PUBLIC FUNCTION v1_registerUser(p_body v1_registerUserRequestBodyType)
+		RETURNS(INTEGER, v1_registerUserMultipartResponse)
+	DEFINE fullpath    base.StringBuffer
 	DEFINE contentType STRING
-	DEFINE req com.HTTPRequest
-	DEFINE resp com.HTTPResponse
-	DEFINE resp_body getTokenResponseBodyType
-	DEFINE json_body STRING
+	DEFINE req         com.HTTPRequest
+	DEFINE resp        com.HTTPResponse
+	DEFINE resp_body   v1_registerUserMultipartResponse
+	DEFINE part        com.HttpPart
+	DEFINE ind         INTEGER
+	DEFINE xml_body    xml.DomDocument
+	DEFINE xml_node    xml.DomNode
+	DEFINE json_body   STRING
+	DEFINE txt         STRING
 
 	TRY
 
 		# Prepare request path
 		LET fullpath = base.StringBuffer.Create()
-		CALL fullpath.append("/getToken/{l_id}/{l_pwd}")
+		CALL fullpath.append("/v1/registerUser")
+
+		WHILE TRUE
+			# Create oauth request and configure it
+			LET req = OAuthAPI.CreateHTTPAuthorizationRequest(SFMT("%1%2", Endpoint.Address.Uri, fullpath.toString()))
+			IF Endpoint.Binding.Version IS NOT NULL THEN
+				CALL req.setVersion(Endpoint.Binding.Version)
+			END IF
+			IF Endpoint.Binding.ConnectionTimeout <> 0 THEN
+				CALL req.setConnectionTimeout(Endpoint.Binding.ConnectionTimeout)
+			END IF
+			IF Endpoint.Binding.ReadWriteTimeout <> 0 THEN
+				CALL req.setTimeout(Endpoint.Binding.ReadWriteTimeout)
+			END IF
+			IF Endpoint.Binding.CompressRequest IS NOT NULL THEN
+				CALL req.setHeader("Content-Encoding", Endpoint.Binding.CompressRequest)
+			END IF
+
+			# Perform request
+			CALL req.setMethod("POST")
+			CALL req.setHeader("Accept", "multipart/form-data")
+			# Perform JSON request
+			CALL req.setHeader("Content-Type", "application/json")
+			LET json_body = util.JSON.stringify(p_body)
+			CALL req.DoTextRequest(json_body)
+
+			# Retrieve response
+			LET resp = req.getResponse()
+			# Retry if access token has expired
+			IF NOT OAuthAPI.RetryHTTPRequest(resp) THEN
+				EXIT WHILE
+			END IF
+		END WHILE
+		# Process response
+		INITIALIZE resp_body TO NULL
+		LET contentType = resp.getHeader("Content-Type")
+		CASE resp.getStatusCode()
+
+			WHEN 200 #Success
+				IF resp.getMultipartType() IS NOT NULL THEN
+					# Parse Multipart response
+					# Parse main part rv0 response
+					# Parse TEXT response
+					LET txt           = resp.getTextResponse()
+					LET resp_body.rv0 = txt
+					FOR ind = 1 TO resp.getPartCount()
+						LET part = resp.getPart(ind)
+						# Parse rv1 response
+						# Parse JSON response
+						LET json_body = part.getContentAsString()
+						CALL util.JSON.parse(json_body, resp_body.rv1)
+					END FOR
+					RETURN C_SUCCESS, resp_body.*
+				END IF
+				RETURN -1, resp_body.*
+
+			OTHERWISE
+				RETURN resp.getStatusCode(), resp_body.*
+		END CASE
+	CATCH
+		RETURN -1, resp_body.*
+	END TRY
+END FUNCTION
+################################################################################
+
+################################################################################
+# Operation /v1/getTimestamp
+#
+# VERB: GET
+# ID:          v1_getTimeStamp
+# DESCRIPTION: Get the server time
+#
+PUBLIC FUNCTION v1_getTimeStamp() RETURNS(INTEGER, STRING)
+	DEFINE fullpath    base.StringBuffer
+	DEFINE contentType STRING
+	DEFINE req         com.HTTPRequest
+	DEFINE resp        com.HTTPResponse
+	DEFINE resp_body   STRING
+	DEFINE json_body   STRING
+	DEFINE txt         STRING
+
+	TRY
+
+		# Prepare request path
+		LET fullpath = base.StringBuffer.Create()
+		CALL fullpath.append("/v1/getTimestamp")
+
+		WHILE TRUE
+			# Create oauth request and configure it
+			LET req = OAuthAPI.CreateHTTPAuthorizationRequest(SFMT("%1%2", Endpoint.Address.Uri, fullpath.toString()))
+			IF Endpoint.Binding.Version IS NOT NULL THEN
+				CALL req.setVersion(Endpoint.Binding.Version)
+			END IF
+			IF Endpoint.Binding.ConnectionTimeout <> 0 THEN
+				CALL req.setConnectionTimeout(Endpoint.Binding.ConnectionTimeout)
+			END IF
+			IF Endpoint.Binding.ReadWriteTimeout <> 0 THEN
+				CALL req.setTimeout(Endpoint.Binding.ReadWriteTimeout)
+			END IF
+			IF Endpoint.Binding.CompressRequest IS NOT NULL THEN
+				CALL req.setHeader("Content-Encoding", Endpoint.Binding.CompressRequest)
+			END IF
+
+			# Perform request
+			CALL req.setMethod("GET")
+			CALL req.setHeader("Accept", "application/json")
+			CALL req.DoRequest()
+
+			# Retrieve response
+			LET resp = req.getResponse()
+			# Retry if access token has expired
+			IF NOT OAuthAPI.RetryHTTPRequest(resp) THEN
+				EXIT WHILE
+			END IF
+		END WHILE
+		# Process response
+		INITIALIZE resp_body TO NULL
+		LET contentType = resp.getHeader("Content-Type")
+		CASE resp.getStatusCode()
+
+			WHEN 200 #Success
+				IF contentType MATCHES "*application/json*" THEN
+					# Parse JSON response
+					LET json_body = resp.getTextResponse()
+					CALL util.JSON.parse(json_body, resp_body)
+					RETURN C_SUCCESS, resp_body
+				END IF
+				RETURN -1, resp_body
+
+			OTHERWISE
+				RETURN resp.getStatusCode(), resp_body
+		END CASE
+	CATCH
+		RETURN -1, resp_body
+	END TRY
+END FUNCTION
+################################################################################
+
+################################################################################
+# Operation /v2/getToken/{l_id}/{l_pwd}
+#
+# VERB: GET
+# ID:          v2_getToken
+# DESCRIPTION: Validate User and get Token
+#
+PUBLIC FUNCTION v2_getToken(p_l_id STRING, p_l_pwd STRING) RETURNS(INTEGER, v2_getTokenResponseBodyType)
+	DEFINE fullpath                  base.StringBuffer
+	DEFINE contentType               STRING
+	DEFINE req                       com.HTTPRequest
+	DEFINE resp                      com.HTTPResponse
+	DEFINE resp_body                 v2_getTokenResponseBodyType
+	DEFINE json_body                 STRING
+	DEFINE txt                       STRING
+
+	TRY
+
+		# Prepare request path
+		LET fullpath = base.StringBuffer.Create()
+		CALL fullpath.append("/v2/getToken/{l_id}/{l_pwd}")
 		CALL fullpath.replace("{l_id}", p_l_id, 1)
 		CALL fullpath.replace("{l_pwd}", p_l_pwd, 1)
 
-		# Create request and configure it
-		LET req =
-				com.HTTPRequest.Create(
-						SFMT("%1%2", Endpoint.Address.Uri, fullpath.toString()))
-		IF Endpoint.Binding.Version IS NOT NULL THEN
-			CALL req.setVersion(Endpoint.Binding.Version)
-		END IF
-		IF Endpoint.Binding.ConnectionTimeout <> 0 THEN
-			CALL req.setConnectionTimeout(Endpoint.Binding.ConnectionTimeout)
-		END IF
-		IF Endpoint.Binding.ReadWriteTimeout <> 0 THEN
-			CALL req.setTimeout(Endpoint.Binding.ReadWriteTimeout)
-		END IF
-		IF Endpoint.Binding.CompressRequest IS NOT NULL THEN
-			CALL req.setHeader("Content-Encoding", Endpoint.Binding.CompressRequest)
-		END IF
+		WHILE TRUE
+			# Create oauth request and configure it
+			LET req = OAuthAPI.CreateHTTPAuthorizationRequest(SFMT("%1%2", Endpoint.Address.Uri, fullpath.toString()))
+			IF Endpoint.Binding.Version IS NOT NULL THEN
+				CALL req.setVersion(Endpoint.Binding.Version)
+			END IF
+			IF Endpoint.Binding.ConnectionTimeout <> 0 THEN
+				CALL req.setConnectionTimeout(Endpoint.Binding.ConnectionTimeout)
+			END IF
+			IF Endpoint.Binding.ReadWriteTimeout <> 0 THEN
+				CALL req.setTimeout(Endpoint.Binding.ReadWriteTimeout)
+			END IF
+			IF Endpoint.Binding.CompressRequest IS NOT NULL THEN
+				CALL req.setHeader("Content-Encoding", Endpoint.Binding.CompressRequest)
+			END IF
 
-		# Perform request
-		CALL req.setMethod("GET")
-		CALL req.setHeader("Accept", "application/json")
-		CALL req.DoRequest()
+			# Perform request
+			CALL req.setMethod("GET")
+			CALL req.setHeader("Accept", "application/json")
+			CALL req.DoRequest()
 
-		# Retrieve response
-		LET resp = req.getResponse()
+			# Retrieve response
+			LET resp = req.getResponse()
+			# Retry if access token has expired
+			IF NOT OAuthAPI.RetryHTTPRequest(resp) THEN
+				EXIT WHILE
+			END IF
+		END WHILE
 		# Process response
 		INITIALIZE resp_body TO NULL
 		LET contentType = resp.getHeader("Content-Type")
@@ -284,55 +497,135 @@ END FUNCTION
 ################################################################################
 
 ################################################################################
-# Operation /checkUserID/{l_id}
+# Operation /v1/getToken/{l_id}/{l_pwd}
 #
 # VERB: GET
-# DESCRIPTION: Check UserID
+# ID:          v1_getToken
+# DESCRIPTION: Validate User and get Token
 #
-PUBLIC FUNCTION checkUserID(p_l_id STRING)
-		RETURNS(INTEGER, checkUserIDMultipartResponse)
-	DEFINE fullpath base.StringBuffer
-	DEFINE contentType STRING
-	DEFINE req com.HTTPRequest
-	DEFINE resp com.HTTPResponse
-	DEFINE resp_body checkUserIDMultipartResponse
-	DEFINE part com.HttpPart
-	DEFINE ind INTEGER
-	DEFINE xml_body xml.DomDocument
-	DEFINE xml_node xml.DomNode
-	DEFINE json_body STRING
+PUBLIC FUNCTION v1_getToken(p_l_id STRING, p_l_pwd STRING) RETURNS(INTEGER, v1_getTokenResponseBodyType)
+	DEFINE fullpath                  base.StringBuffer
+	DEFINE contentType               STRING
+	DEFINE req                       com.HTTPRequest
+	DEFINE resp                      com.HTTPResponse
+	DEFINE resp_body                 v1_getTokenResponseBodyType
+	DEFINE json_body                 STRING
+	DEFINE txt                       STRING
 
 	TRY
 
 		# Prepare request path
 		LET fullpath = base.StringBuffer.Create()
-		CALL fullpath.append("/checkUserID/{l_id}")
+		CALL fullpath.append("/v1/getToken/{l_id}/{l_pwd}")
+		CALL fullpath.replace("{l_id}", p_l_id, 1)
+		CALL fullpath.replace("{l_pwd}", p_l_pwd, 1)
+
+		WHILE TRUE
+			# Create oauth request and configure it
+			LET req = OAuthAPI.CreateHTTPAuthorizationRequest(SFMT("%1%2", Endpoint.Address.Uri, fullpath.toString()))
+			IF Endpoint.Binding.Version IS NOT NULL THEN
+				CALL req.setVersion(Endpoint.Binding.Version)
+			END IF
+			IF Endpoint.Binding.ConnectionTimeout <> 0 THEN
+				CALL req.setConnectionTimeout(Endpoint.Binding.ConnectionTimeout)
+			END IF
+			IF Endpoint.Binding.ReadWriteTimeout <> 0 THEN
+				CALL req.setTimeout(Endpoint.Binding.ReadWriteTimeout)
+			END IF
+			IF Endpoint.Binding.CompressRequest IS NOT NULL THEN
+				CALL req.setHeader("Content-Encoding", Endpoint.Binding.CompressRequest)
+			END IF
+
+			# Perform request
+			CALL req.setMethod("GET")
+			CALL req.setHeader("Accept", "application/json")
+			CALL req.DoRequest()
+
+			# Retrieve response
+			LET resp = req.getResponse()
+			# Retry if access token has expired
+			IF NOT OAuthAPI.RetryHTTPRequest(resp) THEN
+				EXIT WHILE
+			END IF
+		END WHILE
+		# Process response
+		INITIALIZE resp_body TO NULL
+		LET contentType = resp.getHeader("Content-Type")
+		CASE resp.getStatusCode()
+
+			WHEN 200 #Success
+				IF contentType MATCHES "*application/json*" THEN
+					# Parse JSON response
+					LET json_body = resp.getTextResponse()
+					CALL util.JSON.parse(json_body, resp_body)
+					RETURN C_SUCCESS, resp_body.*
+				END IF
+				RETURN -1, resp_body.*
+
+			OTHERWISE
+				RETURN resp.getStatusCode(), resp_body.*
+		END CASE
+	CATCH
+		RETURN -1, resp_body.*
+	END TRY
+END FUNCTION
+################################################################################
+
+################################################################################
+# Operation /v2/checkUserID/{l_id}
+#
+# VERB: GET
+# ID:          v2_checkUserID
+# DESCRIPTION: Check UserID
+#
+PUBLIC FUNCTION v2_checkUserID(p_l_id STRING) RETURNS(INTEGER, v2_checkUserIDMultipartResponse)
+	DEFINE fullpath                     base.StringBuffer
+	DEFINE contentType                  STRING
+	DEFINE req                          com.HTTPRequest
+	DEFINE resp                         com.HTTPResponse
+	DEFINE resp_body                    v2_checkUserIDMultipartResponse
+	DEFINE part                         com.HttpPart
+	DEFINE ind                          INTEGER
+	DEFINE xml_body                     xml.DomDocument
+	DEFINE xml_node                     xml.DomNode
+	DEFINE json_body                    STRING
+	DEFINE txt                          STRING
+
+	TRY
+
+		# Prepare request path
+		LET fullpath = base.StringBuffer.Create()
+		CALL fullpath.append("/v2/checkUserID/{l_id}")
 		CALL fullpath.replace("{l_id}", p_l_id, 1)
 
-		# Create request and configure it
-		LET req =
-				com.HTTPRequest.Create(
-						SFMT("%1%2", Endpoint.Address.Uri, fullpath.toString()))
-		IF Endpoint.Binding.Version IS NOT NULL THEN
-			CALL req.setVersion(Endpoint.Binding.Version)
-		END IF
-		IF Endpoint.Binding.ConnectionTimeout <> 0 THEN
-			CALL req.setConnectionTimeout(Endpoint.Binding.ConnectionTimeout)
-		END IF
-		IF Endpoint.Binding.ReadWriteTimeout <> 0 THEN
-			CALL req.setTimeout(Endpoint.Binding.ReadWriteTimeout)
-		END IF
-		IF Endpoint.Binding.CompressRequest IS NOT NULL THEN
-			CALL req.setHeader("Content-Encoding", Endpoint.Binding.CompressRequest)
-		END IF
+		WHILE TRUE
+			# Create oauth request and configure it
+			LET req = OAuthAPI.CreateHTTPAuthorizationRequest(SFMT("%1%2", Endpoint.Address.Uri, fullpath.toString()))
+			IF Endpoint.Binding.Version IS NOT NULL THEN
+				CALL req.setVersion(Endpoint.Binding.Version)
+			END IF
+			IF Endpoint.Binding.ConnectionTimeout <> 0 THEN
+				CALL req.setConnectionTimeout(Endpoint.Binding.ConnectionTimeout)
+			END IF
+			IF Endpoint.Binding.ReadWriteTimeout <> 0 THEN
+				CALL req.setTimeout(Endpoint.Binding.ReadWriteTimeout)
+			END IF
+			IF Endpoint.Binding.CompressRequest IS NOT NULL THEN
+				CALL req.setHeader("Content-Encoding", Endpoint.Binding.CompressRequest)
+			END IF
 
-		# Perform request
-		CALL req.setMethod("GET")
-		CALL req.setHeader("Accept", "multipart/form-data")
-		CALL req.DoRequest()
+			# Perform request
+			CALL req.setMethod("GET")
+			CALL req.setHeader("Accept", "multipart/form-data")
+			CALL req.DoRequest()
 
-		# Retrieve response
-		LET resp = req.getResponse()
+			# Retrieve response
+			LET resp = req.getResponse()
+			# Retry if access token has expired
+			IF NOT OAuthAPI.RetryHTTPRequest(resp) THEN
+				EXIT WHILE
+			END IF
+		END WHILE
 		# Process response
 		INITIALIZE resp_body TO NULL
 		LET contentType = resp.getHeader("Content-Type")
@@ -343,7 +636,119 @@ PUBLIC FUNCTION checkUserID(p_l_id STRING)
 					# Parse Multipart response
 					# Parse main part rv0 response
 					# Parse TEXT response
-					LET resp_body.rv0 = resp.getTextResponse()
+					LET txt = resp.getTextResponse()
+					IF txt IS NULL THEN
+						LET resp_body.rv0 = NULL
+					ELSE
+						IF txt.equalsIgnoreCase("true") THEN
+							LET resp_body.rv0 = TRUE
+						ELSE
+							IF txt.equalsIgnoreCase("false") THEN
+								LET resp_body.rv0 = FALSE
+							ELSE
+								LET resp_body.rv0 = txt
+							END IF
+						END IF
+					END IF
+					FOR ind = 1 TO resp.getPartCount()
+						LET part = resp.getPart(ind)
+						# Parse rv1 response
+						# Parse JSON response
+						LET json_body = part.getContentAsString()
+						CALL util.JSON.parse(json_body, resp_body.rv1)
+					END FOR
+					RETURN C_SUCCESS, resp_body.*
+				END IF
+				RETURN -1, resp_body.*
+
+			OTHERWISE
+				RETURN resp.getStatusCode(), resp_body.*
+		END CASE
+	CATCH
+		RETURN -1, resp_body.*
+	END TRY
+END FUNCTION
+################################################################################
+
+################################################################################
+# Operation /v1/checkUserID/{l_id}
+#
+# VERB: GET
+# ID:          v1_checkUserID
+# DESCRIPTION: Check UserID
+#
+PUBLIC FUNCTION v1_checkUserID(p_l_id STRING) RETURNS(INTEGER, v1_checkUserIDMultipartResponse)
+	DEFINE fullpath                     base.StringBuffer
+	DEFINE contentType                  STRING
+	DEFINE req                          com.HTTPRequest
+	DEFINE resp                         com.HTTPResponse
+	DEFINE resp_body                    v1_checkUserIDMultipartResponse
+	DEFINE part                         com.HttpPart
+	DEFINE ind                          INTEGER
+	DEFINE xml_body                     xml.DomDocument
+	DEFINE xml_node                     xml.DomNode
+	DEFINE json_body                    STRING
+	DEFINE txt                          STRING
+
+	TRY
+
+		# Prepare request path
+		LET fullpath = base.StringBuffer.Create()
+		CALL fullpath.append("/v1/checkUserID/{l_id}")
+		CALL fullpath.replace("{l_id}", p_l_id, 1)
+
+		WHILE TRUE
+			# Create oauth request and configure it
+			LET req = OAuthAPI.CreateHTTPAuthorizationRequest(SFMT("%1%2", Endpoint.Address.Uri, fullpath.toString()))
+			IF Endpoint.Binding.Version IS NOT NULL THEN
+				CALL req.setVersion(Endpoint.Binding.Version)
+			END IF
+			IF Endpoint.Binding.ConnectionTimeout <> 0 THEN
+				CALL req.setConnectionTimeout(Endpoint.Binding.ConnectionTimeout)
+			END IF
+			IF Endpoint.Binding.ReadWriteTimeout <> 0 THEN
+				CALL req.setTimeout(Endpoint.Binding.ReadWriteTimeout)
+			END IF
+			IF Endpoint.Binding.CompressRequest IS NOT NULL THEN
+				CALL req.setHeader("Content-Encoding", Endpoint.Binding.CompressRequest)
+			END IF
+
+			# Perform request
+			CALL req.setMethod("GET")
+			CALL req.setHeader("Accept", "multipart/form-data")
+			CALL req.DoRequest()
+
+			# Retrieve response
+			LET resp = req.getResponse()
+			# Retry if access token has expired
+			IF NOT OAuthAPI.RetryHTTPRequest(resp) THEN
+				EXIT WHILE
+			END IF
+		END WHILE
+		# Process response
+		INITIALIZE resp_body TO NULL
+		LET contentType = resp.getHeader("Content-Type")
+		CASE resp.getStatusCode()
+
+			WHEN 200 #Success
+				IF resp.getMultipartType() IS NOT NULL THEN
+					# Parse Multipart response
+					# Parse main part rv0 response
+					# Parse TEXT response
+					LET txt = resp.getTextResponse()
+					IF txt IS NULL THEN
+						LET resp_body.rv0 = NULL
+					ELSE
+						IF txt.equalsIgnoreCase("true") THEN
+							LET resp_body.rv0 = TRUE
+						ELSE
+							IF txt.equalsIgnoreCase("false") THEN
+								LET resp_body.rv0 = FALSE
+							ELSE
+								LET resp_body.rv0 = txt
+							END IF
+						END IF
+					END IF
 					FOR ind = 1 TO resp.getPartCount()
 						LET part = resp.getPart(ind)
 						# Parse rv1 response

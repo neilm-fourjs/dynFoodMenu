@@ -4,6 +4,7 @@ IMPORT util
 IMPORT os
 IMPORT FGL debug
 IMPORT FGL config
+IMPORT FGL wsAuthLib
 IMPORT FGL db
 --IMPORT FGL wsBackEnd
 IMPORT FGL wsMenus
@@ -141,8 +142,8 @@ FUNCTION (this Menus) getMenuListWS() RETURNS BOOLEAN
 	DEFINE l_json TEXT
 	DEFINE l_fileName STRING = "menus.json"
 	CALL libCommon.processing("Loading Menus ...",1)
-	LET wsMenus.Endpoint.Address.Uri = g_cfg.getWSServer(C_WS_MENUS)
-	CALL wsMenus.getMenus() RETURNING l_stat,this.menuList.*
+	LET wsMenus.Endpoint.Address.Uri = g_wsAuth.getWSServer(C_WS_MENUS)
+	CALL wsMenus.v2_getMenus() RETURNING l_stat,this.menuList.*
 	CALL libCommon.processing("Loading Menus ...",3)
 	IF l_stat != 0 THEN
 		CALL debug.output(SFMT("getMenuListWS: %1 from %2", l_stat, wsMenus.Endpoint.Address.Uri),FALSE)
@@ -156,9 +157,9 @@ END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION (this Menus) getMenuWS(l_menuName STRING) RETURNS BOOLEAN
 	DEFINE l_stat INT
-	LET wsMenus.Endpoint.Address.Uri = g_cfg.getWSServer(C_WS_MENUS)
+	LET wsMenus.Endpoint.Address.Uri = g_wsAuth.getWSServer(C_WS_MENUS)
 	CALL libCommon.processing("Loading Menu ...",1)
-	CALL wsMenus.getMenu(l_menuName) RETURNING l_stat, this.menu.*
+	CALL wsMenus.v2_getMenu(l_menuName) RETURNING l_stat, this.menu.*
 	CALL libCommon.processing("Loading Menu ...",3)
 	IF l_stat != 0 THEN
 		CALL debug.output(SFMT("getMenuWS: %1 Stat: %2", l_menuName, l_stat),FALSE)
@@ -178,8 +179,8 @@ FUNCTION (this Menus) save()
 	LET this.ordered.menu_id = this.menu.menuName
 	CALL libCommon.processing("Saving Order ...",1)
 
-	LET wsMenus.Endpoint.Address.Uri = g_cfg.getWSServer(C_WS_MENUS)
-	CALL wsMenus.placeOrder(this.ordered.*) RETURNING l_stat, l_resp.*
+	LET wsMenus.Endpoint.Address.Uri = g_wsAuth.getWSServer(C_WS_MENUS)
+	CALL wsMenus.v2_placeOrder(this.ordered.*) RETURNING l_stat, l_resp.*
 	CALL debug.output(SFMT("save Stat:%1:%2:%3 - from %4", l_stat,l_resp.l_stat,l_resp.l_msg, wsMenus.Endpoint.Address.Uri),FALSE)
 
 	CALL libCommon.processing("Saved Order.",3)

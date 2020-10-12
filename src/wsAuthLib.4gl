@@ -10,8 +10,7 @@ TYPE t_cfg RECORD
 		ClientID         STRING,
 		SecretID         STRING,
 		Scopes           STRING,
-		idp              STRING,
-		idpTokenEndpoint STRING
+		idp              STRING
 	END RECORD
 
 PUBLIC TYPE wsAuthLib RECORD
@@ -23,6 +22,7 @@ PUBLIC TYPE wsAuthLib RECORD
 	token            STRING,
 	tokenExpire      INTEGER,
 	endpoint				 STRING,
+	idpTokenEndpoint STRING,
 	cfgJSON RECORD
 		default STRING,
 		cfgs DYNAMIC ARRAY OF t_cfg
@@ -31,29 +31,38 @@ PUBLIC TYPE wsAuthLib RECORD
 	message STRING
 END RECORD
 
-PUBLIC FUNCTION (this wsAuthLib) init(l_cfgFileName STRING, l_cfgName STRING) RETURNS BOOLEAN
+PUBLIC FUNCTION (this wsAuthLib) init(l_dir STRING, l_cfgFileName STRING, l_cfgName STRING) RETURNS BOOLEAN
 	DEFINE l_stat       INT
 	DEFINE l_cfg        TEXT
 	DEFINE x SMALLINT
 
 -- check for and read the json configure for the web services
-	IF this.cfgJSON.default IS NULL THEN
-		LET this.cfgFileName = l_cfgFileName
-		IF NOT os.path.exists(l_cfgFileName) THEN
-			LET this.message = SFMT("Missing config file '%1' !", l_cfgFileName)
+	IF this.cfgJSON.default IS NULL THEN 
+		LET this.cfgFileName = os.path.join(l_dir, l_cfgFileName)
+		IF NOT os.path.exists(this.cfgFileName) THEN
+			LET this.message = SFMT("Missing config file '%1' !", this.cfgFileName)
 			RETURN FALSE
 		END IF
-		LET this.message = SFMT("Using '%1' for configuration", l_cfgFileName)
-		LOCATE l_cfg IN FILE l_cfgFileName
-		CALL util.json.parse(l_cfg, this.cfgJSON)
+		LET this.message = SFMT("Using '%1' for configuration", this.cfgFileName)
 		IF fgl_getEnv("MYWSDEBUG") = "9" THEN
-			DISPLAY SFMT("wsAuthLib.init: File: %1", this.cfgFileName)
+			DISPLAY this.message
 		END IF
+		LOCATE l_cfg IN FILE this.cfgFileName
+		IF fgl_getEnv("MYWSDEBUG") = "9" THEN
+			DISPLAY SFMT("wsAuthLib.init: CFG: %1", l_cfg)
+		END IF
+		TRY
+			CALL util.json.parse(l_cfg, this.cfgJSON)
+		CATCH
+			LET this.message = SFMT("Error parsing '%1'\n%2\nContent: %3", this.cfgFileName, ERR_GET(STATUS), NVL(l_cfg,"NULL!"))
+			DISPLAY this.message
+			RETURN FALSE
+		END TRY
 	END IF
 
 	LET this.cfgCur = 0
 	LET this.cfgName = l_cfgName
-	IF this.cfgName IS NULL THEN LET this.cfgName = this.cfgJSON.default END IF
+	IF this.cfgName IS NULL OR this.cfgName.getLength() < 2 THEN LET this.cfgName = this.cfgJSON.default END IF
 	FOR x = 1 TO this.cfgJSON.cfgs.getLength()
 		IF this.cfgJSON.cfgs[x].name = this.cfgName THEN
 			LET this.cfgCur = x
@@ -97,6 +106,10 @@ PUBLIC FUNCTION (this wsAuthLib) init(l_cfgFileName STRING, l_cfgName STRING) RE
 	RETURN l_stat
 END FUNCTION
 --------------------------------------------------------------------------------
+PUBLIC FUNCTION (this wsAuthLib) getWSServer( l_serviceName STRING) RETURNS STRING
+	RETURN this.endPoint||l_serviceName
+END FUNCTION
+--------------------------------------------------------------------------------
 PRIVATE FUNCTION (this wsAuthLib) getAccessToken() RETURNS BOOLEAN
 	DEFINE l_metadata         OAuthAPI.OpenIDMetadataType
 	DEFINE l_scopes_supported STRING
@@ -119,6 +132,7 @@ PRIVATE FUNCTION (this wsAuthLib) getAccessToken() RETURNS BOOLEAN
 		DISPLAY SFMT("wsAuthLib.getAccessToken: Token Endpoint: %1", l_metadata.token_endpoint)
 		DISPLAY SFMT("wsAuthLib.getAccessToken: Scopes Support: %1", l_scopes_supported)
 	END IF
+	LET this.idpTokenEndpoint = l_metadata.token_endpoint
 
 -- Get the access token using token endpoint and clientId/password
 	CALL OAuthAPI.RetrieveServiceToken(

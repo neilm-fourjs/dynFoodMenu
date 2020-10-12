@@ -11,7 +11,7 @@ MAIN
 
 -- Initialize Secure Access
   LET l_cfgFileName = IIF(NUM_ARGS()>0, ARG_VAL(1), "ws_cfg.json")
-	IF NOT wsAuth.init(l_cfgFileName, NULL) THEN
+	IF NOT wsAuth.init(".", l_cfgFileName, NULL) THEN
 		DISPLAY wsAuth.message
 		EXIT PROGRAM
 	ELSE

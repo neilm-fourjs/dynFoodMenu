@@ -1,6 +1,7 @@
 
 IMPORT FGL config
 IMPORT FGL db
+IMPORT FGL wsAuthLib
 &include "menus.inc"
 &include "globals.inc"
 FUNCTION show()
@@ -19,7 +20,12 @@ FUNCTION show()
 	LET l_about = l_about.append( SFMT("\ndbName=%1", g_cfg.dbName) )
 	LET l_about = l_about.append( SFMT("\nlogDir=%1", g_cfg.logDir) )
 	LET l_about = l_about.append( SFMT("\nlogFile=%1", g_cfg.logFile) )
-	LET l_about = l_about.append( SFMT("\nWS Server=%1", g_cfg.wsServer) )
+	LET l_about = l_about.append( SFMT("\nWS CFGFile=%1", g_wsAuth.cfgFileName) )
+	LET l_about = l_about.append( SFMT("\nWS CFGName=%1", g_wsAuth.cfgName) )
+	LET l_about = l_about.append( SFMT("\nWS CFG GAS=%1", g_wsAuth.cfg.GAS ) )
+	LET l_about = l_about.append( SFMT("\nWS CFG Service=%1", g_wsAuth.cfg.ServiceName ) )
+	LET l_about = l_about.append( SFMT("\nWS CFG Version=%1", g_wsAuth.cfg.ServiceVersion ) )
+	LET l_about = l_about.append( SFMT("\nWS CFG Endpoint=%1", g_wsAuth.endPoint ) )
 	OPEN WINDOW about WITH FORM "about"
 	DISPLAY BY NAME l_about
 	MENU

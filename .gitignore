@@ -23,6 +23,8 @@
 *.class
 
 # Temporary and log files
+*.old
+*.lst
 *.log
 *.out
 *.tmp

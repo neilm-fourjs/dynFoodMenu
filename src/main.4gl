@@ -9,6 +9,7 @@ IMPORT FGL Users
 IMPORT FGL Menus
 IMPORT FGL Patients
 IMPORT FGL db
+IMPORT FGL wsAuthLib
 DEFINE myMenu wc_iconMenu.wc_iconMenu
 &include "globals.inc"
 MAIN
@@ -16,19 +17,25 @@ MAIN
 	DEFINE l_user Users
 	DEFINE l_menu Menus
 	DEFINE l_patients Patients
-
 	DEFINE x SMALLINT
 	WHENEVER ERROR CALL libCommon.abort
 
 	IF NOT g_cfg.initConfigFile(NULL) THEN
 		CALL fgl_winMessage("Error", g_cfg.message,"exclamation")
-		EXIT PROGRAM
+		EXIT PROGRAM 1
 	END IF
 	CALL g_cfg.showCFG()
 	CALL debug.output(g_cfg.message,FALSE)
 	CALL STARTLOG( g_cfg.getLogFile() )
+
+	IF NOT g_wsAuth.init( g_cfg.cfgDir, g_cfg.wsCFGFile, g_cfg.wsCFGName ) THEN
+		CALL fgl_winMessage("Error",g_wsAuth.message,"exclamation")
+		EXIT PROGRAM 1
+	END IF
+
 	CALL libCommon.loadStyles()
 	CALL debug.output(SFMT("Started FGLPROFILE=%1", fgl_getEnv("FGLPROFILE")), FALSE)
+
 	OPEN FORM login FROM "login"
 	DISPLAY FORM login
 

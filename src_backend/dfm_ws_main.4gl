@@ -7,6 +7,7 @@ IMPORT FGL dfm_ws_menus
 IMPORT FGL dfm_ws_users
 IMPORT FGL dfm_ws_patients
 IMPORT FGL ws_lib
+IMPORT FGL wsAuthLib
 IMPORT FGL debug
 IMPORT FGL config
 IMPORT FGL db

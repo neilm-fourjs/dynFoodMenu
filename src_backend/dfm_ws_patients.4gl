@@ -23,6 +23,7 @@ PUBLIC DEFINE serviceInfo RECORD ATTRIBUTE(WSInfo)
 		description: "A RESTFUL backend for the dynFoodMenu mobile demo - Serving: Patients",
     version: "v2", 
     contact: ( name: "Neil J Martin", email:"neilm@4js.com") )
+PRIVATE DEFINE Context DICTIONARY ATTRIBUTE(WSContext) OF STRING
 DEFINE m_patients Patients
 --------------------------------------------------------------------------------
 #+ GET <server>/ws/r/dfm/patients/v1/getWards/<token>

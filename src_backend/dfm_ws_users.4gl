@@ -24,6 +24,7 @@ PUBLIC DEFINE serviceInfo RECORD ATTRIBUTE(WSInfo)
 		description: "A RESTFUL backend for the dynFoodMenu mobile demo - Serving: Users",
     version: "v2", 
     contact: ( name: "Neil J Martin", email:"neilm@4js.com") )
+PRIVATE DEFINE Context DICTIONARY ATTRIBUTE(WSContext) OF STRING
 
 DEFINE m_user Users
 DEFINE m_ts CHAR(19)
@@ -118,7 +119,8 @@ PUBLIC FUNCTION v2_getToken(
 		user_name: "Invalid User Id!" )
 	IF m_ts IS NULL THEN LET m_ts = CURRENT YEAR TO SECOND END IF
 	CALL debug.output( SFMT("v2_getToken - client_id: %1 IP: %2",client_id, l_cli_ip), FALSE)
-
+	CALL debug.output( SFMT("v2_getToken - Context baseURL: %1", Context["BaseURL"]) , FALSE)
+	CALL debug.output( SFMT("v2_getToken - Context scope: %1", Context["Scope"]) , FALSE)
 	IF l_pwd != utils.apiPaas(l_id CLIPPED, m_ts) THEN
 		CALL debug.output(SFMT("v2_getToken: User:%1 API:%2 Invalid APIPASS",l_rec.user_id, l_pwd), FALSE)
 		RETURN l_rec.*

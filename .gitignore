@@ -30,6 +30,7 @@
 *.tmp
 *.err
 *.bak
+*.tok
 
 # Packages
 *.tgz

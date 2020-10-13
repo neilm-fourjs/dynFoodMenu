@@ -23,6 +23,7 @@ PUBLIC DEFINE serviceInfo RECORD ATTRIBUTE(WSInfo)
 END RECORD =
 		(title: "dynFoodMenu", description: "A RESTFUL backend for the dynFoodMenu mobile demo - Serving: Menus",
 				version: "v2", contact:(name: "Neil J Martin", email: "neilm@4js.com"), modules:["One", "Two", "Three"])
+PRIVATE DEFINE Context DICTIONARY ATTRIBUTE(WSContext) OF STRING
 
 PUBLIC DEFINE menuError RECORD ATTRIBUTE(WSError = "Menu Error")
 	host    STRING,

@@ -1,0 +1,25 @@
+{
+  "default": "test",
+  "cfgs": [
+    {
+      "name": "test",
+      "GAS": "http://test/g/ws/r",
+      "ServiceName": "dfmv2",
+      "ServiceVersion": "v2",
+      "ClientID": "XXX",
+      "SecretID": "XXX",
+      "idp": "services/GeneroIdentityProvider",
+      "Scopes": "DFM dfm.get dfm.post"
+    },
+    {
+      "name": "live",
+      "GAS": "https://live/g/ws/r",
+      "ServiceName": "dfmv2",
+      "ServiceVersion": "v2",
+      "ClientID": "XXX",
+      "SecretID": "XXX",
+      "idp": "services/GeneroIdentityProvider",
+      "Scopes": "DFM dfm.get dfm.post"
+    }
+  ]
+}

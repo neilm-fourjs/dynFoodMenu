@@ -252,9 +252,10 @@ FUNCTION (this Users) login(l_win BOOLEAN) RETURNS BOOLEAN
 		ON ACTION about CALL about.show()
 		AFTER INPUT
 			IF NOT int_flag THEN
-				CALL debug.output(SFMT("Getting token for: %1 from: %2 ", this.currentUser.user_id, wsUsers.Endpoint.Address.Uri), FALSE)
 				LET l_pwd = this.currentUser.user_pwd
 				CALL ui.Window.getCurrent().getForm().setFieldStyle("formonly.username","title curvedborder")
+
+				CALL debug.output(SFMT("Getting timestamp from: %1", wsUsers.Endpoint.Address.Uri), FALSE)
 				CALL wsUsers.v2_getTimestamp() RETURNING l_stat, this.server_time
 				IF l_stat != 0 THEN
 					LET l_msg = utils.ws_replyStat(l_stat)
@@ -265,6 +266,8 @@ FUNCTION (this Users) login(l_win BOOLEAN) RETURNS BOOLEAN
 				ELSE
 					CALL debug.output(SFMT("getTimestamp: %1, reply: %2",l_stat, this.server_time),FALSE)
 				END IF
+
+				CALL debug.output(SFMT("Getting session token for: %1", this.currentUser.user_id), FALSE)
 				CALL wsUsers.v2_getToken(this.currentUser.user_id, utils.apiPaas(this.currentUser.user_id, this.server_time) ) RETURNING l_stat, this.currentUser.*
 				CALL debug.output(SFMT("getToken: %1, reply: %2 : %3(%4)",this.currentUser.user_id, l_stat, this.currentUser.user_name, this.currentUser.user_pwd),FALSE)
 				IF l_stat != 0 OR this.currentUser.user_id = "ERROR" THEN
@@ -272,6 +275,7 @@ FUNCTION (this Users) login(l_win BOOLEAN) RETURNS BOOLEAN
 					CALL fgl_winMessage("Error","2) Error logging in, please try again.","exclamation")
 					NEXT FIELD user_id
 				END IF
+
 				IF LENGTH(this.currentUser.user_pwd) < 2 THEN
 					DISPLAY "Invalid login. please report this problem!" TO username
 					NEXT FIELD user_id

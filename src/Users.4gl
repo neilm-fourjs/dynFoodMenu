@@ -166,7 +166,7 @@ FUNCTION (this Users) registerUI()
 	LET this.currentUserDetails.registered = CURRENT
 	LET this.currentUserDetails.dob = "01/01/1970"
 	LET int_flag = FALSE
-	LET wsUsers.Endpoint.Address.Uri = g_wsAuth.getWSServer(C_WS_USERS)
+
 	INPUT BY NAME this.currentUserDetails.*, l_pwd2 WITHOUT DEFAULTS
 		AFTER FIELD user_id
 			CALL wsUsers.v2_checkUserID(this.currentUserDetails.user_id) RETURNING l_stat, l_exists, l_suggestion
@@ -255,16 +255,8 @@ FUNCTION (this Users) login(l_win BOOLEAN) RETURNS BOOLEAN
 				LET l_pwd = this.currentUser.user_pwd
 				CALL ui.Window.getCurrent().getForm().setFieldStyle("formonly.username","title curvedborder")
 
-				CALL debug.output(SFMT("Getting timestamp from: %1", wsUsers.Endpoint.Address.Uri), FALSE)
-				CALL wsUsers.v2_getTimestamp() RETURNING l_stat, this.server_time
-				IF l_stat != 0 THEN
-					LET l_msg = utils.ws_replyStat(l_stat)
-					CALL debug.output(SFMT("getTimestamp: %1, reply: %2",l_stat, l_msg),FALSE)
-					DISPLAY "Login error: "||l_msg  TO username
-					CALL fgl_winMessage("Error","1) Error logging in, please try again.","exclamation")
+				IF NOT this.ws_init() THEN
 					NEXT FIELD user_id
-				ELSE
-					CALL debug.output(SFMT("getTimestamp: %1, reply: %2",l_stat, this.server_time),FALSE)
 				END IF
 
 				CALL debug.output(SFMT("Getting session token for: %1", this.currentUser.user_id), FALSE)
@@ -300,5 +292,32 @@ FUNCTION (this Users) login(l_win BOOLEAN) RETURNS BOOLEAN
 		RETURN FALSE
 	END IF
 	CALL debug.output(SFMT("getToken: %1 %2 Okay",this.currentUser.user_id, this.currentUser.user_token),FALSE )
+	RETURN TRUE
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+PRIVATE FUNCTION (this Users) ws_init() RETURNS BOOLEAN
+	DEFINE l_stat INT
+
+-- Get access token is we don't already have one.
+	IF g_wsAuth.token IS NULL THEN
+		CALL debug.output(SFMT("Doing g_wsAuth.init( '%1', '%2', '%3'", g_cfg.cfgDir, g_cfg.wsCFGFile, g_cfg.wsCFGName ), FALSE)
+		IF NOT g_wsAuth.init( g_cfg.cfgDir, g_cfg.wsCFGFile, g_cfg.wsCFGName ) THEN
+			CALL fgl_winMessage("Error",g_wsAuth.message,"exclamation")
+			RETURN FALSE
+		END IF
+	END IF
+	LET wsUsers.Endpoint.Address.Uri = g_wsAuth.getWSServer(C_WS_USERS)
+
+-- Get the servers timestamp.
+	CALL debug.output(SFMT("Getting timestamp from: %1", wsUsers.Endpoint.Address.Uri), FALSE)
+	CALL wsUsers.v2_getTimestamp() RETURNING l_stat, this.server_time
+	IF l_stat != 0 THEN
+		CALL debug.output(SFMT("getTimestamp: %1, reply: %2",l_stat, utils.ws_replyStat(l_stat)),FALSE)
+		CALL fgl_winMessage("Error","1) Error logging in, please try again.","exclamation")
+		RETURN FALSE
+	ELSE
+		CALL debug.output(SFMT("getTimestamp: %1, reply: %2",l_stat, this.server_time),FALSE)
+	END IF
+
 	RETURN TRUE
 END FUNCTION

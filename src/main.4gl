@@ -24,17 +24,14 @@ MAIN
 		CALL fgl_winMessage("Error", g_cfg.message,"exclamation")
 		EXIT PROGRAM 1
 	END IF
+
+	CALL libCommon.loadStyles()
+	CALL debug.output(SFMT("Started FGLPROFILE=%1", fgl_getEnv("FGLPROFILE")), FALSE)
+
 	CALL g_cfg.showCFG()
 	CALL debug.output(g_cfg.message,FALSE)
 	CALL STARTLOG( g_cfg.getLogFile() )
 	IF NUM_ARGS() > 0 THEN LET g_cfg.wsCFGName = ARG_VAL(1) END IF
-	IF NOT g_wsAuth.init( g_cfg.cfgDir, g_cfg.wsCFGFile, g_cfg.wsCFGName ) THEN
-		CALL fgl_winMessage("Error",g_wsAuth.message,"exclamation")
-		EXIT PROGRAM 1
-	END IF
-
-	CALL libCommon.loadStyles()
-	CALL debug.output(SFMT("Started FGLPROFILE=%1", fgl_getEnv("FGLPROFILE")), FALSE)
 
 	OPEN FORM login FROM "login"
 	DISPLAY FORM login

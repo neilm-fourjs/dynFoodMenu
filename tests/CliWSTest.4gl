@@ -5,16 +5,15 @@ IMPORT FGL wsMenus
 IMPORT FGL wsPatients
 
 MAIN
-	DEFINE l_cfgFileName STRING
+	DEFINE l_cfgFileName, l_cfgName STRING
 	DEFINE wsAuth        wsAuthLib
 
 -- Initialize Secure Access
-	LET l_cfgFileName = IIF(NUM_ARGS() > 0, ARG_VAL(1), "ws_cfg.json")
-	IF NOT wsAuth.init(".", l_cfgFileName, "piv2") THEN
+	LET l_cfgFileName = "ws_cfg.json"
+	LET l_cfgName = IIF(NUM_ARGS() > 0, ARG_VAL(1), "localv2")
+	IF NOT wsAuth.init(".", l_cfgFileName, l_cfgName) THEN
 		DISPLAY wsAuth.message
 		EXIT PROGRAM
-	ELSE
-		DISPLAY "userID: ", wsAuth.user_id
 	END IF
 
 -- Setup my specific service end points

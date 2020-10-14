@@ -10,7 +10,7 @@ XCF=dfmv2
 WS1=menus
 WS2=users
 WS3=patients
-CFG=ws_cfg.json
+CFG=localv2
 TOK=dfm.tok
 
 LIB=../bin/wsAuthLib.42m

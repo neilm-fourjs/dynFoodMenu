@@ -1,4 +1,3 @@
-
 IMPORT FGL wsAuthLib
 
 IMPORT FGL wsUsers
@@ -7,10 +6,10 @@ IMPORT FGL wsPatients
 
 MAIN
 	DEFINE l_cfgFileName STRING
-	DEFINE wsAuth wsAuthLib
+	DEFINE wsAuth        wsAuthLib
 
 -- Initialize Secure Access
-  LET l_cfgFileName = IIF(NUM_ARGS()>0, ARG_VAL(1), "ws_cfg.json")
+	LET l_cfgFileName = IIF(NUM_ARGS() > 0, ARG_VAL(1), "ws_cfg.json")
 	IF NOT wsAuth.init(".", l_cfgFileName, "piv2") THEN
 		DISPLAY wsAuth.message
 		EXIT PROGRAM
@@ -22,12 +21,13 @@ MAIN
 	LET wsUsers.Endpoint.Address.Uri    = wsAuth.endPoint || "users"
 	LET wsMenus.Endpoint.Address.Uri    = wsAuth.endPoint || "menus"
 	LET wsPatients.Endpoint.Address.Uri = wsAuth.endPoint || "patients"
-	DISPLAY "Users Endpoint: ",wsUsers.Endpoint.Address.Uri
+	DISPLAY "Users Endpoint: ", wsUsers.Endpoint.Address.Uri
 
 -- Do test calls
 	CASE wsAuth.cfg.ServiceVersion
 --		WHEN "v1" CALL test_v1()
-		WHEN "v2" CALL test_v2()
+		WHEN "v2"
+			CALL test_v2()
 	END CASE
 
 END MAIN

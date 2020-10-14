@@ -1,7 +1,7 @@
 
 export FGLLDPATH=../bin
-export FGLWSDEBUG=0
-export MYWSDEBUG=9
+export FGLWSDEBUG=9
+export MYWSDEBUG=0
 
 #SRV=https://generodemos.dynu.net/z/ws/r
 # My local GAS

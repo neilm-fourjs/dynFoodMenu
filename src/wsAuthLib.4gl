@@ -80,17 +80,28 @@ PUBLIC FUNCTION (this wsAuthLib) init(l_dir STRING, l_cfgFileName STRING, l_cfgN
 
 -- Set the endpoint for the GAS
 	LET this.endpoint = this.cfg.GAS || "/" || this.cfg.ServiceName || "/"
--- Set the IDP for the GAS
-	LET this.cfg.idp = this.cfg.GAS || "/" || this.cfg.idp
-
 	IF fgl_getEnv("MYWSDEBUG") = "9" THEN
 		DISPLAY SFMT("wsAuthLib.init: GAS: %1", this.cfg.GAS)
 		DISPLAY SFMT("wsAuthLib.init: ServiceName: %1", this.cfg.ServiceName)
 		DISPLAY SFMT("wsAuthLib.init: ServiceVersion: %1", this.cfg.ServiceVersion)
+	END IF
+
+	IF this.cfg.idp IS NULL THEN
+		IF fgl_getEnv("MYWSDEBUG") = "9" THEN
+			DISPLAY "wsAuthLib.init: NO IDP"
+		END IF
+		RETURN TRUE
+	END IF
+
+-- Set the IDP for the GAS
+	LET this.cfg.idp = this.cfg.GAS || "/" || this.cfg.idp
+
+	IF fgl_getEnv("MYWSDEBUG") = "9" THEN
 		DISPLAY SFMT("wsAuthLib.init: IDP: %1", this.cfg.idp)
 		DISPLAY SFMT("wsAuthLib.init: ClientID: %1, SecretID: %2", this.cfg.ClientID, this.cfg.SecretID)
 		DISPLAY SFMT("wsAuthLib.init: Scopes: %1", this.cfg.Scopes)
 	END IF
+
 
 -- Retrieve access token using login credentials
 	IF NOT this.getAccessToken() THEN
@@ -99,9 +110,11 @@ PUBLIC FUNCTION (this wsAuthLib) init(l_dir STRING, l_cfgFileName STRING, l_cfgN
 
 -- Initialize OAuth access
 	CALL OAuthAPI.InitService(this.connectionExpire, this.Token) RETURNING l_stat
-	IF l_stat != 1 THEN LET this.message = "InitService failed!" END IF
+	LET this.message = "OAuthAPI.InitService "||IIF(l_stat,"Okay","Failed!")
+	DISPLAY SFMT("wsAuthLib.init: %1", this.message)
+
 -- Is this actually useful to anyone ?
-	LET this.user_id = OAuthAPI.getIDSubject()
+--	LET this.user_id = OAuthAPI.getIDSubject()
 
 	RETURN l_stat
 END FUNCTION

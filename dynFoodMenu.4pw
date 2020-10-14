@@ -96,6 +96,7 @@
         </Library>
         <Library binaryName="ws_xcf" id="-593227916" label="xcf">
           <File filePath="xcf/dfm.xcf"/>
+          <File filePath="xcf_ws/dfmv2.xcf"/>
           <File filePath="xcf/dynFoodMenu.xcf"/>
           <File filePath="xcf/dynFoodUser.xcf"/>
         </Library>
@@ -270,7 +271,7 @@
         <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>
       </Package>
     </Group>
-    <Group environment="value:MYWSDEBUG=9" id="-973564800" label="Tests" language="Genero" targetDirectory="$(ProjectDir)/tests">
+    <Group environment="value:FGLWSDEBUG=9,value:MYWSDEBUG=9" id="-973564800" label="Tests" language="Genero" targetDirectory="$(ProjectDir)/tests">
       <Application binaryName="CliWSTest" dependencies="589689792,1280753935" id="-1109916243" label="CliWSTest">
         <File filePath="tests/CliWSTest.4gl"/>
       </Application>

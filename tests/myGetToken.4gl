@@ -12,7 +12,7 @@ MAIN
 	LET l_tokenFileName = IIF(NUM_ARGS()>1, ARG_VAL(2), "dfm.tok")
 
 	# Initialize Secure Access
-	IF NOT wsAuth.init(l_cfgFileName) THEN
+	IF NOT wsAuth.init(".",l_cfgFileName,"localv2") THEN
 		DISPLAY "libWSAuth init failed."
 		EXIT PROGRAM
 	END IF

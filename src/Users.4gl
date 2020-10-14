@@ -259,9 +259,14 @@ FUNCTION (this Users) login(l_win BOOLEAN) RETURNS BOOLEAN
 					NEXT FIELD user_id
 				END IF
 
-				CALL debug.output(SFMT("Getting session token for: %1", this.currentUser.user_id), FALSE)
-				CALL wsUsers.v2_getToken(this.currentUser.user_id, utils.apiPaas(this.currentUser.user_id, this.server_time) ) RETURNING l_stat, this.currentUser.*
-				CALL debug.output(SFMT("getToken: %1, reply: %2 : %3(%4)",this.currentUser.user_id, l_stat, this.currentUser.user_name, this.currentUser.user_pwd),FALSE)
+				CALL debug.output(SFMT("Getting User: %1", this.currentUser.user_id), FALSE)
+				CASE g_wsAuth.cfg.ServiceVersion
+					WHEN "v1" 
+						CALL wsUsers.v1_getUser(this.currentUser.user_id, utils.apiPaas(this.currentUser.user_id, this.server_time) ) RETURNING l_stat, this.currentUser.*
+					WHEN "v2" 
+						CALL wsUsers.v2_getUser(this.currentUser.user_id, utils.apiPaas(this.currentUser.user_id, this.server_time), NULL , NULL) RETURNING l_stat, this.currentUser.*
+				END CASE
+				CALL debug.output(SFMT("getUser: %1, reply: %2 : %3(%4)",this.currentUser.user_id, l_stat, this.currentUser.user_name, this.currentUser.user_pwd),FALSE)
 				IF l_stat != 0 OR this.currentUser.user_id = "ERROR" THEN
 					DISPLAY "Login error" TO username
 					CALL fgl_winMessage("Error","2) Error logging in, please try again.","exclamation")
@@ -299,7 +304,7 @@ PRIVATE FUNCTION (this Users) ws_init() RETURNS BOOLEAN
 	DEFINE l_stat INT
 
 -- Get access token is we don't already have one.
-	IF g_wsAuth.token IS NULL THEN
+	IF g_wsAuth.cfg.GAS IS NULL THEN
 		CALL debug.output(SFMT("Doing g_wsAuth.init( '%1', '%2', '%3'", g_cfg.cfgDir, g_cfg.wsCFGFile, g_cfg.wsCFGName ), FALSE)
 		IF NOT g_wsAuth.init( g_cfg.cfgDir, g_cfg.wsCFGFile, g_cfg.wsCFGName ) THEN
 			CALL fgl_winMessage("Error",g_wsAuth.message,"exclamation")
@@ -310,7 +315,10 @@ PRIVATE FUNCTION (this Users) ws_init() RETURNS BOOLEAN
 
 -- Get the servers timestamp.
 	CALL debug.output(SFMT("Getting timestamp from: %1", wsUsers.Endpoint.Address.Uri), FALSE)
-	CALL wsUsers.v2_getTimestamp() RETURNING l_stat, this.server_time
+	CASE g_wsAuth.cfg.ServiceVersion
+		WHEN "v1" CALL wsUsers.v1_getTimestamp() RETURNING l_stat, this.server_time
+		WHEN "v2" CALL wsUsers.v2_getTimestamp() RETURNING l_stat, this.server_time
+	END CASE
 	IF l_stat != 0 THEN
 		CALL debug.output(SFMT("getTimestamp: %1, reply: %2",l_stat, utils.ws_replyStat(l_stat)),FALSE)
 		CALL fgl_winMessage("Error","1) Error logging in, please try again.","exclamation")

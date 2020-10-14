@@ -9,6 +9,19 @@ export URL1=https://generodemos.dynu.net/g/ws/r/dfm/menus?openapi.json
 export URL2=https://generodemos.dynu.net/g/ws/r/dfm/users?openapi.json
 export URL3=https://generodemos.dynu.net/g/ws/r/dfm/patients?openapi.json
 
+export GBC_USER=gbc-foodMenu
+export GBC_USER_DIR=..
+export GBCDISTPATH=../gbc-current/dist/customization
+export FGLGBCDIR=$(GBCDISTPATH)/$(GBC_USER)
+export FGLLDPATH=../binCommon
+export FGLDBPATH=$(FGLLDPATH)
+export FGLRESOURCEPATH=../etc:$(FGLLDPATH)
+export FGLPROFILE=../etc/fglprofile.gst
+export FGLIMAGEPATH=../pics
+export FGLWSDEBUG=9
+export MYWSDEBUG=9
+export WSSERVER=localv2
+
 all: gar
 
 gar: 
@@ -38,3 +51,6 @@ tests/wsPatients.4gl:
 clean:
 	find . -name \*.42? -exec rm {} \;
 	find . -name \*.gar -exec rm {} \;
+
+run:
+	cd bin && fglrun dynFoodMenu.42r $(WSSERVER) > ../debug.$(WSSERVER) 2>&1

@@ -65,8 +65,8 @@ PUBLIC TYPE v1_registerUserMultipartResponse RECORD
 	rv1 STRING
 END RECORD
 
-# generated v2_getTokenResponseBodyType
-PUBLIC TYPE v2_getTokenResponseBodyType RECORD
+# generated v2_getUserResponseBodyType
+PUBLIC TYPE v2_getUserResponseBodyType RECORD
 	user_id    STRING,
 	user_name  STRING,
 	user_pwd   STRING,
@@ -74,8 +74,8 @@ PUBLIC TYPE v2_getTokenResponseBodyType RECORD
 	token_ts   DATETIME YEAR TO SECOND
 END RECORD
 
-# generated v1_getTokenResponseBodyType
-PUBLIC TYPE v1_getTokenResponseBodyType RECORD
+# generated v1_getUserResponseBodyType
+PUBLIC TYPE v1_getUserResponseBodyType RECORD
 	user_id    STRING,
 	user_name  STRING,
 	user_pwd   STRING,
@@ -422,26 +422,28 @@ END FUNCTION
 ################################################################################
 
 ################################################################################
-# Operation /v2/getToken/{l_id}/{l_pwd}
+# Operation /v2/getUser/{l_id}/{l_pwd}
 #
 # VERB: GET
-# ID:          v2_getToken
+# ID:          v2_getUser
 # DESCRIPTION: Validate User and get Token
 #
-PUBLIC FUNCTION v2_getToken(p_l_id STRING, p_l_pwd STRING) RETURNS(INTEGER, v2_getTokenResponseBodyType)
-	DEFINE fullpath                  base.StringBuffer
-	DEFINE contentType               STRING
-	DEFINE req                       com.HTTPRequest
-	DEFINE resp                      com.HTTPResponse
-	DEFINE resp_body                 v2_getTokenResponseBodyType
-	DEFINE json_body                 STRING
-	DEFINE txt                       STRING
+PUBLIC FUNCTION v2_getUser(
+		p_l_id STRING, p_l_pwd STRING, p_X_FourJs_Environment_Variable_REMOTE_ADDR STRING, p_X_VTM_client_id STRING)
+		RETURNS(INTEGER, v2_getUserResponseBodyType)
+	DEFINE fullpath    base.StringBuffer
+	DEFINE contentType STRING
+	DEFINE req         com.HTTPRequest
+	DEFINE resp        com.HTTPResponse
+	DEFINE resp_body   v2_getUserResponseBodyType
+	DEFINE json_body   STRING
+	DEFINE txt         STRING
 
 	TRY
 
 		# Prepare request path
 		LET fullpath = base.StringBuffer.Create()
-		CALL fullpath.append("/v2/getToken/{l_id}/{l_pwd}")
+		CALL fullpath.append("/v2/getUser/{l_id}/{l_pwd}")
 		CALL fullpath.replace("{l_id}", p_l_id, 1)
 		CALL fullpath.replace("{l_pwd}", p_l_pwd, 1)
 
@@ -463,6 +465,12 @@ PUBLIC FUNCTION v2_getToken(p_l_id STRING, p_l_pwd STRING) RETURNS(INTEGER, v2_g
 
 			# Perform request
 			CALL req.setMethod("GET")
+			IF p_X_FourJs_Environment_Variable_REMOTE_ADDR IS NOT NULL THEN
+				CALL req.setHeader("X-FourJs-Environment-Variable-REMOTE_ADDR", p_X_FourJs_Environment_Variable_REMOTE_ADDR)
+			END IF
+			IF p_X_VTM_client_id IS NOT NULL THEN
+				CALL req.setHeader("X-VTM-client-id", p_X_VTM_client_id)
+			END IF
 			CALL req.setHeader("Accept", "application/json")
 			CALL req.DoRequest()
 
@@ -497,26 +505,26 @@ END FUNCTION
 ################################################################################
 
 ################################################################################
-# Operation /v1/getToken/{l_id}/{l_pwd}
+# Operation /v1/getUser/{l_id}/{l_pwd}
 #
 # VERB: GET
-# ID:          v1_getToken
+# ID:          v1_getUser
 # DESCRIPTION: Validate User and get Token
 #
-PUBLIC FUNCTION v1_getToken(p_l_id STRING, p_l_pwd STRING) RETURNS(INTEGER, v1_getTokenResponseBodyType)
-	DEFINE fullpath                  base.StringBuffer
-	DEFINE contentType               STRING
-	DEFINE req                       com.HTTPRequest
-	DEFINE resp                      com.HTTPResponse
-	DEFINE resp_body                 v1_getTokenResponseBodyType
-	DEFINE json_body                 STRING
-	DEFINE txt                       STRING
+PUBLIC FUNCTION v1_getUser(p_l_id STRING, p_l_pwd STRING) RETURNS(INTEGER, v1_getUserResponseBodyType)
+	DEFINE fullpath                 base.StringBuffer
+	DEFINE contentType              STRING
+	DEFINE req                      com.HTTPRequest
+	DEFINE resp                     com.HTTPResponse
+	DEFINE resp_body                v1_getUserResponseBodyType
+	DEFINE json_body                STRING
+	DEFINE txt                      STRING
 
 	TRY
 
 		# Prepare request path
 		LET fullpath = base.StringBuffer.Create()
-		CALL fullpath.append("/v1/getToken/{l_id}/{l_pwd}")
+		CALL fullpath.append("/v1/getUser/{l_id}/{l_pwd}")
 		CALL fullpath.replace("{l_id}", p_l_id, 1)
 		CALL fullpath.replace("{l_pwd}", p_l_pwd, 1)
 

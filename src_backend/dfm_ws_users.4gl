@@ -29,10 +29,10 @@ PRIVATE DEFINE Context DICTIONARY ATTRIBUTE(WSContext) OF STRING
 DEFINE m_user Users
 DEFINE m_ts CHAR(19)
 --------------------------------------------------------------------------------
-#+ GET <server>/ws/r/dfm/users/v1/getToken/id/pwd
+#+ GET <server>/ws/r/dfm/users/v1/getUser/id/pwd
 #+ result: A Record that contains uesr information
-PUBLIC FUNCTION v1_getToken(l_id CHAR(6) ATTRIBUTE(WSParam), l_pwd STRING ATTRIBUTE(WSParam)) ATTRIBUTES( 
-		WSPath = "/v1/getToken/{l_id}/{l_pwd}", 
+PUBLIC FUNCTION v1_getUser(l_id CHAR(6) ATTRIBUTE(WSParam), l_pwd STRING ATTRIBUTE(WSParam)) ATTRIBUTES( 
+		WSPath = "/v1/getUser/{l_id}/{l_pwd}", 
 		WSGet,
 		WSDescription = "Validate User and get Token")
 	RETURNS (userRecord ATTRIBUTES(WSMedia = 'application/json'))
@@ -41,7 +41,7 @@ PUBLIC FUNCTION v1_getToken(l_id CHAR(6) ATTRIBUTE(WSParam), l_pwd STRING ATTRIB
 		user_name: "Invalid User Id!" )
 	IF m_ts IS NULL THEN LET m_ts = CURRENT YEAR TO SECOND END IF
 	IF l_pwd != utils.apiPaas(l_id CLIPPED, m_ts) THEN
-		CALL debug.output(SFMT("v1_getToken: User:%1 API:%2 Invalid APIPASS",l_rec.user_id, l_pwd), FALSE)
+		CALL debug.output(SFMT("v1_getUser: User:%1 API:%2 Invalid APIPASS",l_rec.user_id, l_pwd), FALSE)
 		RETURN l_rec.*
 	END IF
 	IF m_user.get( l_id ) THEN
@@ -51,7 +51,7 @@ PUBLIC FUNCTION v1_getToken(l_id CHAR(6) ATTRIBUTE(WSParam), l_pwd STRING ATTRIB
 		END IF
 		LET l_rec.* = m_user.currentUser.*
 	END IF
-	CALL debug.output(SFMT("v1_getToken: %1 %2",l_rec.user_id, l_rec.user_token), FALSE)
+	CALL debug.output(SFMT("v1_getUser: %1 %2",l_rec.user_id, l_rec.user_token), FALSE)
 	RETURN l_rec.*
 END FUNCTION
 --------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ PUBLIC FUNCTION v1_getTimeStamp() ATTRIBUTES( WSPath = "/v1/getTimestamp",
 		WSDescription = "Get the server time")
 	RETURNS (CHAR(19) ATTRIBUTES(WSMedia = 'application/json'))
 	IF m_ts IS NULL THEN LET m_ts = CURRENT YEAR TO SECOND END IF
-	RUN "env | sort > /tmp/ws_getTimestamp.env"
+	RUN "env | sort > /tmp/ws_v1_getTimestamp.env"
 	RETURN m_ts
 END FUNCTION
 --------------------------------------------------------------------------------
@@ -99,15 +99,15 @@ END FUNCTION
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-#+ GET <server>/ws/r/dfm/users/v2/getToken/id/pwd
+#+ GET <server>/ws/r/dfm/users/v2/getUser/id/pwd
 #+ result: A Record that contains uesr information
-PUBLIC FUNCTION v2_getToken(
+PUBLIC FUNCTION v2_getUser(
 		l_id CHAR(6) ATTRIBUTE(WSParam), 
 		l_pwd STRING ATTRIBUTE(WSParam),
 		l_cli_ip STRING ATTRIBUTES(WSHeader, WSOptional, WSName="X-FourJs-Environment-Variable-REMOTE_ADDR") ,
 		client_id STRING ATTRIBUTE(WSHeader, WSOptional, WSName="X-VTM-client-id")
 	) ATTRIBUTES( 
-		WSPath = "/v2/getToken/{l_id}/{l_pwd}", 
+		WSPath = "/v2/getUser/{l_id}/{l_pwd}", 
 		WSGet,
 &ifdef USE_SCOPES
 		WSScope = "dfm.get",
@@ -118,11 +118,11 @@ PUBLIC FUNCTION v2_getToken(
     user_id: "ERROR", 
 		user_name: "Invalid User Id!" )
 	IF m_ts IS NULL THEN LET m_ts = CURRENT YEAR TO SECOND END IF
-	CALL debug.output( SFMT("v2_getToken - client_id: %1 IP: %2",client_id, l_cli_ip), FALSE)
-	CALL debug.output( SFMT("v2_getToken - Context baseURL: %1", Context["BaseURL"]) , FALSE)
-	CALL debug.output( SFMT("v2_getToken - Context scope: %1", Context["Scope"]) , FALSE)
+	CALL debug.output( SFMT("v2_getUser - client_id: %1 IP: %2",client_id, l_cli_ip), FALSE)
+	CALL debug.output( SFMT("v2_getUser - Context baseURL: %1", Context["BaseURL"]) , FALSE)
+	CALL debug.output( SFMT("v2_getUser - Context scope: %1", Context["Scope"]) , FALSE)
 	IF l_pwd != utils.apiPaas(l_id CLIPPED, m_ts) THEN
-		CALL debug.output(SFMT("v2_getToken: User:%1 API:%2 Invalid APIPASS",l_rec.user_id, l_pwd), FALSE)
+		CALL debug.output(SFMT("v2_getUser: User:%1 API:%2 Invalid APIPASS",l_rec.user_id, l_pwd), FALSE)
 		RETURN l_rec.*
 	END IF
 	IF m_user.get( l_id ) THEN
@@ -132,7 +132,7 @@ PUBLIC FUNCTION v2_getToken(
 		END IF
 		LET l_rec.* = m_user.currentUser.*
 	END IF
-	CALL debug.output(SFMT("v2_getToken: %1 %2",l_rec.user_id, l_rec.user_token), FALSE)
+	CALL debug.output(SFMT("v2_getUser: %1 %2",l_rec.user_id, l_rec.user_token), FALSE)
 	RETURN l_rec.*
 END FUNCTION
 --------------------------------------------------------------------------------
@@ -162,6 +162,7 @@ PUBLIC FUNCTION v2_getTimeStamp() ATTRIBUTES( WSPath = "/v2/getTimestamp",
 		WSDescription = "Get the server time")
 	RETURNS (CHAR(19) ATTRIBUTES(WSMedia = 'application/json'))
 	IF m_ts IS NULL THEN LET m_ts = CURRENT YEAR TO SECOND END IF
+	RUN "env | sort > /tmp/ws_v2_getTimestamp.env"
 	RETURN m_ts
 END FUNCTION
 --------------------------------------------------------------------------------

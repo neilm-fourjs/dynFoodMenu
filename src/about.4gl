@@ -8,9 +8,10 @@ FUNCTION show()
 	DEFINE l_ver STRING
 	DEFINE l_about STRING
 	LET l_ver = SFMT("%1 %2", ui.Interface.getFrontEndName(), ui.Interface.getFrontEndVersion() )
-	LET l_ver = l_ver.append(" UR:"||ui.Interface.getUniversalClientVersion() )
+	LET l_ver = l_ver.append(" UR:"||NVL(ui.Interface.getUniversalClientVersion(),"NULL") )
 	LET l_about = SFMT("Program: %1 Version: %2", base.Application.getProgramName(), C_APPVER )
 	LET l_about = l_about.append( SFMT("\nClient Version: %1", l_ver) )
+	LET l_about = l_about.append( SFMT("\nRendering: %1", fgl_getResource("gui.rendering")) )
 	LET l_about = l_about.append( SFMT("\nFGLIMAGEPATH=%1", fgl_getEnv("FGLIMAGEPATH")) )
 	LET l_about = l_about.append( SFMT("\nGBC_USER_DIR=%1", fgl_getEnv("GBC_USER_DIR")) )
 	LET l_about = l_about.append( SFMT("\nGBC_USER=%1", fgl_getEnv("GBC_USER")) )

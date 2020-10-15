@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Project defaultApplication="-1109916243" gstVersion="31408" version="3.3">
+<Project defaultApplication="400358049" gstVersion="31408" version="3.3">
   <Settings>
     <DynamicProperties version="2">
       <DynamicProperty description="Accent color (Android 5.0 and later)" initialValue="#9575CD" isDefaultInherited="false" isHidden="false" label="Accent color" name="gma-accent-color" readOnly="false" type="COLOR"/>
@@ -149,7 +149,7 @@
           <File filePath="src/wsUsers.4gl"/>
         </Library>
       </Group>
-      <Group environment="value:FGLWSDEBUG=9,value:MYWSDEBUG=9" id="10414220" label="Mobile" language="Genero">
+      <Group environment="value:FGLWSDEBUG=0,value:MYWSDEBUG=9" id="10414220" label="Mobile" language="Genero">
         <Application binaryName="dynFoodMenu" commandLineArguments="piv2" dependencies="159917928,212784684,362164715,455109296,-541155840,91913022,-1361191823,1770744530,1074706446,-4262148,1638566760,-1322651328,855703318" id="400358049" label="dynFoodMenu">
           <File filePath="src/dynFoodMenu.4gl"/>
           <File filePath="src/dynForm.4gl"/>
@@ -241,6 +241,7 @@
         <DynamicProperty name="icon-xxhdpi" value="$(ProjectDir)/pics/icon.png"/>
         <DynamicProperty name="packageId" value="com.fjsemea.dynFoodMenuROS"/>
         <DynamicProperty name="packageLabel" value="FoodMenuROS"/>
+        <DynamicProperty name="permissions" value="ACCESS_BACKGROUND_LOCATION;ACCESS_COARSE_LOCATION;ACCESS_FINE_LOCATION;ACCESS_NETWORK_STATE;ACCESS_WIFI_STATE;CAMERA;CHANGE_NETWORK_STATE;INSTALL_SHORTCUT;INTERNET;MANAGE_DOCUMENTS;MEDIA_CONTENT_CONTROL;MOUNT_FORMAT_FILESYSTEMS;READ_EXTERNAL_STORAGE;READ_LOGS"/>
         <Directory description="Binaries" excludedFiles="Test.42r" includedFiles="*.42?" label="Binaries" recursive="false" sourceDirectory="$(ProjectDir)/bin_ros"/>
         <Directory description="Configuration Files" includedFiles="fglprofile" label="Config" recursive="false" sourceDirectory="$(ProjectDir)/config"/>
         <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>
@@ -271,9 +272,10 @@
         <Directory description="Images" label="pics" sourceDirectory="$(ProjectDir)/pics"/>
       </Package>
     </Group>
-    <Group environment="value:FGLWSDEBUG=9,value:MYWSDEBUG=9" id="-973564800" label="Tests" language="Genero" targetDirectory="$(ProjectDir)/tests">
-      <Application binaryName="CliWSTest" dependencies="589689792,1280753935" id="-1109916243" label="CliWSTest">
+    <Group environment="value:OAUTH_DEBUG=1,value:FGLWSDEBUG=0,value:MYWSDEBUG=9" id="-973564800" label="Tests" language="Genero" targetDirectory="$(ProjectDir)/tests">
+      <Application binaryName="CliWSTest" commandLineArguments="localv2" dependencies="589689792,1280753935" id="-1109916243" label="CliWSTest">
         <File filePath="tests/CliWSTest.4gl"/>
+        <File filePath="tests/OAuthAPI.4gl"/>
       </Application>
       <Application binaryName="dynFoodMenu2" dependencies="362164715" id="1005836130" label="dynFoodMenu2">
         <File filePath="etc/data.json"/>

@@ -5,6 +5,7 @@ IMPORT FGL config
 IMPORT FGL wsAuthLib
 IMPORT FGL db
 IMPORT FGL libCommon
+IMPORT FGL about
 --IMPORT FGL wsBackEnd
 IMPORT FGL wsPatients
 
@@ -60,6 +61,7 @@ FUNCTION (this Patients) select() RETURNS BOOLEAN
 			END DISPLAY
 			ON ACTION accept ACCEPT DIALOG
 			ON ACTION cancel CANCEL DIALOG
+			ON ACTION about CALL about.show()
 		END DIALOG
 		IF int_flag THEN
 			CLOSE WINDOW p

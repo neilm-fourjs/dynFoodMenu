@@ -18,8 +18,12 @@ LIB=../bin/wsAuthLib.42m
 SRC=wsMenus.4gl wsUsers.4gl wsPatients.4gl 
 
 OPTS=--format json --oauth yes --tokenfile $(TOK)
+#OPTS=--format json 
 
-all: myGetToken.42m $(TOK) $(SRC) CliWSTest.42m
+all: myGetToken.42m OAuthAPI.42m  $(TOK) $(SRC) CliWSTest.42m
+
+OAuthAPI.42m: OAuthAPI.4gl
+	fglcomp $^
 
 myGetToken.42m: myGetToken.4gl $(LIB)
 	fglcomp myGetToken.4gl

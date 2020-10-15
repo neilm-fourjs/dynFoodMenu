@@ -10,7 +10,8 @@ TYPE t_cfg RECORD
 	ClientID       STRING,
 	SecretID       STRING,
 	Scopes         STRING,
-	idp            STRING
+	idp            STRING,
+	connTimeout     INTEGER
 END RECORD
 
 PUBLIC TYPE wsAuthLib RECORD
@@ -18,7 +19,6 @@ PUBLIC TYPE wsAuthLib RECORD
 	cfgName          STRING,
 	cfgCur           SMALLINT,
 	user_id          STRING,
-	connectionExpire INTEGER,
 	token            STRING,
 	tokenExpire      INTEGER,
 	endpoint         STRING,
@@ -48,9 +48,8 @@ PUBLIC FUNCTION (this wsAuthLib) init(l_dir STRING, l_cfgFileName STRING, l_cfgN
 			DISPLAY this.message
 		END IF
 		LOCATE l_cfg IN FILE this.cfgFileName
-		IF fgl_getEnv("MYWSDEBUG") = "9" THEN
-			DISPLAY SFMT("wsAuthLib.init: CFG: %1", l_cfg)
-		END IF
+		--CALL debug("init", "l_cfg", l_cfg)
+
 		TRY
 			CALL util.json.parse(l_cfg, this.cfgJSON)
 		CATCH
@@ -77,33 +76,26 @@ PUBLIC FUNCTION (this wsAuthLib) init(l_dir STRING, l_cfgFileName STRING, l_cfgN
 		RETURN FALSE
 	END IF
 
-	IF fgl_getEnv("MYWSDEBUG") = "9" THEN
-		DISPLAY SFMT("wsAuthLib.init: Config Name: %1", this.cfgName)
-	END IF
+	CALL debug("init", "cfgName", this.cfgName)
 
 -- Set the endpoint for the GAS
 	LET this.endpoint = this.cfg.GAS || "/" || this.cfg.ServiceName || "/"
-	IF fgl_getEnv("MYWSDEBUG") = "9" THEN
-		DISPLAY SFMT("wsAuthLib.init: GAS: %1", this.cfg.GAS)
-		DISPLAY SFMT("wsAuthLib.init: ServiceName: %1", this.cfg.ServiceName)
-		DISPLAY SFMT("wsAuthLib.init: ServiceVersion: %1", this.cfg.ServiceVersion)
-	END IF
+	CALL debug("init", "cfg.GAS", this.cfg.GAS)
+	CALL debug("init", "cfg.ServiceName", this.cfg.ServiceName)
+	CALL debug("init", "cfg.ServiceVersion", this.cfg.ServiceVersion)
 
 	IF this.cfg.idp IS NULL THEN
-		IF fgl_getEnv("MYWSDEBUG") = "9" THEN
-			DISPLAY "wsAuthLib.init: NO IDP"
-		END IF
+		CALL debug("init", "NO IDP - not calling getAccessToken()", this.cfg.idp)
 		RETURN TRUE
 	END IF
 
 -- Set the IDP for the GAS
 	LET this.cfg.idp = this.cfg.GAS || "/" || this.cfg.idp
 
-	IF fgl_getEnv("MYWSDEBUG") = "9" THEN
-		DISPLAY SFMT("wsAuthLib.init: IDP: %1", this.cfg.idp)
-		DISPLAY SFMT("wsAuthLib.init: ClientID: %1, SecretID: %2", this.cfg.ClientID, this.cfg.SecretID)
-		DISPLAY SFMT("wsAuthLib.init: Scopes: %1", this.cfg.Scopes)
-	END IF
+	CALL debug("init", "cfg.idp", this.cfg.idp)
+	CALL debug("init", "cfg.connTimeout", this.cfg.connTimeout)
+	CALL debug("init", "cfg.ClientID", this.cfg.ClientID)
+	CALL debug("init", "cfg.Scopes", this.cfg.Scopes)
 
 -- Retrieve access token using login credentials
 	IF NOT this.getAccessToken() THEN
@@ -111,7 +103,7 @@ PUBLIC FUNCTION (this wsAuthLib) init(l_dir STRING, l_cfgFileName STRING, l_cfgN
 	END IF
 
 -- Initialize OAuth access
-	CALL OAuthAPI.InitService(this.connectionExpire, this.Token) RETURNING l_stat
+	CALL OAuthAPI.InitService(this.cfg.connTimeout, this.Token) RETURNING l_stat
 	LET this.message = "OAuthAPI.InitService " || IIF(l_stat, "Okay", "Failed!")
 	DISPLAY SFMT("wsAuthLib.init: %1", this.message)
 
@@ -131,9 +123,8 @@ PRIVATE FUNCTION (this      wsAuthLib) getAccessToken() RETURNS BOOLEAN
 	DEFINE x                  SMALLINT
 
 -- Retieve IdP info to get token endpoint for service access
-	IF fgl_getEnv("MYWSDEBUG") = "9" THEN
-		DISPLAY SFMT("wsAuthLib.getAccessToken: Service IDP: %1", this.cfg.idp)
-	END IF
+	CALL debug("getAccessToken", "cfg.idp", this.cfg.idp)
+
 	CALL OAuthAPI.FetchOpenIDMetadata(5, this.cfg.idp) RETURNING l_metadata.*
 	IF l_metadata.issuer IS NULL THEN
 		LET this.message = SFMT("Error : IDP unavailable: %1", this.cfg.idp)
@@ -144,8 +135,8 @@ PRIVATE FUNCTION (this      wsAuthLib) getAccessToken() RETURNS BOOLEAN
 		FOR x = 1 TO l_metadata.scopes_supported.getLength()
 			LET l_scopes_supported = l_scopes_supported.append(l_metadata.scopes_supported[x] || " ")
 		END FOR
-		DISPLAY SFMT("wsAuthLib.getAccessToken: Token Endpoint: %1", l_metadata.token_endpoint)
-		DISPLAY SFMT("wsAuthLib.getAccessToken: Scopes Support: %1", l_scopes_supported)
+		CALL debug("getAccessToken","l_metadata.token_endpoint", l_metadata.token_endpoint)
+		CALL debug("getAccessToken","l_scopes_supported", l_scopes_supported)
 	END IF
 	LET this.idpTokenEndpoint = l_metadata.token_endpoint
 
@@ -161,9 +152,21 @@ PRIVATE FUNCTION (this      wsAuthLib) getAccessToken() RETURNS BOOLEAN
 	ELSE
 		DISPLAY "Token received."
 	END IF
-	IF fgl_getEnv("MYWSDEBUG") = "9" THEN
-		DISPLAY SFMT("wsAuthLib.getAccessToken: Token: %1", this.token)
-		DISPLAY SFMT("wsAuthLib.getAccessToken: Token Expires in %1 seconds", this.tokenExpire)
-	END IF
+	CALL debug("getAccessToken","token", this.token)
+	CALL debug("getAccessToken","tokenExpire", this.tokenExpire)
+
 	RETURN TRUE
+END FUNCTION
+
+--------------------------------------------------------------------------------------------------------------
+
+PRIVATE FUNCTION debug( l_func STRING, l_var STRING, l_val STRING)
+	DEFINE x SMALLINT
+	IF fgl_getEnv("MYWSDEBUG") = "9" THEN
+		IF l_var = "token" AND l_val IS NOT NULL THEN
+			LET x = LENGTH( l_val)
+			LET l_val = "Length = "||x||" Ends with: "||l_val.subString(x-10,x)
+		END IF
+		DISPLAY SFMT("%1: wsAuthLib: %2 - %3 = %4", CURRENT, l_func, l_var, NVL(l_val,"NULL") )
+	END IF
 END FUNCTION

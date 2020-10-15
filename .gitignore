@@ -31,6 +31,7 @@
 *.err
 *.bak
 *.tok
+*.pcapng
 
 # Packages
 *.tgz

@@ -9,7 +9,8 @@
       "ClientID": "XXX",
       "SecretID": "XXX",
       "idp": "services/GeneroIdentityProvider",
-      "Scopes": "DFM dfm.get dfm.post"
+      "Scopes": "DFM dfm.get dfm.post",
+      "connTimeout": 5
     },
     {
       "name": "live",
@@ -19,7 +20,8 @@
       "ClientID": "XXX",
       "SecretID": "XXX",
       "idp": "services/GeneroIdentityProvider",
-      "Scopes": "DFM dfm.get dfm.post"
+      "Scopes": "DFM dfm.get dfm.post",
+      "connTimeout": 5
     }
   ]
 }

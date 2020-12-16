@@ -1,15 +1,11 @@
 {
-	"xaui-mobileUI-default": "true",
-
-	"theme-disable-context-menu": false,
-
-	"theme-font-familyX": "'Ubuntu, \"Droid Sans\", \"Segoe UI\", sans-serif'",
 	"theme-font-family": "'Roboto, Helvetica, sans-serif'",
 	"theme-font-size-ratio": "1",
 	"theme-margin-ratio": "1",
 	"theme-combobox-padding": "0px",
 	"theme-sidebar-always-visible-min-width": "1601px",
 	"theme-host-action-default-height": "36px",
+
 	"gbc-ChromeBarWidget-height": "40px",
 	"gbc-ChromeBarWidget-item-toggle-margin": "2x",
 	"gbc-ChromeBarWidget-title-margin": "2x",

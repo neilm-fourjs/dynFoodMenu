@@ -1,10 +1,10 @@
 {
+	"aui-mobileUI-default": "true",
 	"theme-font-size-ratio": "0.8",
 	"theme-margin-ratio": "0.4",
 	"theme-field-height-ratio": "0.4",
 	"theme-radiobutton-size": "12px",
 	"theme-checkbox-size": "12px",
 	"mt-field-default-height": "24px",
-
 	"njm-toolbar-padding": "2px"
 }

@@ -2,12 +2,17 @@
 -- This service handles the login and issueing the security token.
 
 IMPORT security
+IMPORT com
 IMPORT util
 IMPORT FGL Users
 IMPORT FGL utils
 IMPORT FGL debug
 
 &include "../src/menus.inc"
+
+PUBLIC DEFINE myNotFound RECORD ATTRIBUTE(WSError="Record not found")
+  message STRING
+END RECORD
 
 PUBLIC DEFINE serviceInfo RECORD ATTRIBUTE(WSInfo)
   title STRING,
@@ -34,7 +39,9 @@ DEFINE m_ts CHAR(19)
 PUBLIC FUNCTION v1_getUser(l_id CHAR(6) ATTRIBUTE(WSParam), l_pwd STRING ATTRIBUTE(WSParam)) ATTRIBUTES( 
 		WSPath = "/v1/getUser/{l_id}/{l_pwd}", 
 		WSGet,
-		WSDescription = "Validate User and get Token")
+		WSDescription = "Validate User and get Token",
+		WSThrows="404:@myNotFound,500:Internal Server Error")
+
 	RETURNS (userRecord ATTRIBUTES(WSMedia = 'application/json'))
 	DEFINE l_rec userRecord = (
     user_id: "ERROR", 
@@ -50,6 +57,9 @@ PUBLIC FUNCTION v1_getUser(l_id CHAR(6) ATTRIBUTE(WSParam), l_pwd STRING ATTRIBU
 		IF m_user.update() THEN
 		END IF
 		LET l_rec.* = m_user.currentUser.*
+	ELSE
+		LET myNotFound.message = SFMT("User Id '%1' not found", l_id )
+		CALL com.WebServiceEngine.SetRestError(404,myNotFound)
 	END IF
 	CALL debug.output(SFMT("v1_getUser: %1 %2",l_rec.user_id, l_rec.user_token), FALSE)
 	RETURN l_rec.*

@@ -17,9 +17,9 @@ BODY {
 }
 
 // get rid of bookmarks option
-.gbc_ChromeBarItemBookmarkWidget, .gbc_ApplicationHostMenuBookmarkWidget {
-	display: none !important;
-}
+//.gbc_ChromeBarItemBookmarkWidget, .gbc_ApplicationHostMenuBookmarkWidget {
+//	display: none !important;
+//}
 
 // remove the box shadows from fields.
 .mt-field {
@@ -55,9 +55,9 @@ BODY {
 }
 
 // Fix problem with checkbox text alignment
-.gbc_CheckBoxWidget .label, .gbc_ThreeStateCheckBoxWidget .label {
-	display: contents;
-}
+//.gbc_CheckBoxWidget .label, .gbc_ThreeStateCheckBoxWidget .label {
+//	display: contents;
+//}
 
 .gbc_style_curvedborder {
 	border: 1px solid $njm-button-border-color;

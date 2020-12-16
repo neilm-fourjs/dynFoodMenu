@@ -52,12 +52,14 @@ FUNCTION (this Patients) select() RETURNS BOOLEAN
 					CALL this.setScrArr()
 			END INPUT
 			DISPLAY ARRAY m_arr TO arr.* 
-				ON ACTION selectrow
+				ON ACTION selectrow 
 					LET this.patients.current.bed_no = m_arr[ arr_curr() ].bed_no
 					CALL this.getPatient( this.patients.current.ward_id, this.patients.current.bed_no )
 					DISPLAY BY NAME this.patients.current.name, this.patients.current.allergies
 					DISPLAY IIF( this.patients.current.diabetic, "my-true","my-false" ) TO dia
 					DISPLAY IIF( this.patients.current.nilbymouth, "my-true","my-false" ) TO nil
+				ON ACTION test ATTRIBUTE(ROWBOUND)
+					CALL fgl_winMessage("Test",SFMT("Test Row %1", arr_curr()),"exclamation")
 			END DISPLAY
 			ON ACTION accept ACCEPT DIALOG
 			ON ACTION cancel CANCEL DIALOG

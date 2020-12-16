@@ -11,7 +11,7 @@ TYPE t_cfg RECORD
 	SecretID       STRING,
 	Scopes         STRING,
 	idp            STRING,
-	connTimeout     INTEGER
+	connTimeout    INTEGER
 END RECORD
 
 PUBLIC TYPE wsAuthLib RECORD
@@ -135,8 +135,8 @@ PRIVATE FUNCTION (this      wsAuthLib) getAccessToken() RETURNS BOOLEAN
 		FOR x = 1 TO l_metadata.scopes_supported.getLength()
 			LET l_scopes_supported = l_scopes_supported.append(l_metadata.scopes_supported[x] || " ")
 		END FOR
-		CALL debug("getAccessToken","l_metadata.token_endpoint", l_metadata.token_endpoint)
-		CALL debug("getAccessToken","l_scopes_supported", l_scopes_supported)
+		CALL debug("getAccessToken", "l_metadata.token_endpoint", l_metadata.token_endpoint)
+		CALL debug("getAccessToken", "l_scopes_supported", l_scopes_supported)
 	END IF
 	LET this.idpTokenEndpoint = l_metadata.token_endpoint
 
@@ -152,21 +152,21 @@ PRIVATE FUNCTION (this      wsAuthLib) getAccessToken() RETURNS BOOLEAN
 	ELSE
 		DISPLAY "Token received."
 	END IF
-	CALL debug("getAccessToken","token", this.token)
-	CALL debug("getAccessToken","tokenExpire", this.tokenExpire)
+	CALL debug("getAccessToken", "token", this.token)
+	CALL debug("getAccessToken", "tokenExpire", this.tokenExpire)
 
 	RETURN TRUE
 END FUNCTION
 
 --------------------------------------------------------------------------------------------------------------
 
-PRIVATE FUNCTION debug( l_func STRING, l_var STRING, l_val STRING)
-	DEFINE x SMALLINT
+PRIVATE FUNCTION debug(l_func STRING, l_var STRING, l_val STRING)
+	DEFINE x                    SMALLINT
 	IF fgl_getEnv("MYWSDEBUG") = "9" THEN
 		IF l_var = "token" AND l_val IS NOT NULL THEN
-			LET x = LENGTH( l_val)
-			LET l_val = "Length = "||x||" Ends with: "||l_val.subString(x-10,x)
+			LET x     = LENGTH(l_val)
+			LET l_val = "Length = " || x || " Ends with: " || l_val.subString(x - 10, x)
 		END IF
-		DISPLAY SFMT("%1: wsAuthLib: %2 - %3 = %4", CURRENT, l_func, l_var, NVL(l_val,"NULL") )
+		DISPLAY SFMT("%1: wsAuthLib: %2 - %3 = %4", CURRENT, l_func, l_var, NVL(l_val, "NULL"))
 	END IF
 END FUNCTION

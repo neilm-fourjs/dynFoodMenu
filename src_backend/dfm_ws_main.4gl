@@ -35,6 +35,6 @@ MAIN
   CALL com.WebServiceEngine.RegisterRestService("dfm_ws_patients", "patients")
   CALL com.WebServiceEngine.Start()
   WHILE ws_lib.ws_ProcessServices_stat( com.WebServiceEngine.ProcessServices(-1) )
-	END WHILE
+  END WHILE
   CALL debug.output(SFMT("%1 Server stopped",base.Application.getProgramName()),FALSE)
 END MAIN

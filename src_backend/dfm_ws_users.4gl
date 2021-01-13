@@ -107,7 +107,7 @@ PUBLIC FUNCTION v2_getUser(
 		client_id STRING ATTRIBUTE(WSHeader, WSOptional, WSName = "X-VTM-client-id"))
 		ATTRIBUTES(WSPath = "/v2/getUser/{l_id}/{l_pwd}", WSGet,
 &ifdef USE_SCOPES
-				WSScope = "dfm.get",
+    WSScope = "dfm.get",
 &endif
 				WSDescription = "Validate User and get Token")
 		RETURNS(userRecord ATTRIBUTES(WSMedia = 'application/json'))
@@ -138,7 +138,7 @@ END FUNCTION
 PUBLIC FUNCTION v2_checkUserID(l_id CHAR(6) ATTRIBUTE(WSParam))
 		ATTRIBUTES(WSPath = "/v2/checkUserID/{l_id}", WSGet,
 &ifdef USE_SCOPES
-				WSScope = "dfm.get",
+    WSScope = "dfm.get",
 &endif
 				WSDescription = "Check UserID")
 		RETURNS(BOOLEAN, CHAR(6) ATTRIBUTES(WSMedia = 'application/json'))
@@ -153,7 +153,7 @@ END FUNCTION
 PUBLIC FUNCTION v2_getTimeStamp()
 		ATTRIBUTES(WSPath = "/v2/getTimestamp", WSGet,
 &ifdef USE_SCOPES
-				WSScope = "dfm.get",
+    WSScope = "dfm.get",
 &endif
 				WSDescription = "Get the server time")
 		RETURNS(CHAR(19) ATTRIBUTES(WSMedia = 'application/json'))
@@ -169,7 +169,7 @@ END FUNCTION
 PUBLIC FUNCTION v2_registerUser(l_userDets userDetailsRecord)
 		ATTRIBUTES(WSPath = "/v2/registerUser", WSPost,
 &ifdef USE_SCOPES
-				WSScope = "dfm.post",
+    WSScope = "dfm.post",
 &endif
 				WSDescription = "Register a user")
 		RETURNS(INT, STRING ATTRIBUTES(WSMedia = 'application/json'))

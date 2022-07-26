@@ -252,11 +252,11 @@
       </Package>
     </Group>
     <Group environment="value:OAUTH_DEBUG=1,value:FGLWSDEBUG=0,value:MYWSDEBUG=9" id="-973564800" label="Tests" language="Genero" targetDirectory="$(ProjectDir)/tests">
-      <Application binaryName="CliWSTestV1" dependencies="589689792,1280753935" id="1588790978" label="CliWSTestV1">
+      <Application binaryName="CliWSTestV1" dependencies="589689792,1280753935,-1649704172,1074706446" id="1588790978" label="CliWSTestV1">
         <Configuration id="-1334517062" label="CliWSTestV1"/>
         <File filePath="tests/CliWSTestV1.4gl"/>
       </Application>
-      <Application binaryName="CliWSTestV2" dependencies="589689792,1280753935" id="-1109916243" label="CliWSTestV2">
+      <Application binaryName="CliWSTestV2" dependencies="589689792,1280753935,-1649704172,1074706446" id="-1109916243" label="CliWSTestV2">
         <Configuration commandLineArguments="localv2" id="1656478562" label="CliWSTestV2"/>
         <File filePath="tests/CliWSTestV2.4gl"/>
       </Application>
@@ -273,12 +273,15 @@
         <Configuration id="-1795634328" label="myGetToken"/>
         <File filePath="tests/myGetToken.4gl"/>
       </Application>
-      <Application binaryName="password" id="656255998" label="password">
+      <Application binaryName="password" dependencies="-1649704172" id="656255998" label="password">
         <Configuration commandLineArguments="12Test" id="-578885792" label="Configuration"/>
         <File filePath="tests/password.4gl"/>
       </Application>
-      <Library binaryName="wsClients" id="589689792" label="wsClients">
+      <Library binaryName="testLib" id="-1649704172" label="testLib">
+        <File filePath="tests/getPWHash.4gl"/>
         <File filePath="tests/OAuthAPI.4gl"/>
+      </Library>
+      <Library binaryName="wsClients" id="589689792" label="wsClients">
         <File filePath="tests/wsMenus.4gl"/>
         <File filePath="tests/wsPatients.4gl"/>
         <File filePath="tests/wsUsers.4gl"/>

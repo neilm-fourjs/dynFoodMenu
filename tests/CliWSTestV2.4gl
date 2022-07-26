@@ -1,5 +1,5 @@
 IMPORT FGL wsAuthLib
-
+IMPORT FGL utils
 IMPORT FGL wsUsers
 IMPORT FGL wsMenus
 IMPORT FGL wsPatients
@@ -30,6 +30,8 @@ END MAIN
 FUNCTION test_v2()
 	DEFINE l_stat INT
 	DEFINE l_ts   STRING
+	DEFINE l_ret1 wsUsers.userRecord
+	DEFINE l_pwd  STRING
 
 	DISPLAY "Doing v2_getTimestamp ..."
 	CALL wsUsers.v2_getTimestamp() RETURNING l_stat, l_ts
@@ -69,11 +71,11 @@ FUNCTION test_v2()
 		DISPLAY SFMT("v2_getTimestamp Stat: %1 TS: %2", l_stat, l_ts)
 	END IF
 
-{
 -- get my session token
-	CALL wsUsers.v2_getUser("test", "test", NULL, NULL) RETURNING l_stat, l_ret1.*
+	LET l_pwd = utils.apiPaas("NJM",l_ts)
+	CALL wsUsers.v2_getUser("NJM", l_pwd, NULL, NULL) RETURNING l_stat, l_ret1.*
 	DISPLAY SFMT("v2_getUser Stat: %1 User: %2 Token: %3", l_stat, l_ret1.user_name, l_ret1.user_token)
-
+{
 	CALL wsMenus.v2_getMenus(NULL) RETURNING l_stat, l_ret2.*
 	IF l_stat != 0 THEN
 		DISPLAY SFMT("v2_getMenus: %1", l_stat)

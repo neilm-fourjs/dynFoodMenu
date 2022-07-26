@@ -43,6 +43,7 @@ PUBLIC FUNCTION v1_getUser(l_id CHAR(6) ATTRIBUTE(WSParam), l_pwd STRING ATTRIBU
 	END IF
 	IF l_pwd != utils.apiPaas(l_id CLIPPED, m_ts) THEN
 		CALL debug.output(SFMT("v1_getUser: User:%1 API:%2 Invalid APIPASS", l_rec.user_id, l_pwd), FALSE)
+		LET l_rec.user_token = "Invalid API"
 		RETURN l_rec.*
 	END IF
 	IF m_user.get(l_id) THEN

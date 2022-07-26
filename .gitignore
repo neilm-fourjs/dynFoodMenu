@@ -32,6 +32,7 @@
 *.tok
 *.lst
 *.pcapng
+*debug*
 
 # Packages
 *.tgz
@@ -42,6 +43,9 @@
 *.apk
 *.gar
 *.zip
+
+# GBC links
+gbc-current*
 
 # Other
 .directory

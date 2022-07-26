@@ -1,4 +1,5 @@
 -- dynFoodMenu Demo
+IMPORT os
 IMPORT FGL config
 IMPORT FGL debug
 IMPORT FGL libCommon
@@ -27,11 +28,14 @@ MAIN
 
 	CALL libCommon.loadStyles()
 	CALL debug.output(SFMT("Started FGLPROFILE=%1", fgl_getEnv("FGLPROFILE")), FALSE)
-
+	CALL debug.output(SFMT("PWD: %1", os.path.pwd()), FALSE)
 	CALL g_cfg.showCFG()
 	CALL debug.output(g_cfg.message,FALSE)
 	CALL STARTLOG( g_cfg.getLogFile() )
-	IF NUM_ARGS() > 0 THEN LET g_cfg.wsCFGName = ARG_VAL(1) END IF
+	IF NUM_ARGS() > 0 THEN 
+		LET g_cfg.wsCFGName = ARG_VAL(1)
+		CALL debug.output(SFMT("Overriding config name with ARG1: %1",g_cfg.wsCFGName), FALSE)
+	END IF
 
 	OPEN FORM login FROM "login"
 	DISPLAY FORM login

@@ -226,7 +226,7 @@ END FUNCTION
 -- Register a new user
 FUNCTION (this Users) login(l_win BOOLEAN) RETURNS BOOLEAN
 	DEFINE l_stat INT
-	DEFINE l_pwd, l_msg STRING
+	DEFINE l_pwd STRING
 	WHENEVER ERROR CALL libCommon.abort
 	IF NOT libMobile.gotNetwork() THEN
 		LET this.currentUser.user_id = "DUMMY"
@@ -303,7 +303,7 @@ END FUNCTION
 PRIVATE FUNCTION (this Users) ws_init() RETURNS BOOLEAN
 	DEFINE l_stat INT
 
--- Get access token is we don't already have one.
+-- Get access token if we don't already have one.
 	IF g_wsAuth.cfg.GAS IS NULL THEN
 		CALL debug.output(SFMT("Doing g_wsAuth.init( '%1', '%2', '%3'", g_cfg.cfgDir, g_cfg.wsCFGFile, g_cfg.wsCFGName ), FALSE)
 		IF NOT g_wsAuth.init( g_cfg.cfgDir, g_cfg.wsCFGFile, g_cfg.wsCFGName ) THEN
@@ -314,7 +314,7 @@ PRIVATE FUNCTION (this Users) ws_init() RETURNS BOOLEAN
 	LET wsUsers.Endpoint.Address.Uri = g_wsAuth.getWSServer(C_WS_USERS)
 
 -- Get the servers timestamp.
-	CALL debug.output(SFMT("Getting timestamp from: %1", wsUsers.Endpoint.Address.Uri), FALSE)
+	CALL debug.output(SFMT("Getting timestamp api: '%1' uri: %2", g_wsAuth.cfg.ServiceVersion, wsUsers.Endpoint.Address.Uri), FALSE)
 	CASE g_wsAuth.cfg.ServiceVersion
 		WHEN "v1" CALL wsUsers.v1_getTimestamp() RETURNING l_stat, this.server_time
 		WHEN "v2" CALL wsUsers.v2_getTimestamp() RETURNING l_stat, this.server_time

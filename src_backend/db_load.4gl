@@ -16,6 +16,7 @@ FUNCTION load_data()
 
 	IF loadJSON( "users.json" ) THEN
 		CALL util.JSON.parse(m_JSONfile, l_users)
+		DELETE FROM users
 		FOR x = 1 TO l_users.getLength()
 			DISPLAY "Insert User:",l_users[x].user_id
 			INSERT INTO users VALUES( l_users[x].* )
@@ -24,6 +25,7 @@ FUNCTION load_data()
 
 	IF loadJSON( "userDetails.json" ) THEN
 		CALL util.JSON.parse(m_JSONfile, l_userDetails)
+		DELETE FROM userDetails
 		FOR x = 1 TO l_userDetails.getLength()
 			DISPLAY "Insert UserDetails:",l_userDetails[x].user_id
 			INSERT INTO userDetails VALUES( l_userDetails[x].* )
@@ -32,6 +34,7 @@ FUNCTION load_data()
 
 	IF loadJSON( "wards.json" ) THEN
 		CALL util.JSON.parse(m_JSONfile, l_wards)
+		DELETE FROM wards
 		FOR x = 1 TO l_wards.getLength()
 			DISPLAY "Insert wards:",l_wards[x].ward_id
 			INSERT INTO wards VALUES( l_wards[x].* )
@@ -40,6 +43,7 @@ FUNCTION load_data()
 
 	IF loadJSON( "patients.json" ) THEN
 		CALL util.JSON.parse(m_JSONfile, l_patients)
+		DELETE FROM patients
 		FOR x = 1 TO l_patients.getLength()
 			DISPLAY "Insert patients:",l_patients[x].id
 			INSERT INTO patients VALUES( l_patients[x].* )
@@ -47,6 +51,8 @@ FUNCTION load_data()
 	END IF
 
 	IF l_data.getMenuListJSON() THEN
+		DELETE FROM menus
+		DELETE FROM menuItems
 		FOR x = 1 TO l_data.menuList.rows
 			DISPLAY "Menu:",l_data.menuList.list[x].menuName,":",l_data.menuList.list[x].menuDesc
 			INSERT INTO menus VALUES( l_data.menuList.list[x].* )

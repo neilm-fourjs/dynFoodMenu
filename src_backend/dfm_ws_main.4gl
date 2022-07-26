@@ -29,10 +29,15 @@ MAIN
 		EXIT PROGRAM
 	END IF
 	CALL debug.output(SFMT("%1 Server started", base.Application.getProgramName()), FALSE)
+	CALL debug.output("Register dfm_ws_menus", FALSE)
 	CALL com.WebServiceEngine.RegisterRestService("dfm_ws_menus", "menus")
+	CALL debug.output("Register dfm_ws_users", FALSE)
 	CALL com.WebServiceEngine.RegisterRestService("dfm_ws_users", "users")
+	CALL debug.output("Register dfm_ws_patients", FALSE)
 	CALL com.WebServiceEngine.RegisterRestService("dfm_ws_patients", "patients")
+	CALL debug.output("Start Engine", FALSE)
 	CALL com.WebServiceEngine.Start()
+	CALL debug.output("Start ProcessServices Loop", FALSE)
 	WHILE ws_lib.ws_ProcessServices_stat(com.WebServiceEngine.ProcessServices(-1))
 	END WHILE
 	CALL debug.output(SFMT("%1 Server stopped", base.Application.getProgramName()), FALSE)

@@ -1,1 +1,18 @@
-[{"user_id":"NJM","user_name":"Neil Martin","user_pwd":"$2a$10$i72qSW3cgjaFAxIJlqFx/OR9oFimTf8KkSnLOVD4EaJx.13kSvOfi"},{"user_id":"RH","user_name":"Ryan Hamlin","user_pwd":"$2a$10$cffa1KVFC6Fr18u8oqX6F.b5Am1S0KufSfNa92BLYzJ5zFRf4iGT6"}]
+[
+  {
+    "user_id": "NJM",
+    "user_name": "Neil Martin",
+    "user_pwd": "$2a$10$Q5u7Pn5Kj9nz9OMKduvyQeC53BHoPQvkSnN9YTtg76t4FymrR4vpG"
+  },
+  {
+    "user_id": "TEST",
+    "user_name": "Test/12Test",
+    "user_pwd": "2a$10$x5nwCXGrYRW2S8xmdZqVZezhWjICAoNqqAdOOgygMZykgOo90.ykS"
+  },
+  {
+    "user_id": "FB",
+    "user_name": "Fred Bloggs",
+    "user_pwd": ""
+  }
+]
+

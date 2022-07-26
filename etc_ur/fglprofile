@@ -4,9 +4,8 @@ dbi.database.dynfooddemo.source = "dynFoodDemo.db"
 my.dbname = "dynFoodDemo.db"
 mobile.environment.DBDATE ="DMY4/"
 
-# Render
+# Render - not needed for V4!
 gui.rendering = "universal"
 
 # WS cert
-security.global.ca = "CABundle.pem"
-
+#security.global.ca = "CABundle.pem"

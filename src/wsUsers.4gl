@@ -236,6 +236,7 @@ PUBLIC FUNCTION v2_getTimeStamp() RETURNS(INTEGER, STRING)
 			END IF
 		END WHILE
 		# Process response
+		DISPLAY SFMT("Resp: %1 %2", resp.getStatusCode(), resp.getStatusDescription())
 		INITIALIZE resp_body TO NULL
 		LET contentType = resp.getHeader("Content-Type")
 		CASE resp.getStatusCode()

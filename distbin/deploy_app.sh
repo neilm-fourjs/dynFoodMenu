@@ -80,17 +80,9 @@ case $SRV in
 ;;
 1)
 	HOST=pi@generodemos.dynu.net
-	PORT=999
+	PORT=666
 ;;
 2)
-	HOST=ryan-4js.com
-	PORT=999
-;;
-3)
-	HOST=demos.4js-emea.com
-	USER=fourjs
-;;
-4)
 	HOST=$5
 ;;
 esac

@@ -3,9 +3,9 @@ GBCBASE=..
 
 include ../makefile.inc
 
-CUSTOMNAME=gbc-foodMenu
-
-TARGET=$(DISTBIN)/$(CUSTOMNAME).zip
+CUSTOMNAME=$(shell basename $(PWD))
+TARGET=$(DISTBIN)/$(CUSTOMNAME)-$(GENVER).zip
+CUSTOMIZATION=--customization customization/$(CUSTOMNAME)
 
 all: theme/common $(TARGET)
 
@@ -19,7 +19,7 @@ $(GBCBASE)/gbc-$(PACKVER)/customization/$(CUSTOMNAME):
 # Build our custom gbc
 $(GBCBASE)/gbc-$(PACKVER)/dist/$(CUSTOMNAME): $(GBCBASE)/gbc-$(PACKVER) $(GBCBASE)/gbc-$(PACKVER)/customization/$(CUSTOMNAME)
 	@echo "Building GBC ..."
-	@cd $(GBCBASE)/gbc-$(PACKVER) && grunt $(CFG) --customization=customization/$(CUSTOMNAME)  > $(CWD)/$(CUSTOMNAME).out 
+	cd $(GBCBASE)/gbc-$(PACKVER) && $(BUILDCMD) $(CFG) $(CUSTOMIZATION) > $(CWD)/$(CUSTOMNAME).out 
 	@tail -10 $(CWD)/$(CUSTOMNAME).out
 
 # Package our custom gbc
@@ -28,7 +28,7 @@ $(TARGET): $(GBCBASE)/gbc-$(PACKVER)/dist/$(CUSTOMNAME)
 
 
 dev:
-	cd $(GBCBASE)/gbc-$(PACKVER) && grunt --customization=customization/$(CUSTOMNAME) dev
+	cd $(GBCBASE)/gbc-$(PACKVER) && $(BUILDCMD) $(CUSTOMIZATION) --watch
 
 deploy:
 	cd ../distbin && ./deploy_gbc.sh

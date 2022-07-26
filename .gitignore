@@ -1,8 +1,8 @@
 # Genero compiler output
 *.42?
-*.4gl~
 
 # Genero Studio generated  project files
+*.4pdb
 *.4pwvs
 *.4pwdb
 *.4pwcfg
@@ -23,14 +23,14 @@
 *.class
 
 # Temporary and log files
-*.old
-*.lst
 *.log
 *.out
 *.tmp
 *.err
 *.bak
+*.4gl~
 *.tok
+*.lst
 *.pcapng
 
 # Packages
@@ -45,7 +45,9 @@
 
 # Other
 .directory
-bin*
-distbin*
+bin
+bin310
+bin320
+distbin
 build
 *.build

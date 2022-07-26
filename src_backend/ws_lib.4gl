@@ -28,6 +28,8 @@ FUNCTION ws_ProcessServices_stat( l_stat INT ) RETURNS BOOLEAN
 			CALL debug.output("No such REST operation found.",FALSE)
 		WHEN -36
 			CALL debug.output("Missing REST parameter.",FALSE)
+		WHEN -40
+			CALL debug.output("Scope Missing.",FALSE)
 		OTHERWISE
 			CALL debug.output("Unexpected server error " || l_stat || ".",FALSE)
 			RETURN FALSE

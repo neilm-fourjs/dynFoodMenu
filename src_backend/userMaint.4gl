@@ -7,7 +7,7 @@ IMPORT FGL debug
 IMPORT FGL Users
 IMPORT FGL db
 IMPORT FGL wsAuthLib
-&include "menus.inc"
+&include "app.inc"
 &include "globals.inc"
 
 MAIN

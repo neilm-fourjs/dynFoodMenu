@@ -1,4 +1,5 @@
-IMPORT FGL main
+
+IMPORT FGL appInfo
 IMPORT FGL config
 IMPORT FGL db
 IMPORT FGL wsAuthLib
@@ -9,7 +10,7 @@ FUNCTION show()
 	DEFINE l_about STRING
 	LET l_ver   = SFMT("%1 %2", ui.Interface.getFrontEndName(), ui.Interface.getFrontEndVersion())
 	LET l_ver   = l_ver.append(" UR:" || NVL(ui.Interface.getUniversalClientVersion(), "NULL"))
-	LET l_about = SFMT("Program: %1 Version: %2", base.Application.getProgramName(), appInfo.version)
+	LET l_about = SFMT("Program: %1 Version: %2", base.Application.getProgramName(), appInfo.appInfo.version)
 	LET l_about = l_about.append(SFMT("\nClient Version: %1", l_ver))
 	LET l_about = l_about.append(SFMT("\nRendering: %1", fgl_getresource("gui.rendering")))
 	LET l_about = l_about.append(SFMT("\nFGLIMAGEPATH=%1", fgl_getenv("FGLIMAGEPATH")))

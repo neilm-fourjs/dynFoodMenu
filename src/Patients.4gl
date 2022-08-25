@@ -1,7 +1,7 @@
 -- Manages the Patients.
 
 IMPORT FGL fgldialog
-IMPORT FGL main
+IMPORT FGL appInfo
 IMPORT FGL debug
 IMPORT FGL config
 IMPORT FGL wsAuthLib
@@ -178,7 +178,7 @@ FUNCTION (this Patients) getWardsDB()
 	CALL debug.output(SFMT("getWardsDB: %1", this.wards.message), FALSE)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
--- Get a list of the wards from the DB.
+-- Get a list of the Patients for the ward from the DB.
 FUNCTION (this Patients) getPatientsDB(l_ward SMALLINT)
 	DEFINE l_cnt     SMALLINT = 1
 	DEFINE x         SMALLINT = 1
@@ -206,7 +206,7 @@ END FUNCTION
 -- Get a list of the wards from the server.
 FUNCTION (this Patients) getWardsWS()
 	DEFINE l_stat SMALLINT
-	LET wsPatients.Endpoint.Address.Uri = g_wsAuth.getWSServer(appInfo.ws_patients)
+	LET wsPatients.Endpoint.Address.Uri = g_wsAuth.getWSServer(appInfo.appInfo.ws_patients)
 	CALL wsPatients.v2_getWards(this.token) RETURNING l_stat, this.wards.*
 	CALL debug.output(
 			SFMT("getWardsWS: Stat=%1 %2 From: %3", l_stat, NVL(this.wards.message, "NULL"), wsPatients.Endpoint.Address.Uri),
@@ -217,7 +217,7 @@ END FUNCTION
 FUNCTION (this Patients) getPatientsWS(l_ward SMALLINT)
 	DEFINE l_stat SMALLINT
 	CALL this.patients.list.clear()
-	LET wsPatients.Endpoint.Address.Uri = g_wsAuth.getWSServer(appInfo.ws_patients)
+	LET wsPatients.Endpoint.Address.Uri = g_wsAuth.getWSServer(appInfo.appInfo.ws_patients)
 	CALL wsPatients.v2_getPatients(this.token, l_ward) RETURNING l_stat, this.patients.*
 	LET this.patients.current.ward_id = l_ward -- restore the current ward id!
 	CALL debug.output(

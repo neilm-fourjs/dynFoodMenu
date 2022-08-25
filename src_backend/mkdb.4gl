@@ -11,10 +11,10 @@ MAIN
 	IF NOT l_db.connect() THEN
 		EXIT PROGRAM
 	END IF
-	IF ARG_VAL(1) = "RECREATE" OR ARG_VAL(1) = "RELOAD" THEN
+	IF base.Application.getArgument(1) = "RECREATE" OR base.Application.getArgument(1) = "RELOAD" THEN
 		CALL l_db.drop_tabs()
 		CALL l_db.create_tabs()
-		IF ARG_VAL(1) = "RELOAD" THEN
+		IF base.Application.getArgument(1) = "RELOAD" THEN
 			CALL db_load.load_data()
 		END IF
 	ELSE

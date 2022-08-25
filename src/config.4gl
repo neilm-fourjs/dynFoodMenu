@@ -1,7 +1,7 @@
 IMPORT os
 IMPORT util
 
-IMPORT FGL main
+IMPORT FGL appInfo
 
 &include "app.inc"
 
@@ -94,10 +94,10 @@ FUNCTION (this config) setDefaults()
 		LET this.errFile = base.Application.getProgramName() || ".err"
 	END IF
 	IF this.wsCFGFile IS NULL THEN
-		LET this.wsCFGFile = appInfo.cfgFile
+		LET this.wsCFGFile = appInfo.appInfo.cfgFile
 	END IF
 	IF this.wsCFGName IS NULL THEN
-		LET this.wsCFGName = appInfo.cfgName
+		LET this.wsCFGName = appInfo.appInfo.cfgName
 	END IF
 	IF NOT os.Path.exists(this.logDir) THEN
 		IF NOT os.Path.mkdir(this.logDir) THEN

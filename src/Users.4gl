@@ -1,5 +1,5 @@
 IMPORT security
-IMPORT FGL main
+IMPORT FGL appInfo
 IMPORT FGL fgldialog
 IMPORT FGL config
 IMPORT FGL db
@@ -254,7 +254,7 @@ FUNCTION (this Users) login(l_win BOOLEAN) RETURNS BOOLEAN
 		RETURN TRUE
 	END IF
 	LET int_flag                     = FALSE
-	LET wsUsers.Endpoint.Address.Uri = g_wsAuth.getWSServer(appInfo.ws_users)
+	LET wsUsers.Endpoint.Address.Uri = g_wsAuth.getWSServer(appInfo.appInfo.ws_users)
 	IF l_win THEN
 		OPEN WINDOW login WITH FORM "login"
 	END IF
@@ -337,7 +337,7 @@ PRIVATE FUNCTION (this Users) ws_init() RETURNS BOOLEAN
 			RETURN FALSE
 		END IF
 	END IF
-	LET wsUsers.Endpoint.Address.Uri = g_wsAuth.getWSServer(appInfo.ws_users)
+	LET wsUsers.Endpoint.Address.Uri = g_wsAuth.getWSServer(appInfo.appInfo.ws_users)
 
 -- Get the servers timestamp.
 	CALL debug.output(

@@ -2,7 +2,7 @@ IMPORT util
 IMPORT os
 IMPORT FGL Menus
 
-&include "menus.inc"
+&include "app.inc"
 
 DEFINE m_JSONfile TEXT
 --------------------------------------------------------------------------------------------------------------

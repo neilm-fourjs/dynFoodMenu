@@ -8,6 +8,10 @@
 		<ENVIRONMENT_VARIABLE Id="FGLGUI">0</ENVIRONMENT_VARIABLE>
 		<PATH>$(res.deployment.path)</PATH>
 		<MODULE>dfm_ws</MODULE>
+		<DELEGATE service="services/GeneroAccessService">
+			<IDP>localhost</IDP><!-- for local GAS -->
+			<!--IDP>http://neilm-predator.local/g4/ws/r/services/GeneroIdentityProvider</IDP--><!-- for remote GAS -->
+		</DELEGATE>
 		<POOL>
 			<START>1</START>
 			<MIN_AVAILABLE>1</MIN_AVAILABLE>

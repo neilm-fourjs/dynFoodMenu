@@ -68,8 +68,8 @@
   <LanguageList version="1.0"/>
   <PlatformList version="1.0"/>
   <Group environment="value:GBCDISTPATH=$(ProjectDir)/gbc-current401/dist/customization,value:GBC=gbc-foodMenu,value:FGLGBCDIR=$(GBCDISTPATH)/$(GBC),value:FGLIMAGEPATH=../pics:$(FGLDIR)/lib/image2font.txt:$(FGLDIR)/lib,filelist:FGLPROFILE=$(ProjectDir)/etc/fglprofile.gst,dirlist:DBPATH=$(ProjectDir)/database;$(DBPATH)" id="-718261780" label="dynFoodMenu" language="Genero">
-    <Group id="-1176894928" label="4GL">
-      <Group compilerOptions="-D USE_SCOPES" id="-2066936228" label="Backend" language="Genero" targetDirectory="$(ProjectDir)/binBackEnd">
+    <Group id="-1176894928" label="4GL" language="Genero">
+      <Group compilerOptions="-D USE_SCOPES" id="-2066936228" label="BackendService" language="Genero" targetDirectory="$(ProjectDir)/binBackEnd">
         <Library binaryName="dfm_menus" dependencies="-1361191823,1074706446,-984239028" id="340558792" label="dfm_menus">
           <File filePath="src_backend/dfm_ws_menus.4gl"/>
         </Library>
@@ -102,7 +102,7 @@
         </Library>
         <Library binaryName="ws_xcf" id="-593227916" label="xcf">
           <File filePath="xcf/dfm.xcf"/>
-          <File filePath="xcf_ws/dfmv2.xcf"/>
+          <File filePath="xcf/dfmv2.xcf"/>
           <File filePath="xcf/dynFoodMenu.xcf"/>
           <File filePath="xcf/dynFoodUser.xcf"/>
         </Library>
@@ -126,6 +126,7 @@
         <Library binaryName="libCommon" dependencies="-1361191823" id="1074706446" label="libCommon" targetDirectory="$(ProjectDir)/binCommon">
           <File filePath="src/about.4gl"/>
           <File filePath="src/about.per"/>
+          <File filePath="src/appInfo.4gl"/>
           <File filePath="src/config.4gl"/>
           <File filePath="src_backend/db.4gl"/>
           <File filePath="src/debug.4gl"/>
@@ -191,7 +192,7 @@
       </Library>
     </Group>
     <Group id="674884836" label="Packages" language="Genero">
-      <Package binaryName="dynFoodBackEnd" dependencies="-593227916,-1361191823,1074484008,1074706446,1770744530,-541155840,400358049,455109296,91913022,875344568,362164715,1321734150,1638566760,-984239028,-1000811841,411074306,340558792,-1118783498" description="WS dynFood Server" id="-255363164" label="dynFoodBackEnd" platform="Genero Application Server">
+      <Package binaryName="dynFoodBackEnd" dependencies="-593227916,-1361191823,1074484008,1074706446,1770744530,-541155840,400358049,455109296,91913022,875344568,362164715,1321734150,1638566760,-984239028,-1000811841,411074306,340558792,-1118783498,-795797368" description="WS dynFood Server" id="-255363164" label="dynFoodBackEnd" platform="Genero Application Server">
         <DynamicProperty name="packageId" value="dynFoodRest"/>
         <DynamicProperty name="packageLabel" value="dynFoodRest"/>
         <Directory label="Bin" recursive="false" sourceDirectory="$(ProjectDir)/bin"/>
@@ -201,16 +202,6 @@
         <Directory label="ConfigBE" recursive="false" sourceDirectory="$(ProjectDir)/etcBackEnd"/>
         <Directory label="pics" sourceDirectory="$(ProjectDir)/pics"/>
         <Directory label="xcf" recursive="false" sourceDirectory="$(ProjectDir)/xcf"/>
-      </Package>
-      <Package binaryName="dynFoodBackEndws" dependencies="-593227916,-1361191823,1074484008,1074706446,1770744530,-541155840,400358049,455109296,91913022,875344568,362164715,1321734150,1638566760,-984239028,-1000811841,411074306,340558792,-1118783498" description="WS dynFood Server" id="1703106160" label="dynFoodBackEndws" platform="Genero Application Server">
-        <DynamicProperty name="packageId" value="dynFoodRest"/>
-        <DynamicProperty name="packageLabel" value="dynFoodRest"/>
-        <Directory label="Bin" recursive="false" sourceDirectory="$(ProjectDir)/bin"/>
-        <Directory excludedFiles="Test.42r" includedFiles="*.42?" label="BinBE" recursive="false" sourceDirectory="$(ProjectDir)/binBackEnd"/>
-        <Directory label="Common" recursive="false" sourceDirectory="$(ProjectDir)/binCommon"/>
-        <Directory label="Config" recursive="false" sourceDirectory="$(ProjectDir)/etc"/>
-        <Directory label="ConfigBE" recursive="false" sourceDirectory="$(ProjectDir)/etcBackEnd"/>
-        <Directory label="xcf" recursive="false" sourceDirectory="$(ProjectDir)/xcf_ws"/>
       </Package>
       <Package binaryName="dynFoodMenu_GMA" dependencies="400358049,781919164,159917928,212784684,715422167,362164715,313644474,-541155840,91913022,-1361191823,1770744530,1074706446,-1322651328,1638566760,855703318" description="Android Package" distDirectory="$(ProjectDir)/distbinGMA" id="187810339" label="dynFoodMenu_GMA" platform="Android">
         <DynamicProperty name="gma-accent-color" value="#70a770"/>

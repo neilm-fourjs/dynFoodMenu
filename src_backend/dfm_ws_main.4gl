@@ -11,7 +11,7 @@ IMPORT FGL debug
 IMPORT FGL config
 IMPORT FGL db
 
-&include "menus.inc"
+&include "app.inc"
 &include "globals.inc"
 
 MAIN

@@ -1,13 +1,12 @@
 -- This service provides the menus, menu items and ability to place an order.
 -- http://localhost/g/ws/r/dfm/menus?openapi.json
 
-IMPORT util
 IMPORT com
 IMPORT FGL Menus
 IMPORT FGL ws_lib
 IMPORT FGL debug
 
-&include "../src/menus.inc"
+&include "../src/app.inc"
 
 PUBLIC DEFINE serviceInfo RECORD ATTRIBUTE(WSInfo)
 	title         STRING,

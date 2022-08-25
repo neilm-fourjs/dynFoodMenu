@@ -1,11 +1,10 @@
 -- This service provides the list of Wards and Patients.
 
-IMPORT util
 IMPORT FGL Patients
 IMPORT FGL ws_lib
 IMPORT FGL debug
 
-&include "../src/menus.inc"
+&include "../src/app.inc"
 
 PUBLIC DEFINE serviceInfo RECORD ATTRIBUTE(WSInfo)
 	title         STRING,

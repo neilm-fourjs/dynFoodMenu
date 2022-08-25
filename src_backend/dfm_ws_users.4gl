@@ -2,12 +2,11 @@
 
 IMPORT security
 IMPORT com
-IMPORT util
 IMPORT FGL Users
 IMPORT FGL utils
 IMPORT FGL debug
 
-&include "../src/menus.inc"
+&include "../src/app.inc"
 
 PUBLIC DEFINE myNotFound RECORD ATTRIBUTE(WSError = "Record not found")
 	message STRING

@@ -1,5 +1,6 @@
 IMPORT os
 IMPORT FGL config
+IMPORT FGL fgldialog
 
 &define USEFILE
 DEFINE m_debugText        STRING = "Debug:\n"
@@ -28,7 +29,7 @@ END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION output(l_str STRING, l_wait BOOLEAN)
 	DEFINE c base.Channel
-	LET l_str = SFMT("%1:%2) %3", CURRENT, fgl_getPid(), l_str)
+	LET l_str = SFMT("%1:%2) %3", CURRENT, fgl_getpid(), l_str)
 &ifdef USEFILE
 	IF m_logFile IS NULL THEN
 		CALL init_debug(NULL, NULL)
@@ -61,13 +62,13 @@ FUNCTION closeWinDebug()
 	IF m_winOpen THEN
 		CLOSE WINDOW debug
 		LET m_winOpen = FALSE
-		CALL ui.interface.refresh()
+		CALL ui.Interface.refresh()
 	END IF
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION showDebug(l_str STRING, l_wait STRING)
 	CALL showWinDebug()
-	LET m_debugText = m_debugText.append(l_str || "\n")
+	LET m_debugText = m_debugText.append(SFMT("%1\n", l_str))
 	DISPLAY m_debugText TO debugtext
 	IF l_wait THEN
 		MENU

@@ -1,4 +1,3 @@
-
 -- Manages the Patients.
 
 IMPORT FGL fgldialog
@@ -16,26 +15,29 @@ IMPORT FGL wsPatients
 &include "globals.inc"
 
 DEFINE m_arr DYNAMIC ARRAY OF RECORD
-			img STRING,
-			bed_no SMALLINT,
-			fld1 STRING,
-			fld2 STRING
-		END RECORD
+	img    STRING,
+	bed_no SMALLINT,
+	fld1   STRING,
+	fld2   STRING
+END RECORD
 
 PUBLIC TYPE Patients RECORD
-	wards wardList,  -- Record: list (array of wardRecord), current & message
-	patients patientList,  -- Record: list (array of patientRecord), ordered (array of patientOrderRecord) , current & message
+	wards wardList, -- Record: list (array of wardRecord), current & message
+	patients
+			patientList, -- Record: list (array of patientRecord), ordered (array of patientOrderRecord) , current & message
 	errorMessage STRING,
-	token STRING
+	token        STRING
 END RECORD
 --------------------------------------------------------------------------------
 --
 FUNCTION (this Patients) select() RETURNS BOOLEAN
-	DEFINE x SMALLINT
+	DEFINE x    SMALLINT
 	DEFINE l_cb ui.ComboBox
 
 	WHENEVER ERROR CALL libCommon.abort
-	IF this.wards.list.getLength() = 0 THEN CALL this.getWards() END IF
+	IF this.wards.list.getLength() = 0 THEN
+		CALL this.getWards()
+	END IF
 	OPEN WINDOW p WITH FORM "patients"
 	LET l_cb = ui.ComboBox.forName("formonly.ward_id")
 	FOR x = 1 TO this.wards.list.getLength()
@@ -51,28 +53,34 @@ FUNCTION (this Patients) select() RETURNS BOOLEAN
 		DIALOG ATTRIBUTES(UNBUFFERED)
 			INPUT BY NAME this.patients.current.ward_id ATTRIBUTES(WITHOUT DEFAULTS)
 				ON CHANGE ward_id
-					CALL this.getPatients( this.patients.current.ward_id )
+					CALL this.getPatients(this.patients.current.ward_id)
 					CALL this.setScrArr()
 			END INPUT
-			DISPLAY ARRAY m_arr TO arr.* 
-				ON ACTION selectrow 
-					LET this.patients.current.bed_no = m_arr[ arr_curr() ].bed_no
-					CALL this.getPatient( this.patients.current.ward_id, this.patients.current.bed_no )
+			DISPLAY ARRAY m_arr TO arr.*
+				ON ACTION selectrow
+					LET this.patients.current.bed_no = m_arr[arr_curr()].bed_no
+					CALL this.getPatient(this.patients.current.ward_id, this.patients.current.bed_no)
 					DISPLAY BY NAME this.patients.current.name, this.patients.current.allergies
-					DISPLAY IIF( this.patients.current.diabetic, "my-true","my-false" ) TO dia
-					DISPLAY IIF( this.patients.current.nilbymouth, "my-true","my-false" ) TO nil
+					DISPLAY IIF(this.patients.current.diabetic, "my-true", "my-false") TO dia
+					DISPLAY IIF(this.patients.current.nilbymouth, "my-true", "my-false") TO nil
 				ON ACTION test ATTRIBUTE(ROWBOUND)
-					CALL fgl_winMessage("Test",SFMT("Test Row %1", arr_curr()),"exclamation")
+					CALL fgl_winMessage("Test", SFMT("Test Row %1", arr_curr()), "exclamation")
 			END DISPLAY
-			ON ACTION accept ACCEPT DIALOG
-			ON ACTION cancel CANCEL DIALOG
-			ON ACTION about CALL about.show()
+			ON ACTION accept
+				ACCEPT DIALOG
+			ON ACTION cancel
+				CANCEL DIALOG
+			ON ACTION about
+				CALL about.show()
 		END DIALOG
 		IF int_flag THEN
 			CLOSE WINDOW p
 			RETURN FALSE
 		END IF
-		CALL debug.output(SFMT("Ward: %1 Bed: %2 Name: %3", this.patients.current.ward_id, this.patients.current.bed_no, this.patients.current.name ), FALSE)
+		CALL debug.output(
+				SFMT("Ward: %1 Bed: %2 Name: %3",
+						this.patients.current.ward_id, this.patients.current.bed_no, this.patients.current.name),
+				FALSE)
 
 {	-- Confirm
 		MENU
@@ -83,7 +91,9 @@ FUNCTION (this Patients) select() RETURNS BOOLEAN
 	END WHILE
 	CLOSE WINDOW p
 
-	IF int_flag THEN RETURN FALSE END IF
+	IF int_flag THEN
+		RETURN FALSE
+	END IF
 	RETURN TRUE
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
@@ -93,22 +103,25 @@ FUNCTION (this Patients) setScrArr()
 	CALL m_arr.clear()
 	FOR x = 1 TO this.patients.list.getLength()
 		LET m_arr[x].img = "fa-bed"
-		IF this.patients.list[x].nilbymouth OR this.patients.list[x].diabetic OR LENGTH(this.patients.list[x].allergies) > 1 THEN
+		IF this.patients.list[x].nilbymouth OR this.patients.list[x].diabetic
+				OR LENGTH(this.patients.list[x].allergies) > 1 THEN
 			LET m_arr[x].img = "fa-exclamation"
 		END IF
 		LET m_arr[x].bed_no = this.patients.list[x].bed_no
-		LET m_arr[x].fld1 = SFMT("Bed #%1 Patient %2", this.patients.list[x].bed_no, this.patients.list[x].name)
-		LET m_arr[x].fld2 = SFMT("Nil by mouth: %1 - Diabetic: %2 - %3", 
-						IIF(this.patients.list[x].nilbymouth,"YES","NO"), 
-						IIF(this.patients.list[x].diabetic,"YES","NO"),
-						IIF(LENGTH(this.patients.list[x].allergies) > 1,"See below","No Allergies"))
+		LET m_arr[x].fld1   = SFMT("Bed #%1 Patient %2", this.patients.list[x].bed_no, this.patients.list[x].name)
+		LET m_arr[x].fld2 =
+				SFMT("Nil by mouth: %1 - Diabetic: %2 - %3",
+						IIF(this.patients.list[x].nilbymouth, "YES", "NO"), IIF(this.patients.list[x].diabetic, "YES", "NO"),
+						IIF(LENGTH(this.patients.list[x].allergies) > 1, "See below", "No Allergies"))
 	END FOR
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- Get a list of the wards
 FUNCTION (this Patients) getWards()
 	DEFINE l_cnt SMALLINT
-	IF NOT g_db.connect() THEN EXIT PROGRAM END IF
+	IF NOT g_db.connect() THEN
+		EXIT PROGRAM
+	END IF
 	SELECT COUNT(*) INTO l_cnt FROM wards
 	IF l_cnt = 0 THEN
 		CALL this.getWardsWS()
@@ -132,7 +145,7 @@ FUNCTION (this Patients) getPatient(l_ward INT, l_bed SMALLINT)
 	DEFINE x SMALLINT
 	IF this.wards.current.ward_id != l_ward OR this.patients.list.getLength() = 0 THEN
 		CALL this.getPatients(l_ward)
-	-- set current ward
+		-- set current ward
 		FOR x = 1 TO this.wards.list.getLength()
 			IF this.wards.list[x].ward_id = l_ward THEN
 				LET this.wards.current.* = this.wards.list[x].*
@@ -151,7 +164,7 @@ END FUNCTION
 -- Get a list of the wards from the DB.
 FUNCTION (this Patients) getWardsDB()
 	DEFINE l_cnt SMALLINT = 1
-	IF NOT g_db.connect() THEN 
+	IF NOT g_db.connect() THEN
 		LET this.wards.message = "failed to connect to db!"
 		EXIT PROGRAM
 	END IF
@@ -161,14 +174,14 @@ FUNCTION (this Patients) getWardsDB()
 		LET l_cnt = l_cnt + 1
 	END FOREACH
 	CALL this.wards.list.deleteElement(l_cnt)
-	LET this.wards.message = SFMT("Found %1 Wards",  this.wards.list.getLength())
+	LET this.wards.message = SFMT("Found %1 Wards", this.wards.list.getLength())
 	CALL debug.output(SFMT("getWardsDB: %1", this.wards.message), FALSE)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- Get a list of the wards from the DB.
 FUNCTION (this Patients) getPatientsDB(l_ward SMALLINT)
-	DEFINE l_cnt SMALLINT = 1
-	DEFINE x SMALLINT = 1
+	DEFINE l_cnt     SMALLINT = 1
+	DEFINE x         SMALLINT = 1
 	DEFINE l_ordered patientOrderRecord
 	IF NOT g_db.connect() THEN
 		LET this.patients.message = "failed to connect to db!"
@@ -185,7 +198,7 @@ FUNCTION (this Patients) getPatientsDB(l_ward SMALLINT)
 		LET l_cnt = l_cnt + 1
 	END FOREACH
 	CALL this.patients.list.deleteElement(l_cnt)
-	LET this.patients.message = SFMT("Found %1 Patients in ward %2",  this.patients.list.getLength(), l_ward)
+	LET this.patients.message = SFMT("Found %1 Patients in ward %2", this.patients.list.getLength(), l_ward)
 	CALL debug.output(SFMT("getPatientsDB: %1 Ward: %2", this.patients.message, this.patients.current.ward_id), FALSE)
 END FUNCTION
 
@@ -195,7 +208,9 @@ FUNCTION (this Patients) getWardsWS()
 	DEFINE l_stat SMALLINT
 	LET wsPatients.Endpoint.Address.Uri = g_wsAuth.getWSServer(appInfo.ws_patients)
 	CALL wsPatients.v2_getWards(this.token) RETURNING l_stat, this.wards.*
-	CALL debug.output(SFMT("getWardsWS: Stat=%1 %2 From: %3", l_stat, NVL(this.wards.message,"NULL"), wsPatients.Endpoint.Address.Uri), FALSE)
+	CALL debug.output(
+			SFMT("getWardsWS: Stat=%1 %2 From: %3", l_stat, NVL(this.wards.message, "NULL"), wsPatients.Endpoint.Address.Uri),
+			FALSE)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- Get a list of the patients for the ward from the server.
@@ -205,5 +220,8 @@ FUNCTION (this Patients) getPatientsWS(l_ward SMALLINT)
 	LET wsPatients.Endpoint.Address.Uri = g_wsAuth.getWSServer(appInfo.ws_patients)
 	CALL wsPatients.v2_getPatients(this.token, l_ward) RETURNING l_stat, this.patients.*
 	LET this.patients.current.ward_id = l_ward -- restore the current ward id!
-	CALL debug.output(SFMT("getPatientsWS: %1 %2 From: %3", l_stat, NVL(this.patients.message,"NULL"), wsPatients.Endpoint.Address.Uri), FALSE)
+	CALL debug.output(
+			SFMT("getPatientsWS: %1 %2 From: %3",
+					l_stat, NVL(this.patients.message, "NULL"), wsPatients.Endpoint.Address.Uri),
+			FALSE)
 END FUNCTION

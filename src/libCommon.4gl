@@ -1,16 +1,19 @@
 IMPORT FGL debug
+IMPORT FGL fgldialog
 --------------------------------------------------------------------------------------------------------------
 -- Load the style file based on the client:
 -- gm.4st for Mobile ( GMA / GMI native )
 -- gd.4st for GDC ( native )
 -- gb.4st for GBC and Universal Rendering
 FUNCTION loadStyles()
-	DEFINE l_fe CHAR(2)
+	DEFINE l_fe     CHAR(2)
 	DEFINE l_uaName STRING
-	LET l_fe = DOWNSHIFT(ui.Interface.getFrontEndName())
+	LET l_fe     = DOWNSHIFT(ui.Interface.getFrontEndName())
 	LET l_uaName = ui.Interface.getUniversalClientName()
-	IF l_uaName.getLength() > 1 THEN LET l_fe = "gb" END IF -- switch GBC
-	CALL debug.output(SFMT("Loaded styles from %1.4st",l_fe),FALSE)
+	IF l_uaName.getLength() > 1 THEN
+		LET l_fe = "gb"
+	END IF -- switch GBC
+	CALL debug.output(SFMT("Loaded styles from %1.4st", l_fe), FALSE)
 	CALL ui.Interface.loadStyles(l_fe)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
@@ -27,11 +30,11 @@ END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION error(l_str STRING)
 	--CALL fgl_winMessage("Error", l_str, "exclamation")
-	CALL debug.output(SFMT("Error: %1",l_str), FALSE)
+	CALL debug.output(SFMT("Error: %1", l_str), FALSE)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION confirm(l_str STRING) RETURNS BOOLEAN
-	IF fgl_winQuestion("Confirm",l_str,"Yes","Yes|No","question",1) = "Yes" THEN
+	IF fgl_winQuestion("Confirm", l_str, "Yes", "Yes|No", "question", 1) = "Yes" THEN
 		RETURN TRUE
 	ELSE
 		RETURN FALSE
@@ -40,9 +43,9 @@ END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION abort()
 	DEFINE l_msg STRING
-	LET l_msg = ERR_GET( STATUS )
+	LET l_msg             = ERR_GET(STATUS)
 	LET debug.m_showDebug = TRUE
-	CALL debug.output(SFMT("Abort Status:%1\n%2", STATUS, l_msg ), TRUE)
+	CALL debug.output(SFMT("Abort Status:%1\n%2", STATUS, l_msg), TRUE)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION exit_program()

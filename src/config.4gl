@@ -63,7 +63,7 @@ FUNCTION (this config) init(
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION (this config) showCFG()
-	DISPLAY "CFG:", util.JSON.stringify(this)
+	DISPLAY SFMT("CFG: %1", util.JSON.stringify(this))
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- Set anything not set in the config file to sane defaults
@@ -84,14 +84,8 @@ FUNCTION (this config) setDefaults()
 		CALL setPermission("MANAGE_EXTERNAL_STORAGE")
 		CALL setPermission("ACCESS_MEDIA_LOCATION")
 		CALL setPermission("ACCESS_CAMERA")
-		CASE -- find the Downloads folder.
-			WHEN os.Path.exists("/storage/sdcard0/download")
-				LET this.logDir = "/storage/sdcard0/download"
-			WHEN os.Path.exists("/sdcard/Download")
-				LET this.logDir = "/sdcard/Download"
-			WHEN os.Path.exists("/storage/emulated/Download")
-				LET this.logDir = "/storage/emulated/Download"
-		END CASE
+		CALL setPermission("CAMERA")
+		LET this.logDir = findDownloads()
 	END IF
 	IF this.logFile IS NULL THEN
 		LET this.logFile = base.Application.getProgramName() || ".log"
@@ -121,6 +115,18 @@ END FUNCTION
 FUNCTION (this config) getErrFile() RETURNS STRING
 	CALL this.setDefaults()
 	RETURN os.Path.join(this.logDir, this.errFile)
+END FUNCTION
+--------------------------------------------------------------------------------------------------------------
+FUNCTION findDownloads() RETURNS STRING
+	DEFINE x     SMALLINT
+	DEFINE l_dir STRING
+	FOR x = 1 TO m_loc.getLength()
+		IF os.Path.exists(m_loc[x]) AND os.Path.isDirectory(m_loc[x]) THEN
+			LET l_dir = m_loc[x]
+			EXIT FOR
+		END IF
+	END FOR
+	RETURN l_dir
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION findCFGFile(l_fileName STRING) RETURNS STRING

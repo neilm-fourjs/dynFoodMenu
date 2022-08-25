@@ -1,9 +1,9 @@
 -- dynFoodMenu Demo
 IMPORT os
+IMPORT FGL fgldialog
 IMPORT FGL config
 IMPORT FGL debug
 IMPORT FGL libCommon
-IMPORT FGL libMobile
 IMPORT FGL wc_iconMenu
 IMPORT FGL dynFoodMenu
 IMPORT FGL Users
@@ -11,6 +11,25 @@ IMPORT FGL Menus
 IMPORT FGL Patients
 IMPORT FGL db
 IMPORT FGL wsAuthLib
+
+PUBLIC DEFINE appInfo RECORD
+		version STRING,
+		cfgFile STRING,
+		cfgName STRING,
+		ws_users STRING,
+		ws_menus STRING,
+		ws_patients STRING,
+		apiPass STRING
+	END RECORD = ( 
+		version: "1,1", 
+		cfgFile: "ws_cfg.json",
+		cfgName: "localv2",
+		ws_users: "users",
+		ws_menus: "menus",
+		ws_patients: "patients",
+		apiPass: "dynFoodMenuDemofqqGQg43ppgjcaqz"
+		)
+
 DEFINE myMenu wc_iconMenu.wc_iconMenu
 &include "globals.inc"
 MAIN
@@ -27,13 +46,13 @@ MAIN
 	END IF
 
 	CALL libCommon.loadStyles()
-	CALL debug.output(SFMT("Started FGLPROFILE=%1", fgl_getEnv("FGLPROFILE")), FALSE)
-	CALL debug.output(SFMT("PWD: %1", os.path.pwd()), FALSE)
+	CALL debug.output(SFMT("Started FGLPROFILE=%1", fgl_getenv("FGLPROFILE")), FALSE)
+	CALL debug.output(SFMT("PWD: %1", os.Path.pwd()), FALSE)
 	CALL g_cfg.showCFG()
 	CALL debug.output(g_cfg.message,FALSE)
-	CALL STARTLOG( g_cfg.getLogFile() )
-	IF NUM_ARGS() > 0 THEN 
-		LET g_cfg.wsCFGName = ARG_VAL(1)
+	CALL startlog( g_cfg.getLogFile() )
+	IF base.Application.getArgumentCount() > 0 THEN 
+		LET g_cfg.wsCFGName = base.Application.getArgument(1)
 		CALL debug.output(SFMT("Overriding config name with ARG1: %1",g_cfg.wsCFGName), FALSE)
 	END IF
 

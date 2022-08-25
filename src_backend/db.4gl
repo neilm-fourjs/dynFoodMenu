@@ -1,5 +1,5 @@
+
 IMPORT os
-IMPORT util
 IMPORT FGL debug
 IMPORT FGL config
 IMPORT FGL libCommon
@@ -7,7 +7,7 @@ IMPORT FGL db
 
 CONSTANT C_DBVER = 1
 
-&include "menus.inc"
+&include "app.inc"
 
 PUBLIC TYPE db RECORD
 	config config,

@@ -38,8 +38,8 @@ PUBLIC FUNCTION (this wsAuthLib) init(l_dir STRING, l_cfgFileName STRING, l_cfgN
 
 -- check for and read the json configure for the web services
 	IF this.cfgJSON.default IS NULL THEN
-		LET this.cfgFileName = os.path.join(l_dir, l_cfgFileName)
-		IF NOT os.path.exists(this.cfgFileName) THEN
+		LET this.cfgFileName = os.Path.join(l_dir, l_cfgFileName)
+		IF NOT os.Path.exists(this.cfgFileName) THEN
 			LET this.message = SFMT("Missing config file '%1' !", this.cfgFileName)
 			RETURN FALSE
 		END IF
@@ -103,7 +103,7 @@ PUBLIC FUNCTION (this wsAuthLib) init(l_dir STRING, l_cfgFileName STRING, l_cfgN
 	END IF
 
 -- Initialize OAuth access
-	CALL OAuthAPI.InitService(this.cfg.connTimeout, this.Token) RETURNING l_stat
+	CALL OAuthAPI.InitService(this.cfg.connTimeout, this.token) RETURNING l_stat
 	LET this.message = "OAuthAPI.InitService " || IIF(l_stat, "Okay", "Failed!")
 	DISPLAY SFMT("wsAuthLib.init: %1", this.message)
 
@@ -124,10 +124,9 @@ PRIVATE FUNCTION (this      wsAuthLib) getAccessToken() RETURNS BOOLEAN
 
 -- Retieve IdP info to get token endpoint for service access
 	CALL debug("getAccessToken", "cfg.idp", this.cfg.idp)
-
 	CALL OAuthAPI.FetchOpenIDMetadata(5, this.cfg.idp) RETURNING l_metadata.*
 	IF l_metadata.issuer IS NULL THEN
-		LET this.message = SFMT("Error : IDP unavailable: %1", this.cfg.idp)
+		LET this.message = SFMT("Error : IDP unavailable:\n%1\nOAuthAPI.FetchOpenIDMetadata", this.cfg.idp)
 		RETURN FALSE
 	END IF
 

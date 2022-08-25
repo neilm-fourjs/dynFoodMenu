@@ -15,7 +15,9 @@ Property of Four Js*
 		<StyleAttribute name="fontFamily" value="Roboto" />
 	</Style>
 	<Style name="HBox.splitView" >
-		<StyleAttribute name="splitViewRendering" value="yes" />
+		<StyleAttribute name="navigationArrows" value="yes" />
+		<StyleAttribute name="navigationDots" value="no" />
+		<!--StyleAttribute name="splitViewRendering" value="yes" /-->
 	</Style>
   <Style name=".underline">
      <StyleAttribute name="textDecoration" value="underline" />

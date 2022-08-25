@@ -2,11 +2,9 @@
 #+ Generated from wsPatients
 #+
 IMPORT com
-IMPORT xml
 IMPORT util
-IMPORT os
 IMPORT FGL OAuthAPI
-&include "menus.inc"
+&include "app.inc"
 
 #+
 #+ Global Endpoint user-defined type definition

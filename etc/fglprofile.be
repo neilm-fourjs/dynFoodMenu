@@ -8,4 +8,4 @@ mobile.environment.DBDATE ="DMY4/"
 gui.rendering = "universal"
 
 # WS cert
-security.global.ca = "CABundle.pem"
+#security.global.ca = "CABundle.pem"

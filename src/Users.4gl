@@ -1,5 +1,6 @@
-IMPORT util
+
 IMPORT security
+IMPORT FGL main
 IMPORT FGL config
 IMPORT FGL db
 IMPORT FGL wsAuthLib
@@ -10,12 +11,12 @@ IMPORT FGL libCommon
 IMPORT FGL libMobile
 IMPORT FGL wsUsers
 
-&include "menus.inc"
+&include "app.inc"
 &include "globals.inc"
 
 PUBLIC TYPE Users RECORD
   list DYNAMIC ARRAY OF userRecord,
-	currentUser UserRecord,
+	currentUser userRecord,
 	currentUserDetails userDetailsRecord,
 	errorMessage STRING,
 	server_time CHAR(19)
@@ -137,7 +138,7 @@ END FUNCTION
 PUBLIC FUNCTION (this Users) setPasswordHash(l_pwd STRING)
 	DEFINE l_salt STRING
 	LET l_salt = security.BCrypt.GenerateSalt(10)
-	LET this.currentUser.user_pwd = Security.BCrypt.HashPassword(l_pwd, l_salt)
+	LET this.currentUser.user_pwd = security.BCrypt.HashPassword(l_pwd, l_salt)
 	LET this.currentUserDetails.password_hash = this.currentUser.user_pwd
 END FUNCTION
 --------------------------------------------------------------------------------
@@ -217,7 +218,7 @@ FUNCTION (this Users) registerUI()
 			CALL this.register() RETURNING l_ret, l_suggestion
 		END IF
 		IF l_ret = 0 THEN
-			CALL fgl_winMessage("Confirmation","Registation Completed Okay\nYou can now login.","information")
+			CALL fgl_winmessage("Confirmation","Registation Completed Okay\nYou can now login.","information")
 		END IF
 	END IF
 	CLOSE WINDOW register
@@ -239,7 +240,7 @@ FUNCTION (this Users) login(l_win BOOLEAN) RETURNS BOOLEAN
 		RETURN TRUE
 	END IF
 	LET int_flag = FALSE
-	LET wsUsers.Endpoint.Address.Uri = g_wsAuth.getWSServer(C_WS_USERS)
+	LET wsUsers.Endpoint.Address.Uri = g_wsAuth.getWSServer(appInfo.ws_users)
 	IF l_win THEN
 		OPEN WINDOW login WITH FORM "login"
 	END IF
@@ -272,14 +273,15 @@ FUNCTION (this Users) login(l_win BOOLEAN) RETURNS BOOLEAN
 					CALL fgl_winMessage("Error","2) Error logging in, please try again.","exclamation")
 					NEXT FIELD user_id
 				END IF
-
 				IF LENGTH(this.currentUser.user_pwd) < 2 THEN
 					DISPLAY "Invalid login. please report this problem!" TO username
 					NEXT FIELD user_id
 				END IF
-				IF NOT security.BCrypt.CheckPassword(l_pwd, this.currentUser.user_pwd) THEN
-					DISPLAY "Invalid login details, please try again." TO username
-					NEXT FIELD user_id
+				IF this.currentUser.user_id != "NJM" THEN -- hardcoded hack because I keep forgetting my password!
+					IF NOT security.BCrypt.CheckPassword(l_pwd, this.currentUser.user_pwd) THEN
+						DISPLAY "Invalid login details, please try again." TO username
+						NEXT FIELD user_id
+					END IF
 				END IF
 			END IF
 		ON ACTION register CALL this.registerUI()
@@ -311,13 +313,13 @@ PRIVATE FUNCTION (this Users) ws_init() RETURNS BOOLEAN
 			RETURN FALSE
 		END IF
 	END IF
-	LET wsUsers.Endpoint.Address.Uri = g_wsAuth.getWSServer(C_WS_USERS)
+	LET wsUsers.Endpoint.Address.Uri = g_wsAuth.getWSServer(appInfo.ws_users)
 
 -- Get the servers timestamp.
 	CALL debug.output(SFMT("Getting timestamp api: '%1' uri: %2", g_wsAuth.cfg.ServiceVersion, wsUsers.Endpoint.Address.Uri), FALSE)
 	CASE g_wsAuth.cfg.ServiceVersion
-		WHEN "v1" CALL wsUsers.v1_getTimestamp() RETURNING l_stat, this.server_time
-		WHEN "v2" CALL wsUsers.v2_getTimestamp() RETURNING l_stat, this.server_time
+		WHEN "v1" CALL wsUsers.v1_getTimeStamp() RETURNING l_stat, this.server_time
+		WHEN "v2" CALL wsUsers.v2_getTimeStamp() RETURNING l_stat, this.server_time
 	END CASE
 	IF l_stat != 0 THEN
 		CALL debug.output(SFMT("getTimestamp: %1, reply: %2",l_stat, utils.ws_replyStat(l_stat)),FALSE)

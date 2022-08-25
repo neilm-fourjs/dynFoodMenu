@@ -2,6 +2,7 @@
 -- TODO: Get data from a web service
 IMPORT util
 IMPORT os
+IMPORT FGL main
 IMPORT FGL debug
 IMPORT FGL config
 IMPORT FGL wsAuthLib
@@ -11,7 +12,7 @@ IMPORT FGL wsMenus
 IMPORT FGL libCommon
 IMPORT FGL libMobile
 
-&include "menus.inc"
+&include "app.inc"
 &include "globals.inc"
 
 PUBLIC TYPE Menus RECORD
@@ -142,7 +143,7 @@ FUNCTION (this Menus) getMenuListWS() RETURNS BOOLEAN
 	DEFINE l_json TEXT
 	DEFINE l_fileName STRING = "menus.json"
 	CALL libCommon.processing("Loading Menus ...",1)
-	LET wsMenus.Endpoint.Address.Uri = g_wsAuth.getWSServer(C_WS_MENUS)
+	LET wsMenus.Endpoint.Address.Uri = g_wsAuth.getWSServer(appInfo.ws_menus)
 	CALL wsMenus.v2_getMenus() RETURNING l_stat,this.menuList.*
 	CALL libCommon.processing("Loading Menus ...",3)
 	IF l_stat != 0 THEN
@@ -157,7 +158,7 @@ END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION (this Menus) getMenuWS(l_menuName STRING) RETURNS BOOLEAN
 	DEFINE l_stat INT
-	LET wsMenus.Endpoint.Address.Uri = g_wsAuth.getWSServer(C_WS_MENUS)
+	LET wsMenus.Endpoint.Address.Uri = g_wsAuth.getWSServer(appInfo.ws_menus)
 	CALL libCommon.processing("Loading Menu ...",1)
 	CALL wsMenus.v2_getMenu(l_menuName) RETURNING l_stat, this.menu.*
 	CALL libCommon.processing("Loading Menu ...",3)
@@ -179,7 +180,7 @@ FUNCTION (this Menus) save()
 	LET this.ordered.menu_id = this.menu.menuName
 	CALL libCommon.processing("Saving Order ...",1)
 
-	LET wsMenus.Endpoint.Address.Uri = g_wsAuth.getWSServer(C_WS_MENUS)
+	LET wsMenus.Endpoint.Address.Uri = g_wsAuth.getWSServer(appInfo.ws_menus)
 	CALL wsMenus.v2_placeOrder(this.ordered.*) RETURNING l_stat, l_resp.*
 	CALL debug.output(SFMT("save Stat:%1:%2:%3 - from %4", l_stat,l_resp.l_stat,l_resp.l_msg, wsMenus.Endpoint.Address.Uri),FALSE)
 

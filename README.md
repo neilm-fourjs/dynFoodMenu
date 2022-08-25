@@ -28,6 +28,9 @@ The bulk of the business logic is handled by 3 modules:
 
 Those modules can be used by the frontend program and by the backend web services to handle data access via a database connection or via the published web services depending on the need.
 
+## Web Services
+The web services are REST based, there are two versions, on is using 'scope' based authentification.
+
 ## Custom GBC build on Linux.
 This assumes you have installed the GBC Prerequisites and have downloaded the current GBC project zip file and either placed it in a folder of ~/FourJs_Downloads/GBC or have set GBCPROJECTDIR to the folder containing that zip file.
 ```

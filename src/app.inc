@@ -1,14 +1,6 @@
 
 SCHEMA dynfooddemo
 
-CONSTANT C_APPVER="1.1"
-CONSTANT C_WS_CFGFILE="ws_cfg.json"
-CONSTANT C_WS_CFGNAME="localv2"
-CONSTANT C_WS_USERS="users"
-CONSTANT C_WS_MENUS="menus"
-CONSTANT C_WS_PATIENTS="patients"
-CONSTANT C_APIPASS="dynFoodMenuDemofqqGQg43ppgjcaqz"
-
 PUBLIC TYPE menuList RECORD
 		list DYNAMIC ARRAY OF RECORD
 			menuName STRING,

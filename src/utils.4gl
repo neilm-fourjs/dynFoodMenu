@@ -1,11 +1,13 @@
-&include "menus.inc"
+
+IMPORT FGL main
+&include "app.inc"
 --------------------------------------------------------------------------------------------------------------
 -- 2020-02-10 15:52:22
 -- 1234567890123456789
 FUNCTION  apiPaas(l_usr STRING, l_ts CHAR(19)) RETURNS STRING
 	DEFINE l_ret STRING
 	DEFINE l_char CHAR(50)
-	LET l_char = C_APIPASS
+	LET l_char = main.appInfo.apiPass
 	LET l_char[16, 15+l_usr.getLength()] = l_usr
 	LET l_char[22,23] = l_ts[3,4] -- year
 	LET l_char[24,25] = l_ts[15,16] -- min

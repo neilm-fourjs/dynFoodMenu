@@ -2,7 +2,6 @@
 
 IMPORT FGL Patients
 IMPORT FGL ws_lib
-IMPORT FGL debug
 
 &include "../src/app.inc"
 

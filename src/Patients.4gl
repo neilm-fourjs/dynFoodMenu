@@ -217,11 +217,15 @@ END FUNCTION
 FUNCTION (this Patients) getPatientsWS(l_ward SMALLINT)
 	DEFINE l_stat SMALLINT
 	CALL this.patients.list.clear()
+	IF l_ward IS NULL OR l_ward = 0 THEN
+		CALL debug.output(SFMT("getPatientsWS: Ward: %1 - aborted", NVL(l_ward,"(null)")), FALSE)
+		RETURN
+	END IF
 	LET wsPatients.Endpoint.Address.Uri = g_wsAuth.getWSServer(appInfo.appInfo.ws_patients)
 	CALL wsPatients.v2_getPatients(this.token, l_ward) RETURNING l_stat, this.patients.*
 	LET this.patients.current.ward_id = l_ward -- restore the current ward id!
 	CALL debug.output(
-			SFMT("getPatientsWS: %1 %2 From: %3",
-					l_stat, NVL(this.patients.message, "NULL"), wsPatients.Endpoint.Address.Uri),
+			SFMT("getPatientsWS: Ward: %1 Stat: %2 Mess: %3 From: %4",
+					l_ward, l_stat, NVL(this.patients.message, "NULL"), wsPatients.Endpoint.Address.Uri),
 			FALSE)
 END FUNCTION

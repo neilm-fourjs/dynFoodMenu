@@ -18,6 +18,7 @@ PUBLIC DEFINE serviceInfo RECORD ATTRIBUTE(WSInfo)
 END RECORD =
 		(title: "dynFoodMenu", description: "A RESTFUL backend for the dynFoodMenu mobile demo - Serving: Patients",
 				version: "v2", contact:(name: "Neil J Martin", email: "neilm@4js.com"))
+
 PRIVATE DEFINE Context DICTIONARY ATTRIBUTE(WSContext) OF STRING
 DEFINE m_patients      Patients
 --------------------------------------------------------------------------------
@@ -48,6 +49,7 @@ PUBLIC FUNCTION v1_getPatients(l_token STRING ATTRIBUTE(WSParam), l_ward SMALLIN
 	ELSE
 		LET m_patients.patients.message = "Invalid Token."
 	END IF
+
 	RETURN m_patients.patients.*
 END FUNCTION
 --------------------------------------------------------------------------------

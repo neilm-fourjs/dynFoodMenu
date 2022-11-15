@@ -40,13 +40,16 @@ FUNCTION (this db) connect() RETURNS BOOLEAN
 		LET this.config.dbName = os.Path.join(this.config.dbDir, this.config.dbName)
 	END IF
 
-	IF NOT os.Path.exists(this.config.dbName) THEN
-		CALL debug.output(SFMT("Creating %1", this.config.dbName), FALSE)
-		CREATE DATABASE this.config.dbName
-		CALL this.create()
+	LET this.dbtype = fgl_getresource("dbi.default.driver")
+	IF this.dbtype = "dbmsqt" THEN
+		IF NOT os.Path.exists(this.config.dbName) THEN
+			CALL debug.output(SFMT("Creating %1", this.config.dbName), FALSE)
+			CREATE DATABASE this.config.dbName
+			CALL this.create()
+		END IF
 	END IF
 
-	CALL debug.output(SFMT("Connecting to %1", this.config.dbName), FALSE)
+	CALL debug.output(SFMT("Connecting to %1  type: %2", this.config.dbName, this.dbtype), FALSE)
 	TRY
 		CONNECT TO this.config.dbName
 		LET this.connected = TRUE
@@ -54,7 +57,7 @@ FUNCTION (this db) connect() RETURNS BOOLEAN
 		CALL libCommon.error(SFMT("DB Connect failed %1", SQLERRMESSAGE))
 		RETURN FALSE
 	END TRY
-	LET this.dbtype = fgl_getresource("dbi.default.driver")
+
 	CALL this.check()
 	CALL this.fix_serials("orders", "order_id")
 	CALL this.fix_serials("wards", "ward_id")

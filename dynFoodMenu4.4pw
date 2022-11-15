@@ -70,7 +70,7 @@
   <Group environment="value:GBCDISTPATH=$(ProjectDir)/gbc-current401/dist/customization,value:GBC=gbc-foodMenu,value:FGLGBCDIR=$(GBCDISTPATH)/$(GBC),value:FGLIMAGEPATH=../pics:$(FGLDIR)/lib/image2font.txt:$(FGLDIR)/lib,filelist:FGLPROFILE=$(ProjectDir)/etc/fglprofile.gst,dirlist:DBPATH=$(ProjectDir)/database;$(DBPATH)" id="-718261780" label="dynFoodMenu" language="Genero">
     <Group id="-1176894928" label="4GL" language="Genero">
       <Group compilerOptions="-D USE_SCOPES" id="-2066936228" label="BackendService" language="Genero" targetDirectory="$(ProjectDir)/binBackEnd">
-        <Library binaryName="dfm_menus" dependencies="-1361191823,1074706446,-984239028" id="340558792" label="dfm_menus">
+        <Library binaryName="dfm_menus" dependencies="-1361191823,1074706446,-984239028" id="340558792" label="dfm_menus" language="Genero">
           <File filePath="src_backend/dfm_ws_menus.4gl"/>
         </Library>
         <Library binaryName="dfm_patients" dependencies="-1361191823,1074706446" id="-1118783498" label="dfm_patients">

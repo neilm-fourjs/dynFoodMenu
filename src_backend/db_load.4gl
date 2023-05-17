@@ -67,7 +67,8 @@ FUNCTION load_data()
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION loadJSON(l_file STRING) RETURNS BOOLEAN
-	IF os.path.exists( l_file ) THEN
+	LET l_file = os.Path.join("../etcBackEnd", l_file)
+	IF os.Path.exists( l_file ) THEN
 		LOCATE m_JSONfile IN MEMORY
 		CALL m_JSONfile.readFile(l_file)
 		RETURN TRUE

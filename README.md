@@ -31,6 +31,14 @@ Those modules can be used by the frontend program and by the backend web service
 ## Web Services
 The web services are REST based, there are two versions, on is using 'scope' based authentification.
 
+## Building the GAR
+The Genero build environment needs to be set and include GeneroStudio's tools ( gsmake )
+Set the GENVER variable to either 320 or 401
+```
+export GENVER=401
+make
+```
+
 ## Custom GBC build on Linux.
 This assumes you have installed the GBC Prerequisites and have downloaded the current GBC project zip file and either placed it in a folder of ~/FourJs_Downloads/GBC or have set GBCPROJECTDIR to the folder containing that zip file.
 ```

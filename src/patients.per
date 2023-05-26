@@ -1,6 +1,10 @@
 
 LAYOUT (TEXT="Patients", STYLE="main")
+&ifdef g320
+HBOX  (SPLITTER, STYLE="splitView")
+&else
 HBOX  (SPLITTER, STYLE="splitView", SPLIT@small)
+&endif
 GRID
 {
 <G loc                              >
